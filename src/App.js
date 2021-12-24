@@ -1,23 +1,16 @@
-import logo from './logo.svg';
-import './App.css';
+var SpotifyWebApi = require('spotify-web-api-node');
+
+// credentials are optional
+var spotifyApi = new SpotifyWebApi({
+  clientId: '3f25e7854a2645b78bd43d3f3003f105',
+  clientSecret: 'aee85bacd18b4301ad31b12197149759',
+  redirectUri: 'http://www.example.com/callback'
+});
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      
     </div>
   );
 }
