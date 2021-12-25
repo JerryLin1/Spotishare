@@ -27,6 +27,7 @@ class App extends React.Component {
                             localStorage.getItem("spotify-access-token") &&
                             localStorage.getItem("spotify-access-token-expiry") > Date.now()
                         ) {
+							// just testing api stuff
                             fetch(`/top?accessToken=${localStorage.getItem("spotify-access-token")}`)
                                 .then((e) => e.json())
                                 .then((data) => {
@@ -36,7 +37,13 @@ class App extends React.Component {
                                             <div>
                                                 {data.items.map((e) => (
                                                     <div>
-                                                        <a target="__blank" href={e.external_urls.spotify}>{e.name}</a>
+                                                        <a target="__blank" href={e.external_urls.spotify}>
+                                                            {e.name}
+                                                        </a>
+                                                        <audio
+                                                            controls
+                                                            src="https://p.scdn.co/mp3-preview/6f2069c109afd0326c3419435d9b31c34c82c75e?cid=3f25e7854a2645b78bd43d3f3003f105"
+                                                        ></audio>
                                                     </div>
                                                 ))}
                                             </div>

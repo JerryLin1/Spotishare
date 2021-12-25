@@ -71,6 +71,7 @@ app.get("/auth/callback", (req, res) => {
     );
 });
 
+// just to test the api stuff
 app.get("/top", (req, res) => {
     var loggedInSpotifyApi = new SpotifyWebApi();
     spotifyApi.setAccessToken(req.query.accessToken);
