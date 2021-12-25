@@ -1,7 +1,4 @@
 module.exports = {
-    numberOfClientsInRoom(roomId) {
-        return Object.keys(rooms[roomId].clients).length;
-    },
     // Room id generator
     RandomId(length = 16) {
         return Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, length);

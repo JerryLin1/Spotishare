@@ -19,10 +19,10 @@ var spotifyClientSecret = process.env.REACT_APP_SPOTIFY_CLIENTSECRET;
 var redirectUri = process.env.REACT_APP_REDIRECT_URI_LOCAL;
 
 // When using public ip
-// var redirectUri = process.env.REACT_APP_REDIRECT_URI
+// var redirectUri = process.env.REACT_APP_REDIRECT_URI;
 
 var SpotifyWebApi = require("spotify-web-api-node");
-const { RandomId, numberOfClientsInRoom } = require("./server/helperFunctions");
+const { RandomId } = require("./server/helperFunctions");
 var spotifyApi = new SpotifyWebApi({
     clientId: spotifyClientId,
     clientSecret: spotifyClientSecret,
@@ -101,20 +101,34 @@ app.get("/top", (req, res) => {
 app.get("/createLobby", (req, res) => {
     // TODO: Check if the access token is valid
     var roomId = RandomId();
-    rooms[roomId] = new Room();
+    rooms[roomId] = {
+        clients: {},
+    };
     res.send({ roomId: roomId });
-	console.log(`Room ${roomId} created`)
+    console.log(`Room ${roomId} created`);
 });
-app.get("/attemptJoinLobby", (req, res) => {
-	// TODO: Check if the access token is valid
-	var roomId = req.query.roomId;
-	res.sendStatus(200)
-})
 app.get("/joinLobby", (req, res) => {
-	// TODO: Check if the access token is valid
-	var roomId = req.query.roomId;
-	rooms[roomId].clients.append()
-})
+    // TODO: Check if the access token is valid
+    console.log(req.query);
+    var roomId = req.query.roomId.trim();
+    var loggedInSpotifyApi = new SpotifyWebApi();
+    var client = new Client(roomId);
+    loggedInSpotifyApi.setAccessToken(req.query.accessToken);
+    loggedInSpotifyApi
+        .getMe()
+        .then((data) => {
+            client.name = data.body.display_name;
+            client.id = data.body.id;
+            client.country = data.body.country;
+            client.picture = data.body.images[0].url;
+        })
+        .then(() => {
+            rooms[roomId].clients[req.query.socketid] = client;
+        })
+        .then(() => {
+            res.sendStatus(200);
+        });
+});
 
 // function refreshAccessToken() {
 //     // clientId, clientSecret and refreshToken has been set on the api object previous to this call.
@@ -169,12 +183,13 @@ io.on("connection", (socket) => {
     });
 });
 
-// Make new room like rooms[roomId] = new Room();
-function Room() {
-    this.clients = {};
-}
-
 // Add new client like rooms[roomId].clients[socket.id] = new Client()
-function Client() {
+function Client(roomId) {
     this.isHost = numberOfClientsInRoom(roomId) === 0;
+}
+setInterval(() => {
+    console.dir(rooms, { depth: null });
+}, 5000);
+function numberOfClientsInRoom(roomId) {
+    return Object.keys(rooms[roomId].clients).length;
 }

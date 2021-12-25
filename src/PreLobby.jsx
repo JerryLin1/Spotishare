@@ -6,15 +6,13 @@ function PreLobby(props) {
     return (
         <div>
             <div>Press join to listen to moosic with friends! :D</div>
-            <button onClick={() => {
-                fetch(`/attemptJoinLobby?roomId=${roomId}`)
-                .then(e => e)
-                .then(data => {
-                    if (data.status == 200) {
-                        navigate(`/${roomId}/lobby`)
-                    }
-                })
-            }}>JOIN THE LOBBY</button>
+            <button
+                onClick={() => {
+                    navigate(`/${roomId}/lobby`);
+                }}
+            >
+                JOIN THE LOBBY
+            </button>
         </div>
     );
 }
