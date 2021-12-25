@@ -27,7 +27,7 @@ class App extends React.Component {
                             localStorage.getItem("spotify-access-token") &&
                             localStorage.getItem("spotify-access-token-expiry") > Date.now()
                         ) {
-							// just testing api stuff
+                            // just testing api stuff
                             fetch(`/top?accessToken=${localStorage.getItem("spotify-access-token")}`)
                                 .then((e) => e.json())
                                 .then((data) => {
@@ -49,16 +49,13 @@ class App extends React.Component {
                                             </div>
                                         ),
                                     });
+                                })
+                                .catch((err) => {
+									console.log(err)
+                                    login();
                                 });
                         } else {
-                            fetch("/auth/login")
-                                .then((e) => e.json())
-                                .then((data) => {
-                                    window.location = data.redirectUri;
-                                })
-                                .catch((error) => {
-                                    alert("Failed to prepare for Spotify Authentication");
-                                });
+                            login();
                         }
                     }}
                 >
@@ -77,6 +74,16 @@ class App extends React.Component {
             </div>
         );
     }
+}
+async function login() {
+    fetch("/auth/login")
+        .then((e) => e.json())
+        .then((data) => {
+            window.location = data.redirectUri;
+        })
+        .catch((error) => {
+            console.log("Failed to prepare for Spotify Authentication");
+        });
 }
 document.addEventListener("DOMContentLoaded", () => {
     if (
