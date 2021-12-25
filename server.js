@@ -16,18 +16,21 @@ var spotifyClientId = process.env.REACT_APP_SPOTIFY_CLIENTID;
 var spotifyClientSecret = process.env.REACT_APP_SPOTIFY_CLIENTSECRET;
 
 // When using localhost:3000
-var redirectUri = process.env.REACT_APP_REDIRECT_URI_LOCAL
+var redirectUri = process.env.REACT_APP_REDIRECT_URI_LOCAL;
 
 // When using public ip
 // var redirectUri = process.env.REACT_APP_REDIRECT_URI
 
 var SpotifyWebApi = require("spotify-web-api-node");
+const { RandomId, numberOfClientsInRoom } = require("./server/helperFunctions");
 var spotifyApi = new SpotifyWebApi({
     clientId: spotifyClientId,
     clientSecret: spotifyClientSecret,
     redirectUri: redirectUri,
 });
 // ======================================
+
+const rooms = {};
 
 // TODO: Implement "state" which is a security thing or something using a randomly generated string
 app.get("/auth/login", (req, res) => {
@@ -80,7 +83,7 @@ app.get("/auth/callback", (req, res) => {
 
 // just to test the api stuff
 app.get("/top", (req, res) => {
-	// new spotify web api instance for each call
+    // new spotify web api instance for each call
     var loggedInSpotifyApi = new SpotifyWebApi();
     loggedInSpotifyApi.setAccessToken(req.query.accessToken);
     loggedInSpotifyApi.getMyTopTracks().then(
@@ -88,11 +91,19 @@ app.get("/top", (req, res) => {
             res.send(data.body);
         },
         (err) => {
-			res.send(err)
+            res.send(err);
             console.error(err);
         }
     );
-	// loggedInSpotifyApi.play({uris: ["spotify:track:0vWg2qGAdSGGsgmyVgb4ox"]})
+    // loggedInSpotifyApi.play({uris: ["spotify:track:0vWg2qGAdSGGsgmyVgb4ox"]})
+});
+
+app.get("/createLobby", (req, res) => {
+    // TODO: Check if the access token is valid
+    var roomId = RandomId();
+    rooms[roomId] = new Room();
+    res.send({ roomId: roomId });
+	console.log(`Room ${roomId} created`)
 });
 
 // function refreshAccessToken() {
@@ -114,20 +125,6 @@ const port = process.env.PORT || 6567;
 server.listen(port, () => {
     console.log(`Listening on port ${port}`);
 });
-
-// ============== Helper Functions =================
-function numberOfClientsInRoom(roomId) {
-    return Object.keys(rooms[roomId].clients).length;
-}
-
-function getRandomInt(min, max) {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min) + min); //The maximum is exclusive and the minimum is inclusive
-}
-// =================================================
-
-const rooms = {};
 
 io.on("connection", (socket) => {
     console.log(`${socket.id} has connected.`);
@@ -168,7 +165,6 @@ function Room() {
 }
 
 // Add new client like rooms[roomId].clients[socket.id] = new Client()
-function Client(nickname, roomId) {
-    this.nickname = nickname;
+function Client() {
     this.isHost = numberOfClientsInRoom(roomId) === 0;
 }
