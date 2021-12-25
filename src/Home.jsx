@@ -1,25 +1,19 @@
 
-import React from "react";
+import { useState } from "react";
 
 import { Row, Col } from "react-bootstrap";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 
-export default class HomePage extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      members: ["Royeek", "Yom", "Yerry"],
-      songs: null,
-    };
+function HomePage(props) {
+  const [members, setMembers] = useState(["Royeek", "Yom", "Yerry"]);
+  const [songs, setSongs] = useState(null);
 
-    this.client = this.props.client;
-  }
 
-  renderMembers() {
+  const renderMembers = () => {
     return (
       <div>
-        {this.state.members.map((member, key) => {
+        {members.map((member, key) => {
           if (member === "Royeek") {
             return (
               <div className="member-card" key={key}>
@@ -46,20 +40,20 @@ export default class HomePage extends React.Component {
     );
   }
 
-  renderSongList() {
-    if (this.state.songs === null) {
+  const renderSongList = () => {
+    if (songs === null) {
       return <span />;
     } else {
-      return this.state.songs;
+      return songs;
     }
   }
 
-  render() {
-    return (
-      <div>
-        <h1 id="title">SpotiShare</h1>
-		{/*  */}
-		<button onClick={()=>{
+
+  return (
+    <div>
+      <h1 id="title">SpotiShare</h1>
+      {/*  */}
+      <button onClick={()=>{
 			if (IsLoggedIn()) {
 				console.log(IsLoggedIn())
 				CreateLobby();
@@ -68,82 +62,79 @@ export default class HomePage extends React.Component {
 		}}>
 			Create Lobby
 		</button>
-        <button
-          onClick={() => {
-            Login()
-          }}
-          id="sign-in"
-        >
-          Sign in
-        </button>
+      <button
+        onClick={() => {
+          Login()
+        }}
+        id="sign-in"
+      >
+        Sign in
+      </button>
 
-        <Row style={{ margin: "3em 1.5em 0 1.5em" }}>
-          <Col xs="5">
-            <h3>Current Listening Party Members:</h3>
-            <div>{this.renderMembers()}</div>
-          </Col>
-          <Col xs="1"></Col>
-          <Col>
-            <div id="searchArea">
-              <input
-                id="searchbox"
-                type="text"
-                placeholder="Artist, Song Name, Album..."
-              />
-              <button id="search-btn">Search!</button>
-            </div>
-            <button
-              onClick={() => {
-                if (
-                  IsLoggedIn()
-                ) {
-                  // just testing api stuff
-                  fetch(
-                    `/top?accessToken=${localStorage.getItem(
-                      "spotify-access-token"
-                    )}`
-                  )
-                    .then((e) => e.json())
-                    .then((data) => {
-                      console.log(data);
-                      this.setState({
-                        songs: (
-                          <div>
-                            {data.items.map((e) => (
-                              <div className="song-card">
-                                <div className="song-card">
-									<iframe
-										src={`https://open.spotify.com/embed/track/${e.id}?utm_source=generator`}
-										width="100%"
-										height="80"
-										frameBorder="0"
-										allowfullscreen=""
-										allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-									></iframe>
-								</div>
-                              </div>
-                            ))}
+      <Row style={{ margin: "3em 1.5em 0 1.5em" }}>
+        <Col xs="5">
+          <h3>Current Listening Party Members:</h3>
+          <div>{renderMembers()}</div>
+        </Col>
+        <Col xs="1"></Col>
+        <Col>
+          <div id="searchArea">
+            <input
+              id="searchbox"
+              type="text"
+              placeholder="Artist, Song Name, Album..."
+            />
+            <button id="search-btn">Search!</button>
+          </div>
+          <button
+            onClick={() => {
+              if (
+                IsLoggedIn()
+              ) {
+                // just testing api stuff
+                fetch(
+                  `/top?accessToken=${localStorage.getItem(
+                    "spotify-access-token"
+                  )}`
+                )
+                  .then((e) => e.json())
+                  .then((data) => {
+                    console.log(data);
+                    setSongs(
+                      <div>
+                        {data.items.map((e) => (
+                          <div className="song-card">
+                            <div className="song-card">
+                              <iframe
+                                src={`https://open.spotify.com/embed/track/${e.id}?utm_source=generator`}
+                                width="100%"
+                                height="80"
+                                frameBorder="0"
+                                allowfullscreen=""
+                                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                              ></iframe>
+                            </div>
                           </div>
-                        ),
-                      });
-                    })
-                    .catch((err) => {
-                      console.log(err);
-                      Login();
-                    });
-                } else {
-                  Login();
-                }
-              }}
-            >
-              CLICK ME
-            </button>
-            <div>{this.renderSongList()}</div>
-          </Col>
-        </Row>
-      </div>
-    );
-  }
+                        ))}
+                      </div>
+                    )
+                  })
+                  .catch((err) => {
+                    console.log(err);
+                    Login();
+                  });
+              } else {
+                Login();
+              }
+            }}
+          >
+            CLICK ME
+          </button>
+          <div>{renderSongList()}</div>
+        </Col>
+      </Row>
+    </div>
+  );
 }
 function IsLoggedIn() {
 	return localStorage.getItem("spotify-access-token") &&
@@ -160,13 +151,16 @@ async function Login() {
       console.log("Failed to prepare for Spotify Authentication");
     });
 }
+
 async function CreateLobby() {
-	fetch(`/createLobby?accessToken=${localStorage.getItem("spotify-access-token")}`)
-	.then(e=>e.json())
-	.then(data=>{
-		window.location = data.roomId
-	})
-	.catch(error => {
-		alert(error)
-	})
+  fetch(`/createLobby?accessToken=${localStorage.getItem("spotify-access-token")}`)
+    .then(e => e.json())
+    .then(data => {
+      window.location = data.roomId
+    })
+    .catch(error => {
+      alert(error)
+    })
 }
+
+export default HomePage;
