@@ -9,82 +9,29 @@ import "./styles.css";
 class App extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {
-            songs: <div></div>,
-        };
         this.client = new Client({
             match: props.match,
         });
-        this.client.socket.on("newClient", (socket) => {});
+        this.client.socket.on("newClient", (socket) => { });
     }
 
     render() {
+        {/* <Switch>
+  <Route path="/:roomId?" exact render={(props) => (<Home client={this.client} match={props.match} />)} />
+  <Route path="/:roomId/lobby" exact render={(props) => (<Lobby client={this.client} match={props.match} />)} />
+  <Route path="/:roomId/drawing" exact render={(props) => (<DrawingPhase client={this.client} match={props.match} />)} />
+  <Route path="/:roomId/describing" exact render={(props) => (<DescribingPhase client={this.client} match={props.match} />)} />
+  <Route path="/:roomId/round_results" exact render={(props) => (<RoundResultsPhase client={this.client} match={props.match} />)} />
+  <Route path="/:roomId/game_results" exact render={(props) => (<GameResultsPhase client={this.client} match={props.match} />)} />
+</Switch> */}
         return (
             <div>
-                <button
-                    onClick={() => {
-                        if (
-                            localStorage.getItem("spotify-access-token") &&
-                            localStorage.getItem("spotify-access-token-expiry") > Date.now()
-                        ) {
-                            // just testing api stuff
-                            fetch(`/top?accessToken=${localStorage.getItem("spotify-access-token")}`)
-                                .then((e) => e.json())
-                                .then((data) => {
-                                    console.log(data);
-                                    this.setState({
-                                        songs: (
-                                            <div>
-                                                {data.items.map((e) => (
-                                                    <div>
-                                                        <a target="__blank" href={e.external_urls.spotify}>
-                                                            {e.name}
-                                                        </a>
-                                                        <audio
-                                                            controls
-                                                            src="https://p.scdn.co/mp3-preview/6f2069c109afd0326c3419435d9b31c34c82c75e?cid=3f25e7854a2645b78bd43d3f3003f105"
-                                                        ></audio>
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        ),
-                                    });
-                                })
-                                .catch((err) => {
-									console.log(err)
-                                    login();
-                                });
-                        } else {
-                            login();
-                        }
-                    }}
-                >
-                    CLICK ME
-                </button>
-                <div>{this.state.songs}</div>
-                {/* <Switch>
-          <Route path="/:roomId?" exact render={(props) => (<Home client={this.client} match={props.match} />)} />
-          <Route path="/:roomId/lobby" exact render={(props) => (<Lobby client={this.client} match={props.match} />)} />
-          <Route path="/:roomId/drawing" exact render={(props) => (<DrawingPhase client={this.client} match={props.match} />)} />
-          <Route path="/:roomId/describing" exact render={(props) => (<DescribingPhase client={this.client} match={props.match} />)} />
-          <Route path="/:roomId/round_results" exact render={(props) => (<RoundResultsPhase client={this.client} match={props.match} />)} />
-          <Route path="/:roomId/game_results" exact render={(props) => (<GameResultsPhase client={this.client} match={props.match} />)} />
-        </Switch> */}
-                <HomePage />
+                <HomePage client={this.client}/>
             </div>
         );
     }
 }
-async function login() {
-    fetch("/auth/login")
-        .then((e) => e.json())
-        .then((data) => {
-            window.location = data.redirectUri;
-        })
-        .catch((error) => {
-            console.log("Failed to prepare for Spotify Authentication");
-        });
-}
+
 document.addEventListener("DOMContentLoaded", () => {
     if (
         localStorage.getItem("spotify-access-token") &&

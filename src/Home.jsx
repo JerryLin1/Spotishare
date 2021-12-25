@@ -9,7 +9,10 @@ export default class HomePage extends React.Component {
     super(props);
     this.state = {
       members: ["Royeek", "Yom", "Yerry"],
+      songs: null,
     };
+
+    this.client = this.props.client;
   }
 
   renderMembers() {
@@ -42,6 +45,14 @@ export default class HomePage extends React.Component {
     );
   }
 
+  renderSongList() {
+    if (this.state.songs === null) {
+      return <span />;
+    } else {
+      return this.state.songs;
+    }
+  }
+
   render() {
     return (
       <div>
@@ -59,13 +70,14 @@ export default class HomePage extends React.Component {
         >
           Sign in
         </button>
+
         <Row style={{ margin: "3em 1.5em 0 1.5em" }}>
           <Col xs="5">
             <h3>Current Listening Party Members:</h3>
             <div>{this.renderMembers()}</div>
           </Col>
           <Col xs="1"></Col>
-          <Col xs="5">
+          <Col>
             <div id="searchArea">
               <input
                 id="searchbox"
@@ -74,9 +86,73 @@ export default class HomePage extends React.Component {
               />
               <button id="search-btn">Search!</button>
             </div>
+            <button
+              onClick={() => {
+                if (
+                  localStorage.getItem("spotify-access-token") &&
+                  localStorage.getItem("spotify-access-token-expiry") >
+                    Date.now()
+                ) {
+                  // just testing api stuff
+                  fetch(
+                    `/top?accessToken=${localStorage.getItem(
+                      "spotify-access-token"
+                    )}`
+                  )
+                    .then((e) => e.json())
+                    .then((data) => {
+                      console.log(data);
+                      this.setState({
+                        songs: (
+                          <div>
+                            {data.items.map((e) => (
+                              <div className="song-card">
+                                <span className="song-card-name">
+                                  <a
+                                    target="__blank"
+                                    href={e.external_urls.spotify}
+                                  >
+                                    {e.name}
+                                  </a>
+                                </span>
+                                <span>
+                                  <audio
+                                    controls
+                                    src="https://p.scdn.co/mp3-preview/6f2069c109afd0326c3419435d9b31c34c82c75e?cid=3f25e7854a2645b78bd43d3f3003f105"
+                                  ></audio>
+                                </span>
+                              </div>
+                            ))}
+                          </div>
+                        ),
+                      });
+                    })
+                    .catch((err) => {
+                      console.log(err);
+                      login();
+                    });
+                } else {
+                  login();
+                }
+              }}
+            >
+              CLICK ME
+            </button>
+            <div>{this.renderSongList()}</div>
           </Col>
         </Row>
       </div>
     );
   }
+}
+
+async function login() {
+  fetch("/auth/login")
+    .then((e) => e.json())
+    .then((data) => {
+      window.location = data.redirectUri;
+    })
+    .catch((error) => {
+      console.log("Failed to prepare for Spotify Authentication");
+    });
 }

@@ -85,7 +85,7 @@ app.get("/top", (req, res) => {
             console.error(err);
         }
     );
-	loggedInSpotifyApi.play({uris: ["spotify:track:0vWg2qGAdSGGsgmyVgb4ox"]})
+	// loggedInSpotifyApi.play({uris: ["spotify:track:0vWg2qGAdSGGsgmyVgb4ox"]})
 });
 
 // function refreshAccessToken() {
