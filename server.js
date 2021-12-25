@@ -1,3 +1,6 @@
+// dotenv allows for system variables
+// React has these already, this is for server only
+require('dotenv').config();
 // ============== Magic =================
 const { info } = require("console");
 const express = require("express");
@@ -17,9 +20,10 @@ var spotifyApi = new SpotifyWebApi({
     clientSecret: spotifyClientSecret,
     // redirectUri: "http://www.example.com/callback",
 });
-// ======================================
+// ======================================	
 
 app.get("/auth/login", (req, res) => {
+	console.log(process.env)
     const scope = ["streaming", "user-read-private", "user-modify-playback-state", "user-read-currently-playing"];
     var auth_query_parameters = new URLSearchParams({
         response_type: "code",
@@ -28,12 +32,19 @@ app.get("/auth/login", (req, res) => {
         redirect_uri: "http://localhost:3000/auth/callback",
     });
     const redirectUri = "https://accounts.spotify.com/authorize/?" + auth_query_parameters.toString();
-    res.redirect(redirectUri);
+    return res.send(
+        JSON.stringify(
+            {
+                redirectUri,
+            },
+            null,
+            2
+        )
+    );
 });
 
 app.get("/auth/callback", (req, res) => {
     // var code = req.query.code;
-
     // var authOptions = {
     //     url: "https://accounts.spotify.com/api/token",
     //     form: {
@@ -47,7 +58,6 @@ app.get("/auth/callback", (req, res) => {
     //     },
     //     json: true,
     // };
-
     // request.post(authOptions, function (error, response, body) {
     //     if (!error && response.statusCode === 200) {
     //         var access_token = body.access_token;
