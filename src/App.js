@@ -2,6 +2,10 @@ import React from "react";
 import io from "socket.io-client";
 import Client from "./client";
 
+import HomePage from "./Home.jsx"
+
+import './styles.css'
+
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -23,6 +27,7 @@ class App extends React.Component {
           <Route path="/:roomId/round_results" exact render={(props) => (<RoundResultsPhase client={this.client} match={props.match} />)} />
           <Route path="/:roomId/game_results" exact render={(props) => (<GameResultsPhase client={this.client} match={props.match} />)} />
         </Switch> */}
+        <HomePage />
       </div>
     );
   }
