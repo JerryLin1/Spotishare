@@ -7,7 +7,7 @@
 }
 
 html {
-    background-color: #27e469;
+    background-color: #23d863;
 }
 
 body {
@@ -37,7 +37,12 @@ button {
     display: inline-block;
 }
 
+#title::selection {
+    background: transparent;
+}
+
 .member-card {
+    position: relative;
     background-color: #fff;
     border-radius: 0.25em;
     margin: 0.25em 0;
@@ -46,13 +51,22 @@ button {
 
 /* Middle area */
 
+#left, #right {
+    max-height: 80vh;
+    overflow: hidden;
+}
+
+/* left */
+
+/* right */
+
 #searchArea {
     text-align: center;
 }
 
 #searchbox {
     height: 2.5em;
-    width: 25em;
+    width: 75%;
     font-size: 1.25em;
     border: none;
     border-radius: 0.25em;
@@ -83,14 +97,41 @@ button {
 
 /* song list */
 
-.song-card {
-    background-color: white;
-    border: 1px solid #ccc;
-    border-radius: 0.5em;
-    padding: 0.5em;
+#song-list:empty {
+    height: 0;
+    border: none;
 }
 
-.song-card > a {
+#song-list {
+    height: 50%;
+    overflow-y: scroll;
+    border: 1px solid grey;
+    border-radius: 0.5em;
+}
+
+.song-card {
+    position: relative;
+    padding: 0.5em;
+    padding: 1.5em 0;
+    transition: 0.3s;
+}
+
+.song-card:hover {
+    background: rgba(27, 27, 27, 0.5);
+    color: #fff;
+}
+
+.song-card a {
+    color: #000;
+    text-decoration: none;
+}
+
+.audio-preview {
+    position: absolute;
+    right: 0;
+}
+
+.song-card>span {
     height: max-content;
     vertical-align: middle;
 }
