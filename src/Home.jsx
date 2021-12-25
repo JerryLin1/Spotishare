@@ -119,7 +119,7 @@ export default class HomePage extends React.Component {
                                 <span>
                                   <audio
                                     controls
-                                    src="https://p.scdn.co/mp3-preview/6f2069c109afd0326c3419435d9b31c34c82c75e?cid=3f25e7854a2645b78bd43d3f3003f105"
+                                    src={e.preview_url}
                                   ></audio>
                                 </span>
                               </div>

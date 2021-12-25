@@ -16,10 +16,10 @@ var spotifyClientId = process.env.REACT_APP_SPOTIFY_CLIENTID;
 var spotifyClientSecret = process.env.REACT_APP_SPOTIFY_CLIENTSECRET;
 
 // When using localhost:3000
-// var redirectUri = process.env.REACT_APP_REDIRECT_URI_LOCAL
+var redirectUri = process.env.REACT_APP_REDIRECT_URI_LOCAL
 
 // When using public ip
-var redirectUri = process.env.REACT_APP_REDIRECT_URI
+// var redirectUri = process.env.REACT_APP_REDIRECT_URI
 
 var SpotifyWebApi = require("spotify-web-api-node");
 var spotifyApi = new SpotifyWebApi({
@@ -44,11 +44,11 @@ app.get("/auth/login", (req, res) => {
         scope: scope.join(" "),
         redirect_uri: redirectUri,
     });
-    const redirectUri = "https://accounts.spotify.com/authorize/?" + auth_query_parameters.toString();
+    const redirectUriAuth = "https://accounts.spotify.com/authorize/?" + auth_query_parameters.toString();
     res.send(
         JSON.stringify(
             {
-                redirectUri,
+                redirectUri: redirectUriAuth,
             },
             null,
             2
