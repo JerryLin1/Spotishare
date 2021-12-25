@@ -8,27 +8,49 @@ html {
     background-color: #27e469;
 }
 
+body {
+    background: transparent;
+}
+
+button {
+    background-color: #fff;
+    border: none;
+    border-radius: 0.25em;
+}
+
+#sign-in {
+    position: absolute;
+    right: 1.5em;
+    top: 1.5em;
+    vertical-align: middle;
+    display: inline-block;
+}
+
 #title {
     font-size: 3em;
     pointer-events: none;
     margin: 0.5em 0 0 0.5em;
+    display: inline-block;
+}
+
+.member-card {
+    background-color: #fff;
+    border-radius: 0.25em;
+    margin: 0.25em 0;
+    padding: 0.5em;
 }
 
 #searchArea {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    width: fit-content;
+    text-align: center;
 }
 
 #searchbox {
     height: 2.5em;
-    width: 50vw;
+    width: 25em;
     font-size: 1.25em;
     border: none;
     border-radius: 0.25em;
-    padding: 0 0.25em;
+    padding: 0 0.5em;
 }
 
 #searchbox:focus {
@@ -44,4 +66,11 @@ html {
     margin-left: 0.5em;
     padding: 0 0.5em;
     background-color: white;
+    transition: 0.25s;
+}
+
+#search-btn:hover {
+    background: rgb(41, 41, 41);
+    color: #fff;
+    cursor: pointer;
 }

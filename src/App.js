@@ -19,16 +19,6 @@ class App extends React.Component {
   render() {
     return (
       <div>
-        <button onClick={() => {
-          fetch("/auth/login")
-            .then((e) => e.json())
-            .then((data) => {
-              console.log(data);
-              window.location = data.redirectUri;
-            });
-        }}>
-          CLICK ME
-        </button>
         {/* <Switch>
           <Route path="/:roomId?" exact render={(props) => (<Home client={this.client} match={props.match} />)} />
           <Route path="/:roomId/lobby" exact render={(props) => (<Lobby client={this.client} match={props.match} />)} />
