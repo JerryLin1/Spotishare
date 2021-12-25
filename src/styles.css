@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap');
 
 /* general css */
 
@@ -97,13 +97,35 @@ button {
 
 /* song list */
 
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    border-radius: 1em;
+    background: rgb(243, 243, 243);
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    border-radius: 1em;
+    background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
 #song-list:empty {
     height: 0;
     border: none;
 }
 
 #song-list {
-    height: 50%;
+    height: 50vh;
     overflow-y: scroll;
     border: 1px solid grey;
     border-radius: 0.5em;
@@ -111,8 +133,7 @@ button {
 
 .song-card {
     position: relative;
-    padding: 0.5em;
-    padding: 1.5em 0;
+    padding: 0.25em;
     transition: 0.3s;
 }
 
