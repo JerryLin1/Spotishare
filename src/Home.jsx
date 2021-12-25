@@ -59,12 +59,15 @@ export default class HomePage extends React.Component {
                 <h1 id="title">SpotiShare</h1>
                 <button
                     onClick={() => {
-                        fetch("/auth/login")
-                            .then((e) => e.json())
-                            .then((data) => {
-                                console.log(data);
-                                window.location = data.redirectUri;
-                            });
+                        if (IsLoggedIn()) CreateLobby();
+                        else Login();
+                    }}
+                >
+                    Create Lobby
+                </button>
+                <button
+                    onClick={() => {
+                        Login();
                     }}
                     id="sign-in"
                 >
@@ -88,14 +91,7 @@ export default class HomePage extends React.Component {
                         </div>
                         <button
                             onClick={() => {
-                                if (
-                                    localStorage.getItem(
-                                        "spotify-access-token"
-                                    ) &&
-                                    localStorage.getItem(
-                                        "spotify-access-token-expiry"
-                                    ) > Date.now()
-                                ) {
+                                if (IsLoggedIn()) {
                                     // just testing api stuff
                                     fetch(
                                         `/top?accessToken=${localStorage.getItem(
@@ -105,48 +101,31 @@ export default class HomePage extends React.Component {
                                         .then((e) => e.json())
                                         .then((data) => {
                                             console.log(data);
-                                            this.setState({
-                                                songs: (
-                                                    <div>
-                                                        {data.items.map(
-                                                            (e, key) => (
-                                                                <div
-                                                                    className="song-card"
-                                                                    key={key}
-                                                                >
-                                                                    <span className="song-card-name">
-                                                                        <a
-                                                                            target="__blank"
-                                                                            href={
-                                                                                e
-                                                                                    .external_urls
-                                                                                    .spotify
-                                                                            }
-                                                                        >
-                                                                            {
-                                                                                e.name
-                                                                            }
-                                                                        </a>
-                                                                    </span>
-                                                                    <span className="audio-preview">
-                                                                        <audio
-                                                                            controls
-                                                                            src="https://p.scdn.co/mp3-preview/6f2069c109afd0326c3419435d9b31c34c82c75e?cid=3f25e7854a2645b78bd43d3f3003f105"
-                                                                        ></audio>
-                                                                    </span>
-                                                                </div>
-                                                            )
-                                                        )}
-                                                    </div>
-                                                ),
-                                            });
+                                            setSongs(
+                                                <div>
+                                                    {data.items.map((e) => (
+                                                        <div className="song-card">
+                                                            <div className="song-card">
+                                                                <iframe
+                                                                    src={`https://open.spotify.com/embed/track/${e.id}?utm_source=generator`}
+                                                                    width="100%"
+                                                                    height="80"
+                                                                    frameBorder="0"
+                                                                    allowfullscreen=""
+                                                                    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                                                                ></iframe>
+                                                            </div>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            );
                                         })
                                         .catch((err) => {
                                             console.log(err);
-                                            login();
+                                            Login();
                                         });
                                 } else {
-                                    login();
+                                    Login();
                                 }
                             }}
                         >
@@ -155,12 +134,63 @@ export default class HomePage extends React.Component {
                         <div id="song-list">{this.renderSongList()}</div>
                     </Col>
                 </Row>
+
+                <button
+                    onClick={() => {
+                        if (IsLoggedIn()) {
+                            // just testing api stuff
+                            fetch(
+                                `/top?accessToken=${localStorage.getItem(
+                                    "spotify-access-token"
+                                )}`
+                            )
+                                .then((e) => e.json())
+                                .then((data) => {
+                                    console.log(data);
+                                    this.setState({
+                                        songs: (
+                                            <div>
+                                                {data.items.map((e) => (
+                                                    <div className="song-card">
+                                                        <div className="song-card">
+                                                            <iframe
+                                                                src={`https://open.spotify.com/embed/track/${e.id}?utm_source=generator`}
+                                                                width="100%"
+                                                                height="80"
+                                                                frameBorder="0"
+                                                                allowfullscreen=""
+                                                                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                                                            ></iframe>
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        ),
+                                    });
+                                })
+                                .catch((err) => {
+                                    console.log(err);
+                                    Login();
+                                });
+                        } else {
+                            Login();
+                        }
+                    }}
+                >
+                    CLICK ME
+                </button>
+                <div>{this.renderSongList()}</div>
             </div>
         );
     }
 }
-
-async function login() {
+async function IsLoggedIn() {
+    return (
+        localStorage.getItem("spotify-access-token") &&
+        localStorage.getItem("spotify-access-token-expiry") > Date.now()
+    );
+}
+async function Login() {
     fetch("/auth/login")
         .then((e) => e.json())
         .then((data) => {
@@ -168,5 +198,19 @@ async function login() {
         })
         .catch((error) => {
             console.log("Failed to prepare for Spotify Authentication");
+        });
+}
+async function CreateLobby() {
+    fetch(
+        `/createLobby?accessToken=${localStorage.getItem(
+            "spotify-access-token"
+        )}`
+    )
+        .then((e) => e.json())
+        .then((data) => {
+            window.location = data.roomId;
+        })
+        .catch((error) => {
+            alert(error);
         });
 }
