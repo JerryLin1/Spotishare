@@ -34,9 +34,11 @@ class App extends React.Component {
                                     this.setState({
                                         songs: (
                                             <div>
-                                                {data.items.map((e) => 
-                                                    <div>{e.name}</div>
-                                                )}
+                                                {data.items.map((e) => (
+                                                    <div>
+                                                        <a target="__blank" href={e.external_urls.spotify}>{e.name}</a>
+                                                    </div>
+                                                ))}
                                             </div>
                                         ),
                                     });
