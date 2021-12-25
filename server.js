@@ -14,11 +14,18 @@ const io = new Server(server);
 // ============= Spotify ================
 var spotifyClientId = process.env.REACT_APP_SPOTIFY_CLIENTID;
 var spotifyClientSecret = process.env.REACT_APP_SPOTIFY_CLIENTSECRET;
+
+// When using localhost:3000
+// var redirectUri = process.env.REACT_APP_REDIRECT_URI_LOCAL
+
+// When using public ip
+var redirectUri = process.env.REACT_APP_REDIRECT_URI
+
 var SpotifyWebApi = require("spotify-web-api-node");
 var spotifyApi = new SpotifyWebApi({
     clientId: spotifyClientId,
     clientSecret: spotifyClientSecret,
-    redirectUri: "http://localhost:3000/auth/callback",
+    redirectUri: redirectUri,
 });
 // ======================================
 
@@ -35,7 +42,7 @@ app.get("/auth/login", (req, res) => {
         response_type: "code",
         client_id: process.env.REACT_APP_SPOTIFY_CLIENTID,
         scope: scope.join(" "),
-        redirect_uri: "http://localhost:3000/auth/callback",
+        redirect_uri: redirectUri,
     });
     const redirectUri = "https://accounts.spotify.com/authorize/?" + auth_query_parameters.toString();
     res.send(
