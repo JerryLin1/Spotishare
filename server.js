@@ -73,12 +73,11 @@ app.get("/auth/callback", (req, res) => {
 
 // just to test the api stuff
 app.get("/top", (req, res) => {
+	// new spotify web api instance for each call
     var loggedInSpotifyApi = new SpotifyWebApi();
-    spotifyApi.setAccessToken(req.query.accessToken);
-	console.log(spotifyApi)
-    spotifyApi.getMyTopTracks().then(
+    loggedInSpotifyApi.setAccessToken(req.query.accessToken);
+    loggedInSpotifyApi.getMyTopTracks().then(
         (data) => {
-            console.log(data.body);
             res.send(data.body);
         },
         (err) => {
