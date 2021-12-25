@@ -108,20 +108,16 @@ export default class HomePage extends React.Component {
                           <div>
                             {data.items.map((e) => (
                               <div className="song-card">
-                                <span className="song-card-name">
-                                  <a
-                                    target="__blank"
-                                    href={e.external_urls.spotify}
-                                  >
-                                    {e.name}
-                                  </a>
-                                </span>
-                                <span>
-                                  <audio
-                                    controls
-                                    src={e.preview_url}
-                                  ></audio>
-                                </span>
+                                <div className="song-card">
+									<iframe
+										src={`https://open.spotify.com/embed/track/${e.id}?utm_source=generator`}
+										width="100%"
+										height="80"
+										frameBorder="0"
+										allowfullscreen=""
+										allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+									></iframe>
+								</div>
                               </div>
                             ))}
                           </div>
