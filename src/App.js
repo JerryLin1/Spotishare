@@ -2,29 +2,66 @@ import React from "react";
 import io from "socket.io-client";
 import Client from "./client";
 
+import HomePage from "./Home.jsx";
+
+import "./styles.css";
+
 class App extends React.Component {
     constructor(props) {
         super(props);
+        this.state = {
+            songs: <div></div>,
+        };
         this.client = new Client({
             match: props.match,
         });
-        console.log(this.client);
         this.client.socket.on("newClient", (socket) => {});
     }
 
     render() {
         return (
-            <div
-                onClick={() => {
-                    fetch("/auth/login")
-                        .then((e) => e.json())
-                        .then((data) => {
-                            console.log(data);
-                            window.location = data.redirectUri;
-                        });
-                }}
-            >
-                CLICK ME
+            <div>
+                <button
+                    onClick={() => {
+                        if (
+                            localStorage.getItem("spotify-access-token") &&
+                            localStorage.getItem("spotify-access-token-expiry") > Date.now()
+                        ) {
+                            // just testing api stuff
+                            fetch(`/top?accessToken=${localStorage.getItem("spotify-access-token")}`)
+                                .then((e) => e.json())
+                                .then((data) => {
+                                    console.log(data);
+                                    this.setState({
+                                        songs: (
+                                            <div>
+                                                {data.items.map((e) => (
+                                                    <div>
+                                                        <a target="__blank" href={e.external_urls.spotify}>
+                                                            {e.name}
+                                                        </a>
+                                                        <audio
+                                                            controls
+                                                            src="https://p.scdn.co/mp3-preview/6f2069c109afd0326c3419435d9b31c34c82c75e?cid=3f25e7854a2645b78bd43d3f3003f105"
+                                                        ></audio>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        ),
+                                    });
+                                })
+                                .catch((err) => {
+									console.log(err)
+                                    login();
+                                });
+                        } else {
+                            login();
+                        }
+                    }}
+                >
+                    CLICK ME
+                </button>
+                <div>{this.state.songs}</div>
                 {/* <Switch>
           <Route path="/:roomId?" exact render={(props) => (<Home client={this.client} match={props.match} />)} />
           <Route path="/:roomId/lobby" exact render={(props) => (<Lobby client={this.client} match={props.match} />)} />
@@ -33,9 +70,36 @@ class App extends React.Component {
           <Route path="/:roomId/round_results" exact render={(props) => (<RoundResultsPhase client={this.client} match={props.match} />)} />
           <Route path="/:roomId/game_results" exact render={(props) => (<GameResultsPhase client={this.client} match={props.match} />)} />
         </Switch> */}
+                <HomePage />
             </div>
         );
     }
 }
-
+async function login() {
+    fetch("/auth/login")
+        .then((e) => e.json())
+        .then((data) => {
+            window.location = data.redirectUri;
+        })
+        .catch((error) => {
+            console.log("Failed to prepare for Spotify Authentication");
+        });
+}
+document.addEventListener("DOMContentLoaded", () => {
+    if (
+        localStorage.getItem("spotify-access-token") &&
+        localStorage.getItem("spotify-access-token-expiry") > Date.now()
+    ) {
+    }
+    if (window.location.pathname == "/auth/callback") {
+        fetch("/auth/callback" + window.location.search)
+            .then((e) => e.json())
+            .then((data) => {
+                localStorage.setItem("spotify-access-token", data.accessToken);
+                localStorage.setItem("spotify-access-token-expiry", Date.now() + data.expiresIn * 990);
+                localStorage.setItem("spotify-refresh-token", data.refreshToken);
+                window.location = "/";
+            });
+    }
+});
 export default App;
