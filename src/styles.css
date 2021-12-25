@@ -4,6 +4,7 @@
 
 * {
     font-family: 'Poppins';
+    border-radius: 0.5em !important;
 }
 
 html {
@@ -17,7 +18,7 @@ body {
 button {
     background-color: #fff;
     border: none;
-    border-radius: 0.25em;
+    padding: 0.5em;
 }
 
 /* Header and top section */
@@ -25,7 +26,7 @@ button {
 #sign-in {
     position: absolute;
     right: 1.5em;
-    top: 1.5em;
+    top: 2.5em;
     vertical-align: middle;
     display: inline-block;
 }
@@ -44,7 +45,6 @@ button {
 .member-card {
     position: relative;
     background-color: #fff;
-    border-radius: 0.25em;
     margin: 0.25em 0;
     padding: 0.5em;
 }
@@ -62,6 +62,7 @@ button {
 
 #searchArea {
     text-align: center;
+    margin-bottom: 1rem;
 }
 
 #searchbox {
@@ -69,7 +70,6 @@ button {
     width: 75%;
     font-size: 1.25em;
     border: none;
-    border-radius: 0.25em;
     padding: 0 0.5em;
 }
 
@@ -81,7 +81,6 @@ button {
     font-size: 1.25em;
     height: 2.5em;
     width: fit-content;
-    border-radius: 0.25em;
     border: none;
     margin-left: 0.5em;
     padding: 0 0.5em;
@@ -97,24 +96,21 @@ button {
 
 /* song list */
 
-/* width */
+
 ::-webkit-scrollbar {
-    width: 10px;
+    width: 0.75em;
 }
 
-/* Track */
 ::-webkit-scrollbar-track {
-    border-radius: 1em;
+    border-radius: 0.5em;
     background: rgb(243, 243, 243);
 }
 
-/* Handle */
 ::-webkit-scrollbar-thumb {
-    border-radius: 1em;
+    border-radius: 0.5em;
     background: #888;
 }
 
-/* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
     background: #555;
 }
@@ -122,13 +118,14 @@ button {
 #song-list:empty {
     height: 0;
     border: none;
+    padding: 0;
 }
 
 #song-list {
     height: 50vh;
     overflow-y: scroll;
-    border: 1px solid grey;
-    border-radius: 0.5em;
+    border: 1px solid #888;
+    padding: 1em;
 }
 
 .song-card {
@@ -155,4 +152,17 @@ button {
 .song-card>span {
     height: max-content;
     vertical-align: middle;
+}
+
+/* master playlist */
+#master-playlist-title {
+    margin-top: 5%;
+    text-align: center;
+}
+
+#master-playlist-container {
+    border: 1px solid #888;
+    width: 90%;
+    margin: 0 5%;
+    padding: 1em;
 }
