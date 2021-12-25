@@ -1,6 +1,6 @@
 // dotenv allows for system variables
 // React has these already, this is for server only
-require('dotenv').config();
+require("dotenv").config();
 // ============== Magic =================
 const { info } = require("console");
 const express = require("express");
@@ -18,12 +18,12 @@ var SpotifyWebApi = require("spotify-web-api-node");
 var spotifyApi = new SpotifyWebApi({
     clientId: spotifyClientId,
     clientSecret: spotifyClientSecret,
-    // redirectUri: "http://www.example.com/callback",
+    redirectUri: "http://localhost:3000/auth/callback",
 });
-// ======================================	
+// ======================================
 
+// TODO: Implement "state" which is a security thing or something using a randomly generated string
 app.get("/auth/login", (req, res) => {
-	console.log(process.env)
     const scope = ["streaming", "user-read-private", "user-modify-playback-state", "user-read-currently-playing"];
     var auth_query_parameters = new URLSearchParams({
         response_type: "code",
@@ -32,7 +32,7 @@ app.get("/auth/login", (req, res) => {
         redirect_uri: "http://localhost:3000/auth/callback",
     });
     const redirectUri = "https://accounts.spotify.com/authorize/?" + auth_query_parameters.toString();
-    return res.send(
+    res.send(
         JSON.stringify(
             {
                 redirectUri,
@@ -44,27 +44,38 @@ app.get("/auth/login", (req, res) => {
 });
 
 app.get("/auth/callback", (req, res) => {
-    // var code = req.query.code;
-    // var authOptions = {
-    //     url: "https://accounts.spotify.com/api/token",
-    //     form: {
-    //         code: code,
-    //         redirect_uri: "http://localhost:3000/auth/callback",
-    //         grant_type: "authorization_code",
-    //     },
-    //     headers: {
-    //         Authorization: "Basic " + Buffer.from(spotify_client_id + ":" + spotify_client_secret).toString("base64"),
-    //         "Content-Type": "application/x-www-form-urlencoded",
-    //     },
-    //     json: true,
-    // };
-    // request.post(authOptions, function (error, response, body) {
-    //     if (!error && response.statusCode === 200) {
-    //         var access_token = body.access_token;
-    //         res.redirect("/");
-    //     }
-    // });
+    var code = req.query.code;
+    console.log(req.query);
+    spotifyApi.authorizationCodeGrant(code).then(
+        function (data) {
+            console.log("The token expires in " + data.body["expires_in"]);
+            console.log("The access token is " + data.body["access_token"]);
+            console.log("The refresh token is " + data.body["refresh_token"]);
+
+            // Set the access token on the API object to use it in later calls
+            spotifyApi.setAccessToken(data.body["access_token"]);
+            spotifyApi.setRefreshToken(data.body["refresh_token"]);
+        },
+        function (err) {
+            console.log("Something went wrong!", err);
+        }
+    );
 });
+
+function refreshAccessToken() {
+    // clientId, clientSecret and refreshToken has been set on the api object previous to this call.
+    spotifyApi.refreshAccessToken().then(
+        function (data) {
+            console.log("The access token has been refreshed!");
+
+            // Save the access token so that it's used in future calls
+            spotifyApi.setAccessToken(data.body["access_token"]);
+        },
+        function (err) {
+            console.log("Could not refresh access token", err);
+        }
+    );
+}
 
 const port = process.env.PORT || 6567;
 server.listen(port, () => {
