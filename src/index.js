@@ -1,14 +1,20 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { BrowserRouter, Route, MemoryRouter } from "react-router-dom";
+import { BrowserRouter, Route, MemoryRouter, Routes } from "react-router-dom";
 import HomePage from "./Home";
+import Lobby from "./Lobby";
+import PreLobby from "./PreLobby";
 import "./styles.css";
 
 ReactDOM.render(
     <React.StrictMode>
         <div>
             <BrowserRouter>
-                <HomePage />
+                <Routes>
+                    <Route path="/" element={<HomePage />}></Route>
+                    <Route path="/:roomId" element={<PreLobby />}></Route>
+					<Route path="/:roomId/Lobby" element={<Lobby />}></Route>
+                </Routes>
             </BrowserRouter>
         </div>
     </React.StrictMode>,

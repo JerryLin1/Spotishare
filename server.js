@@ -105,6 +105,16 @@ app.get("/createLobby", (req, res) => {
     res.send({ roomId: roomId });
 	console.log(`Room ${roomId} created`)
 });
+app.get("/attemptJoinLobby", (req, res) => {
+	// TODO: Check if the access token is valid
+	var roomId = req.query.roomId;
+	res.sendStatus(200)
+})
+app.get("/joinLobby", (req, res) => {
+	// TODO: Check if the access token is valid
+	var roomId = req.query.roomId;
+	rooms[roomId].clients.append()
+})
 
 // function refreshAccessToken() {
 //     // clientId, clientSecret and refreshToken has been set on the api object previous to this call.
