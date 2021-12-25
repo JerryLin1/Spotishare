@@ -24,7 +24,13 @@ var spotifyApi = new SpotifyWebApi({
 
 // TODO: Implement "state" which is a security thing or something using a randomly generated string
 app.get("/auth/login", (req, res) => {
-    const scope = ["streaming", "user-read-private", "user-modify-playback-state", "user-read-currently-playing"];
+    const scope = [
+        "streaming",
+        "user-read-private",
+        "user-modify-playback-state",
+        "user-read-currently-playing",
+        "user-top-read",
+    ];
     var auth_query_parameters = new URLSearchParams({
         response_type: "code",
         client_id: process.env.REACT_APP_SPOTIFY_CLIENTID,
@@ -43,21 +49,21 @@ app.get("/auth/login", (req, res) => {
     );
 });
 // Mostly taken from https://github.com/thelinmichael/spotify-web-api-node#authorization
-// I think the actual idea is to store tokens in local storage, not on server.
-// Like this example: https://glitch.com/edit/#!/spotify-audio-analysis?path=public%2Findex.js%3A41%3A2
-// If that is even different?
+// Look here too: https://glitch.com/edit/#!/spotify-audio-analysis?path=public%2Findex.js%3A41%3A2
 app.get("/auth/callback", (req, res) => {
     var code = req.query.code;
     console.log(req.query);
     spotifyApi.authorizationCodeGrant(code).then(
-        function (data) {
-            console.log("The token expires in " + data.body["expires_in"]);
-            console.log("The access token is " + data.body["access_token"]);
-            console.log("The refresh token is " + data.body["refresh_token"]);
-
-            // Set the access token on the API object to use it in later calls
-            spotifyApi.setAccessToken(data.body["access_token"]);
-            spotifyApi.setRefreshToken(data.body["refresh_token"]);
+        (data) => {
+            var accessToken = data.body.access_token;
+            var expiresIn = data.body.expires_in;
+            // expiresIn is in seconds
+            var refreshToken = data.body.refresh_token;
+            res.send({
+                accessToken: accessToken,
+                expiresIn: expiresIn,
+                refreshToken: refreshToken,
+            });
         },
         function (err) {
             console.log("Something went wrong!", err);
@@ -65,20 +71,35 @@ app.get("/auth/callback", (req, res) => {
     );
 });
 
-function refreshAccessToken() {
-    // clientId, clientSecret and refreshToken has been set on the api object previous to this call.
-    spotifyApi.refreshAccessToken().then(
-        function (data) {
-            console.log("The access token has been refreshed!");
-
-            // Save the access token so that it's used in future calls
-            spotifyApi.setAccessToken(data.body["access_token"]);
+app.get("/top", (req, res) => {
+    var loggedInSpotifyApi = new SpotifyWebApi();
+    spotifyApi.setAccessToken(req.query.accessToken);
+	console.log(spotifyApi)
+    spotifyApi.getMyTopTracks().then(
+        (data) => {
+            console.log(data.body);
+            res.send(data.body);
         },
-        function (err) {
-            console.log("Could not refresh access token", err);
+        (err) => {
+            console.error(err);
         }
     );
-}
+});
+
+// function refreshAccessToken() {
+//     // clientId, clientSecret and refreshToken has been set on the api object previous to this call.
+//     spotifyApi.refreshAccessToken().then(
+//         function (data) {
+//             console.log("The access token has been refreshed!");
+
+//             // Save the access token so that it's used in future calls
+//             spotifyApi.setAccessToken(data.body["access_token"]);
+//         },
+//         function (err) {
+//             console.log("Could not refresh access token", err);
+//         }
+//     );
+// }
 
 const port = process.env.PORT || 6567;
 server.listen(port, () => {
