@@ -42,7 +42,7 @@ function HomePage(props) {
 
   const renderSongList = () => {
     if (songs === null) {
-      return <span />;
+      return null;
     } else {
       return songs;
     }
