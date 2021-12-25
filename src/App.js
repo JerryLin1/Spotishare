@@ -7,29 +7,29 @@ import HomePage from "./Home.jsx"
 import './styles.css'
 
 class App extends React.Component {
-    constructor(props) {
-        super(props);
-        this.client = new Client({
-            match: props.match,
-        });
-        console.log(this.client);
-        this.client.socket.on("newClient", (socket) => {});
-    }
+  constructor(props) {
+    super(props);
+    this.client = new Client({
+      match: props.match,
+    });
+    console.log(this.client);
+    this.client.socket.on("newClient", (socket) => { });
+  }
 
-    render() {
-        return (
-            <div
-                onClick={() => {
-                    fetch("/auth/login")
-                        .then((e) => e.json())
-                        .then((data) => {
-                            console.log(data);
-                            window.location = data.redirectUri;
-                        });
-                }}
-            >
-                CLICK ME
-                {/* <Switch>
+  render() {
+    return (
+      <div>
+        <button onClick={() => {
+          fetch("/auth/login")
+            .then((e) => e.json())
+            .then((data) => {
+              console.log(data);
+              window.location = data.redirectUri;
+            });
+        }}>
+          CLICK ME
+        </button>
+        {/* <Switch>
           <Route path="/:roomId?" exact render={(props) => (<Home client={this.client} match={props.match} />)} />
           <Route path="/:roomId/lobby" exact render={(props) => (<Lobby client={this.client} match={props.match} />)} />
           <Route path="/:roomId/drawing" exact render={(props) => (<DrawingPhase client={this.client} match={props.match} />)} />
