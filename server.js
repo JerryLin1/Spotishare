@@ -42,7 +42,10 @@ app.get("/auth/login", (req, res) => {
         )
     );
 });
-
+// Mostly taken from https://github.com/thelinmichael/spotify-web-api-node#authorization
+// Perhaps instead store tokens in local storage?
+// Like this example: https://glitch.com/edit/#!/spotify-audio-analysis?path=public%2Findex.js%3A41%3A2
+// If that is even different?
 app.get("/auth/callback", (req, res) => {
     var code = req.query.code;
     console.log(req.query);
