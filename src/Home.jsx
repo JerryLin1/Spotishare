@@ -52,14 +52,16 @@ function HomePage(props) {
   return (
     <div>
       <h1 id="title">SpotiShare</h1>
+      {/*  */}
+      <button onClick={() => {
+        if (IsLoggedIn()) CreateLobby();
+        else Login()
+      }}>
+        Create Lobby
+      </button>
       <button
         onClick={() => {
-          fetch("/auth/login")
-            .then((e) => e.json())
-            .then((data) => {
-              console.log(data);
-              window.location = data.redirectUri;
-            });
+          Login()
         }}
         id="sign-in"
       >
@@ -84,9 +86,7 @@ function HomePage(props) {
           <button
             onClick={() => {
               if (
-                localStorage.getItem("spotify-access-token") &&
-                localStorage.getItem("spotify-access-token-expiry") >
-                Date.now()
+                IsLoggedIn()
               ) {
                 // just testing api stuff
                 fetch(
@@ -114,14 +114,14 @@ function HomePage(props) {
                           </div>
                         ))}
                       </div>
-                    );
+                    )
                   })
                   .catch((err) => {
                     console.log(err);
-                    login();
+                    Login();
                   });
               } else {
-                login();
+                Login();
               }
             }}
           >
@@ -132,10 +132,14 @@ function HomePage(props) {
       </Row>
     </div>
   );
-
 }
 
-async function login() {
+async function IsLoggedIn() {
+  return localStorage.getItem("spotify-access-token") &&
+    localStorage.getItem("spotify-access-token-expiry") >
+    Date.now()
+}
+async function Login() {
   fetch("/auth/login")
     .then((e) => e.json())
     .then((data) => {
@@ -144,6 +148,17 @@ async function login() {
     .catch((error) => {
       console.log("Failed to prepare for Spotify Authentication");
     });
+}
+
+async function CreateLobby() {
+  fetch(`/createLobby?accessToken=${localStorage.getItem("spotify-access-token")}`)
+    .then(e => e.json())
+    .then(data => {
+      window.location = data.roomId
+    })
+    .catch(error => {
+      alert(error)
+    })
 }
 
 export default HomePage;
