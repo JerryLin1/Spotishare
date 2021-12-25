@@ -60,7 +60,10 @@ export default class HomePage extends React.Component {
         <h1 id="title">SpotiShare</h1>
 		{/*  */}
 		<button onClick={()=>{
-			if (IsLoggedIn()) CreateLobby();
+			if (IsLoggedIn()) {
+				console.log(IsLoggedIn())
+				CreateLobby();
+			}
 			else Login()
 		}}>
 			Create Lobby
@@ -142,7 +145,7 @@ export default class HomePage extends React.Component {
     );
   }
 }
-async function IsLoggedIn() {
+function IsLoggedIn() {
 	return localStorage.getItem("spotify-access-token") &&
 	localStorage.getItem("spotify-access-token-expiry") >
 	  Date.now()
