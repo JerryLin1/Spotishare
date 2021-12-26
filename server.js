@@ -180,8 +180,8 @@ io.on("connection", (socket) => {
     socket.on("disconnect", () => {
         console.log(`${socket.id} has disconnected.`);
         if (socket.room in rooms) {
+            io.to(socket.room).emit("updateClientList", rooms[socket.room].clients);
             delete rooms[socket.room].clients[socket.id];
-            io.to(info.roomId).emit("updateClientList", rooms[info.roomId].clients);
         }
     });
 
@@ -190,6 +190,10 @@ io.on("connection", (socket) => {
         socket.room = info.roomId;
         io.to(info.roomId).emit("updateClientList", rooms[info.roomId].clients);
     });
+
+    socket.on("pause", ({roomId, }) => {
+
+    })
 });
 
 // Add new client like rooms[roomId].clients[socket.id] = new Client()
