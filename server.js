@@ -129,6 +129,7 @@ app.get("/joinLobby", (req, res) => {
     var loggedInSpotifyApi = new SpotifyWebApi();
     var client = new Client(roomId);
     // TODO: Check if a user with this accesstoken is already in this room
+    rooms[roomId].clients[req.query.socketid] = {};
     loggedInSpotifyApi.setAccessToken(req.query.accessToken);
     loggedInSpotifyApi
         .getMe()
@@ -139,11 +140,12 @@ app.get("/joinLobby", (req, res) => {
             client.image = data.body.images[0].url;
         })
         .then(() => {
-            rooms[roomId].clients[req.query.socketid] = client;
+            rooms[roomId].clients[req.query.socketid] = client
         })
         .then(() => {
             res.sendStatus(200);
-        });
+        })
+        .catch((error) => console.log(error))
 });
 
 app.get("/playerReady", (req, res) => {
@@ -178,7 +180,6 @@ io.on("connection", (socket) => {
     console.log(`${socket.id} has connected.`);
     socket.room = undefined;
 
-    console.log(`${socket.id} has connected.`);
     socket.on("disconnect", () => {
         console.log(`${socket.id} has disconnected.`);
         if (socket.room in rooms) {
@@ -224,9 +225,9 @@ io.on("connection", (socket) => {
 function Client(roomId) {
     this.isHost = numberOfClientsInRoom(roomId) === 0;
 }
-setInterval(() => {
-    console.dir(rooms, { depth: null });
-}, 5000);
+// setInterval(() => {
+//     console.dir(rooms, { depth: null });
+// }, 5000);
 function numberOfClientsInRoom(roomId) {
     return Object.keys(rooms[roomId].clients).length;
 }
