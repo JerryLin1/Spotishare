@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Col } from "react-bootstrap";
 import { useParams } from "react-router-dom";
 import Client from "./client.js";
-import WebPlayback from "./WebPlayback.jsx";
 
 function Lobby(props) {
     let { roomId } = useParams();
@@ -63,7 +62,6 @@ function Lobby(props) {
             <Col xs="5">
                 <h3>Current Listening Party Members:</h3>
                 <div>{renderMembers()}</div>
-				<WebPlayback token={localStorage.getItem("spotify-access-token")}/>
             </Col>
         </div>
     );
