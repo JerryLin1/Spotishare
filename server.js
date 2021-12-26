@@ -35,11 +35,25 @@ const rooms = {};
 // TODO: Implement "state" which is a security thing or something using a randomly generated string
 app.get("/auth/login", (req, res) => {
     const scope = [
-        "streaming",
-        "user-read-private",
+        "ugc-image-upload",
+        "user-read-playback-state",
         "user-modify-playback-state",
         "user-read-currently-playing",
+        "user-read-private",
+        "user-read-email",
+        "user-follow-modify",
+        "user-follow-read",
+        "user-library-modify",
+        "user-library-read",
+        "streaming",
+        "app-remote-control",
+        "user-read-playback-position",
         "user-top-read",
+        "user-read-recently-played",
+        "playlist-modify-private",
+        "playlist-read-collaborative",
+        "playlist-read-private",
+        "playlist-modify-public",
     ];
     var auth_query_parameters = new URLSearchParams({
         response_type: "code",
