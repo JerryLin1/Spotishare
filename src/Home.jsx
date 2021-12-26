@@ -5,33 +5,8 @@ import { Row, Col, Container, Button } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 function HomePage(props) {
-    const [members, setMembers] = useState(["Royeek", "Yom", "Yerry"]);
     const [songs, setSongs] = useState(null);
     const [queue, updateQueue] = useState(["3dPtXHP0oXQ4HCWHsOA9js?si=8593d745abde4cb7", "185Wm4Mx09dQG0fUktklDm?si=8fd67a8eb5f04c99"]);
-
-    const renderMembers = () => {
-        return (
-            <div>
-                {members.map((member, key) => {
-                    if (member === "Royeek") {
-                        return (
-                            <div className="member-card" key={key}>
-                                {member}{" "}
-                                <svg xmlns="http://www.w3.org/2000/svg" width={36} height={20} viewBox="0 0 512 512" fill="gold">
-                                    <path d="M528 448H112c-8.8 0-16 7.2-16 16v32c0 8.8 7.2 16 16 16h416c8.8 0 16-7.2 16-16v-32c0-8.8-7.2-16-16-16zm64-320c-26.5 0-48 21.5-48 48 0 7.1 1.6 13.7 4.4 19.8L476 239.2c-15.4 9.2-35.3 4-44.2-11.6L350.3 85C361 76.2 368 63 368 48c0-26.5-21.5-48-48-48s-48 21.5-48 48c0 15 7 28.2 17.7 37l-81.5 142.6c-8.9 15.6-28.9 20.8-44.2 11.6l-72.3-43.4c2.7-6 4.4-12.7 4.4-19.8 0-26.5-21.5-48-48-48S0 149.5 0 176s21.5 48 48 48c2.6 0 5.2-.4 7.7-.8L128 416h384l72.3-192.8c2.5.4 5.1.8 7.7.8 26.5 0 48-21.5 48-48s-21.5-48-48-48z" />
-                                </svg>
-                            </div>
-                        );
-                    }
-                    return (
-                        <div className="member-card" key={key}>
-                            {member}
-                        </div>
-                    );
-                })}
-            </div>
-        );
-    };
 
     const renderSongList = () => {
         if (songs === null) {
@@ -50,24 +25,18 @@ function HomePage(props) {
 
     return (
         <Container fluid>
-            <Button
-                onClick={() => login()}
-                id="sign-in"
-            >
+            <button onClick={() => login()} id="sign-in">
                 Sign in
-            </Button>
+            </button>
             <h1 id="title">SpotiShare</h1>
 
             <div>
-                <button onClick={() => isLoggedIn() ? createLobby() : login()}>
-                    Create Lobby
-                </button>
+                <button onClick={() => (isLoggedIn() ? createLobby() : login())}>Create Lobby</button>
             </div>
 
             <Row style={{ margin: "3em 1.5em 0 1.5em" }}>
                 <Col xs="5">
-                    <h3>Current Listening Party Members:</h3>
-                    <div>{renderMembers()}</div>
+                    <p>lol</p>
                 </Col>
                 <Col xs="1"></Col>
                 <Col>
@@ -166,7 +135,7 @@ async function login() {
 async function createLobby() {
     fetch(`/createLobby?accessToken=${localStorage.getItem("spotify-access-token")}`)
         .then((e) => e.json())
-        .then((data) => window.location = data.roomId)
+        .then((data) => (window.location = data.roomId))
         .catch((error) => alert(error));
 }
 

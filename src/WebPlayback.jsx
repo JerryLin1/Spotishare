@@ -20,7 +20,6 @@ function WebPlayback(props) {
     const [current_track, setTrack] = useState(track);
 
     useEffect(() => {
-
         const script = document.createElement("script");
         script.src = "https://sdk.scdn.co/spotify-player.js";
         script.async = true;
@@ -29,7 +28,7 @@ function WebPlayback(props) {
 
         window.onSpotifyWebPlaybackSDKReady = () => {
             const player = new window.Spotify.Player({
-                name: 'Spomongus',
+                name: 'spomongus',
                 getOAuthToken: cb => { cb(props.token); },
                 volume: 0.5
             });
@@ -62,6 +61,10 @@ function WebPlayback(props) {
             }));
 
             player.connect();
+
+            props.client.socket.on("paused", isPaused => {
+                isPaused ? player.pause() : player.resume()
+            })
         };
     }, []);
 
@@ -90,7 +93,9 @@ function WebPlayback(props) {
                                 &lt;&lt;
                             </button>
 
-                            <button className="btn-spotify" onClick={() => { player.togglePlay() }} >
+                            <button className="btn-spotify" onClick={() => { player.togglePlay() 
+                            props.client.socket.emit("togglePlayPause", "po")
+                            }} >
                                 { is_paused ? "PLAY" : "PAUSE" }
                             </button>
 

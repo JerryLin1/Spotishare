@@ -5,6 +5,7 @@
 * {
     font-family: 'Poppins';
     border-radius: 0.5em !important;
+    max-width: 100vw;
 }
 
 html {
@@ -28,7 +29,25 @@ button:hover {
     cursor: default;
 }
 
-/* Header and top section */
+::-webkit-scrollbar {
+    width: 0.75em;
+}
+
+::-webkit-scrollbar-track {
+    border-radius: 0.5em;
+    background: rgb(243, 243, 243);
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 0.5em;
+    background: #888;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/********* Home *********/
 
 #sign-in {
     position: absolute;
@@ -48,26 +67,6 @@ button:hover {
 #title::selection {
     background: transparent;
 }
-
-.member-card {
-    position: relative;
-    background-color: #fff;
-    margin: 0.5em 0;
-    padding: 0.5em;
-}
-
-/* Middle area */
-
-#left, #right {
-    max-height: 80vh;
-    overflow: hidden;
-}
-
-/* left */
-
-/* nothing yet */
-
-/* right */
 
 #searchArea {
     text-align: center;
@@ -95,36 +94,34 @@ button:hover {
     padding: 0 0.5em;
 }
 
-/* song list */
 
-::-webkit-scrollbar {
-    width: 0.75em;
+
+/********* Lobby *********/
+
+.member-card {
+    position: relative;
+    background-color: #fff;
+    height: 100px;
+    margin: 0.5em 0;
+    padding: 0.5em;
 }
 
-::-webkit-scrollbar-track {
-    border-radius: 0.5em;
-    background: rgb(243, 243, 243);
+.member-card>img {
+    position: absolute;
+    right: 1%;
 }
 
-::-webkit-scrollbar-thumb {
-    border-radius: 0.5em;
-    background: #888;
+/* Queue */
+
+#queue-title {
+    margin-top: 5%;
+    text-align: center;
 }
 
-::-webkit-scrollbar-thumb:hover {
-    background: #555;
-}
-
-#song-list:empty {
-    height: 0;
-    border: none;
-    padding: 0;
-}
-
-#song-list {
-    height: 50vh;
-    overflow-y: scroll;
+#queue-container {
     border: 1px solid #888;
+    width: 90%;
+    margin: 1em 5%;
     padding: 1em;
 }
 
@@ -147,16 +144,13 @@ button:hover {
     color: #fff;
 }
 
-/* master playlist */
 
-#queue-title {
-    margin-top: 5%;
+/* Web Player */
+
+.main-wrapper {
     text-align: center;
 }
 
-#queue-container {
-    border: 1px solid #888;
-    width: 90%;
-    margin: 1em 5%;
-    padding: 1em;
+.btn-spotify {
+    margin: 0 0.25em;
 }
