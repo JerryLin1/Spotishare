@@ -19,6 +19,13 @@ button {
     background-color: #fff;
     border: none;
     padding: 0.5em;
+    transition: 0.25s;
+}
+
+button:hover {
+    background: rgb(41, 41, 41);
+    color: #fff;
+    cursor: default;
 }
 
 /* Header and top section */
@@ -45,7 +52,7 @@ button {
 .member-card {
     position: relative;
     background-color: #fff;
-    margin: 0.25em 0;
+    margin: 0.5em 0;
     padding: 0.5em;
 }
 
@@ -57,6 +64,8 @@ button {
 }
 
 /* left */
+
+/* nothing yet */
 
 /* right */
 
@@ -84,18 +93,9 @@ button {
     border: none;
     margin-left: 0.5em;
     padding: 0 0.5em;
-    background-color: white;
-    transition: 0.25s;
-}
-
-#search-btn:hover {
-    background: rgb(41, 41, 41);
-    color: #fff;
-    cursor: pointer;
 }
 
 /* song list */
-
 
 ::-webkit-scrollbar {
     width: 0.75em;
@@ -134,35 +134,29 @@ button {
     transition: 0.3s;
 }
 
+.song-card>button {
+    position: absolute;
+    width: 20%;
+    right: -7.5%;
+    top: 25%;
+    transform: translateX(-50%);
+}
+
 .song-card:hover {
     background: rgba(27, 27, 27, 0.5);
     color: #fff;
 }
 
-.song-card a {
-    color: #000;
-    text-decoration: none;
-}
-
-.audio-preview {
-    position: absolute;
-    right: 0;
-}
-
-.song-card>span {
-    height: max-content;
-    vertical-align: middle;
-}
-
 /* master playlist */
-#master-playlist-title {
+
+#queue-title {
     margin-top: 5%;
     text-align: center;
 }
 
-#master-playlist-container {
+#queue-container {
     border: 1px solid #888;
     width: 90%;
-    margin: 0 5%;
+    margin: 1em 5%;
     padding: 1em;
 }
