@@ -48,10 +48,10 @@ function Lobby(props) {
                     client.socket.emit("joinRoom", {
                         roomId: roomId,
                     });
-                    client.socket.on("updateClientList", (clients) => {
-                        client.clientsInRoom = clients;
-                        setMembers(Object.values(clients));
-                    });
+                    // client.socket.on("updateClientList", (clients) => {
+                    //     client.clientsInRoom = clients;
+                    //     setMembers(Object.values(clients));
+                    // });
                 }
             });
     })();
