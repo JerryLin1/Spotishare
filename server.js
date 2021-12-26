@@ -35,11 +35,25 @@ const rooms = {};
 // TODO: Implement "state" which is a security thing or something using a randomly generated string
 app.get("/auth/login", (req, res) => {
     const scope = [
-        "streaming",
-        "user-read-private",
+        "ugc-image-upload",
+        "user-read-playback-state",
         "user-modify-playback-state",
         "user-read-currently-playing",
+        "user-read-private",
+        "user-read-email",
+        "user-follow-modify",
+        "user-follow-read",
+        "user-library-modify",
+        "user-library-read",
+        "streaming",
+        "app-remote-control",
+        "user-read-playback-position",
         "user-top-read",
+        "user-read-recently-played",
+        "playlist-modify-private",
+        "playlist-read-collaborative",
+        "playlist-read-private",
+        "playlist-modify-public",
     ];
     var auth_query_parameters = new URLSearchParams({
         response_type: "code",
@@ -109,10 +123,10 @@ app.get("/createLobby", (req, res) => {
 });
 app.get("/joinLobby", (req, res) => {
     // TODO: Check if the access token is valid
-    console.log(req.query);
     var roomId = req.query.roomId.trim();
     var loggedInSpotifyApi = new SpotifyWebApi();
     var client = new Client(roomId);
+    // TODO: Check if a user with this accesstoken is already in this room
     loggedInSpotifyApi.setAccessToken(req.query.accessToken);
     loggedInSpotifyApi
         .getMe()
@@ -120,7 +134,7 @@ app.get("/joinLobby", (req, res) => {
             client.name = data.body.display_name;
             client.id = data.body.id;
             client.country = data.body.country;
-            client.picture = data.body.images[0].url;
+            client.image = data.body.images[0].url;
         })
         .then(() => {
             rooms[roomId].clients[req.query.socketid] = client;
@@ -130,6 +144,14 @@ app.get("/joinLobby", (req, res) => {
         });
 });
 
+app.get("/getDevices", (req, res) => {
+    // TODO: Check if the access token is valid
+    var loggedInSpotifyApi = new SpotifyWebApi();
+    loggedInSpotifyApi.setAccessToken(req.query.accessToken);
+    loggedInSpotifyApi.transferMyPlayback([req.query.deviceId], {play: true});
+});
+
+// TODO: Refresh access token? IDK what this is
 // function refreshAccessToken() {
 //     // clientId, clientSecret and refreshToken has been set on the api object previous to this call.
 //     spotifyApi.refreshAccessToken().then(
@@ -171,15 +193,12 @@ io.on("connection", (socket) => {
         rooms[roomId] = new Room();
 
         console.log("room created " + roomId);
-        console.dir(rooms, { depth: null });
     });
 
     socket.on("joinRoom", (info) => {
         socket.join(info.roomId);
         socket.room = info.roomId;
-        rooms[info.roomId].clients[socket.id] = new Client(info.nickname, info.roomId);
         io.to(info.roomId).emit("updateClientList", rooms[info.roomId].clients);
-        console.log(rooms[info.roomId].clients);
     });
 });
 
