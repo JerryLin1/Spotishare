@@ -61,6 +61,10 @@ function WebPlayback(props) {
             }));
 
             player.connect();
+
+            props.client.socket.on("paused", isPaused => {
+                isPaused ? player.pause() : player.resume()
+            })
         };
     }, []);
 
@@ -89,7 +93,9 @@ function WebPlayback(props) {
                                 &lt;&lt;
                             </button>
 
-                            <button className="btn-spotify" onClick={() => { player.togglePlay() }} >
+                            <button className="btn-spotify" onClick={() => { player.togglePlay() 
+                            props.client.socket.emit("togglePlayPause", "po")
+                            }} >
                                 { is_paused ? "PLAY" : "PAUSE" }
                             </button>
 
