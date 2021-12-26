@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Row, Col, Container, Button } from "react-bootstrap";
 
 import "bootstrap/dist/css/bootstrap.min.css";
+import { isLoggedIn, login } from ".";
 
 function HomePage(props) {
     const [songs, setSongs] = useState(null);
@@ -116,20 +117,6 @@ function HomePage(props) {
             </div>
         </Container>
     );
-}
-
-function isLoggedIn() {
-    return localStorage.getItem("spotify-access-token") && localStorage.getItem("spotify-access-token-expiry") > Date.now();
-}
-async function login() {
-    fetch("/auth/login")
-        .then((e) => e.json())
-        .then((data) => {
-            window.location = data.redirectUri;
-        })
-        .catch((error) => {
-            console.log("Failed to prepare for Spotify Authentication");
-        });
 }
 
 async function createLobby() {

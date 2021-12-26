@@ -63,8 +63,6 @@ function Lobby(props) {
                 <strong>{chatInfo.nickname}</strong>: <span dangerouslySetInnerHTML={{ __html: processChatMessage(chatInfo.msg) }} />
             </span>]);
 
-
-            console.log(chat.length);
         })
     }, []);
 
