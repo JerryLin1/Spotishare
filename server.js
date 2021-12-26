@@ -197,6 +197,15 @@ io.on("connection", (socket) => {
         io.to(socket.room).emit("paused", rooms[socket.room].paused);
         console.log(rooms[socket.room].paused)
     });
+    socket.on("changeTrackRequest", ({trackId})=> {
+        console.log(trackId)
+        socket.broadcast.to(socket.room).emit("changeTrack", trackId)
+    })
+    socket.on("changeTrack", ({trackId, accessToken}) => {
+        var loggedInSpotifyApi = new SpotifyWebApi();
+        loggedInSpotifyApi.setAccessToken(accessToken);
+        loggedInSpotifyApi.play({context_uri: `spotify:track:${trackId}`})
+    })
 });
 
 // Add new client like rooms[roomId].clients[socket.id] = new Client()

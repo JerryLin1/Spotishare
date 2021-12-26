@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { io } from 'socket.io-client';
 
 const track = {
     name: "",
@@ -46,6 +47,7 @@ function WebPlayback(props) {
 
             player.addListener('player_state_changed', ( state => {
                 console.log(state)
+                props.client.socket.emit("changeTrackRequest", {trackId: state.track_window.current_track.id})
 
                 if (!state) {
                     return;
@@ -64,6 +66,12 @@ function WebPlayback(props) {
 
             props.client.socket.on("paused", isPaused => {
                 isPaused ? player.pause() : player.resume()
+            })
+            props.client.socket.on("changeTrack", ({trackId}) => {
+                props.client.socket.emit("changeTrack", {
+                    accessToken: localStorage.getItem("spotify-access-token"),
+                    trackId: trackId
+                })
             })
         };
     }, []);
