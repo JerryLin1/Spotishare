@@ -1,0 +1,50 @@
+#lobby-list {
+    background-color: rgb(243, 243, 243);
+    padding: 1em;
+}
+
+.member-card {
+    background-color: #fff;
+    height: 140px;
+    margin: 0.5em 0;
+    padding: 0.5em;
+    box-shadow: 0 0 2px black;
+}
+
+#member-name {
+    font-size: 1.25em;
+}
+
+#member-pfp {
+    width: fit-content;
+    height: 120px;
+    border-radius: 50%;
+}
+
+#chat-wrapper {
+    width: 50%;
+}
+
+
+/***** CHAT *****/
+
+#chat { 
+    min-height: 250px;
+}
+
+#sendBar {
+    height: 3em;
+    width: 100%;
+    display: inline-flex;
+}
+
+#chatInput {
+    width: 70%;
+}
+
+#sendBtn { 
+    border: solid rgba(103, 164, 255, 0.603) 2px;
+    background-color: rgba(103, 164, 255, 0.603) ;
+    border-radius: 0.25rem;
+    width: 30%;
+}

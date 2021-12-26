@@ -118,6 +118,7 @@ app.get("/createLobby", (req, res) => {
     rooms[roomId] = {
         clients: {},
         paused: false,
+        chatHistory: [],
     };
     res.send({ roomId: roomId });
     console.log(`Room ${roomId} created`);
@@ -197,7 +198,18 @@ io.on("connection", (socket) => {
         io.to(socket.room).emit("paused", rooms[socket.room].paused);
         console.log(rooms[socket.room].paused)
     });
+
+    socket.on("sendMessage", (msg) => {
+        sendToChat(msg, "USER", rooms[socket.room].clients[socket.id].name, socket.id);
+    })
+    function sendToChat(msg, type, senderNickname, senderId) {
+        let chatMsg = { msg: msg, type: type, nickname: senderNickname, id: senderId };
+        rooms[socket.room].chatHistory.push(chatMsg);
+        io.to(socket.room).emit("receiveMessage", chatMsg);
+    }
 });
+
+
 
 // Add new client like rooms[roomId].clients[socket.id] = new Client()
 function Client(roomId) {

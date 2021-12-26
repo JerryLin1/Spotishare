@@ -35,4 +35,10 @@ export default class Client extends React.Component {
             roomId: roomId,
         });
     };
+
+    sendMessage = (msg) => {
+        if (msg != "") {
+            this.socket.emit("sendMessage", msg);
+        }
+    }
 }

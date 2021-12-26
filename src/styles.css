@@ -6,6 +6,7 @@
     font-family: 'Poppins';
     border-radius: 0.5em !important;
     max-width: 100vw;
+    
 }
 
 html {
@@ -14,6 +15,7 @@ html {
 
 body {
     background: transparent;
+    padding: 2em
 }
 
 button {
@@ -59,9 +61,7 @@ button:hover {
 
 #title {
     font-size: 3em;
-    pointer-events: none;
-    margin: 0.5em 0 0 0.5em;
-    display: inline-block;
+    font-weight: 800;
 }
 
 #title::selection {
@@ -96,20 +96,7 @@ button:hover {
 
 
 
-/********* Lobby *********/
 
-.member-card {
-    position: relative;
-    background-color: #fff;
-    height: 100px;
-    margin: 0.5em 0;
-    padding: 0.5em;
-}
-
-.member-card>img {
-    position: absolute;
-    right: 1%;
-}
 
 /* Queue */
 
