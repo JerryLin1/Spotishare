@@ -63,7 +63,7 @@ function Lobby(props) {
             <Col xs="5">
                 <h3>Current Listening Party Members:</h3>
                 <div>{renderMembers()}</div>
-				<WebPlayback token={localStorage.getItem("spotify-access-token")}/>
+				<WebPlayback token={localStorage.getItem("spotify-access-token")} client = {client}/>
             </Col>
         </div>
     );

@@ -117,6 +117,7 @@ app.get("/createLobby", (req, res) => {
     var roomId = RandomId();
     rooms[roomId] = {
         clients: {},
+        paused: false,
     };
     res.send({ roomId: roomId });
     console.log(`Room ${roomId} created`);
@@ -148,7 +149,7 @@ app.get("/playerReady", (req, res) => {
     // TODO: Check if the access token is valid
     var loggedInSpotifyApi = new SpotifyWebApi();
     loggedInSpotifyApi.setAccessToken(req.query.accessToken);
-    loggedInSpotifyApi.transferMyPlayback([req.query.deviceId], {play: true});
+    loggedInSpotifyApi.transferMyPlayback([req.query.deviceId], { play: true });
 });
 
 // TODO: Refresh access token? IDK what this is
@@ -191,9 +192,11 @@ io.on("connection", (socket) => {
         io.to(info.roomId).emit("updateClientList", rooms[info.roomId].clients);
     });
 
-    socket.on("pause", ({roomId, }) => {
-
-    })
+    socket.on("togglePlayPause", () => {
+        rooms[socket.room].paused = !rooms[socket.room].paused;
+        io.to(socket.room).emit("paused", rooms[socket.room].paused);
+        console.log(rooms[socket.room].paused)
+    });
 });
 
 // Add new client like rooms[roomId].clients[socket.id] = new Client()
