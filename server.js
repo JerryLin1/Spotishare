@@ -109,10 +109,10 @@ app.get("/createLobby", (req, res) => {
 });
 app.get("/joinLobby", (req, res) => {
     // TODO: Check if the access token is valid
-    console.log(req.query);
     var roomId = req.query.roomId.trim();
     var loggedInSpotifyApi = new SpotifyWebApi();
     var client = new Client(roomId);
+    // TODO: Check if a user with this accesstoken is already in this room
     loggedInSpotifyApi.setAccessToken(req.query.accessToken);
     loggedInSpotifyApi
         .getMe()
@@ -120,7 +120,7 @@ app.get("/joinLobby", (req, res) => {
             client.name = data.body.display_name;
             client.id = data.body.id;
             client.country = data.body.country;
-            client.picture = data.body.images[0].url;
+            client.image = data.body.images[0].url;
         })
         .then(() => {
             rooms[roomId].clients[req.query.socketid] = client;
@@ -171,15 +171,12 @@ io.on("connection", (socket) => {
         rooms[roomId] = new Room();
 
         console.log("room created " + roomId);
-        console.dir(rooms, { depth: null });
     });
 
     socket.on("joinRoom", (info) => {
         socket.join(info.roomId);
         socket.room = info.roomId;
-        rooms[info.roomId].clients[socket.id] = new Client(info.nickname, info.roomId);
         io.to(info.roomId).emit("updateClientList", rooms[info.roomId].clients);
-        console.log(rooms[info.roomId].clients);
     });
 });
 

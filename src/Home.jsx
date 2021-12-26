@@ -60,7 +60,7 @@ function HomePage(props) {
             </button>
             <h1 id="title">SpotiShare</h1>
 
-            {/* <div>
+            <div>
                 <button
                     onClick={() => {
                         if (IsLoggedIn()) {
@@ -71,7 +71,7 @@ function HomePage(props) {
                 >
                     Create Lobby
                 </button>
-            </div> */}
+            </div>
 
             <Row style={{ margin: "3em 1.5em 0 1.5em" }}>
                 <Col xs="5">
