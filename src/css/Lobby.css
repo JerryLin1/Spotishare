@@ -44,8 +44,79 @@
 }
 
 #sendBtn { 
-    border: solid rgba(103, 164, 255, 0.603) 2px;
-    background-color: rgba(103, 164, 255, 0.603) ;
+    font-size: 0.8em;
+    border: solid rgba(56, 253, 89, 0.603) 2px;
+    background-color: rgba(103, 255, 128, 0.603);
     border-radius: 0.25rem;
     width: 30%;
+}
+
+#searchArea {
+    text-align: center;
+    margin: 1rem auto;
+}
+
+#searchbox {
+    height: 2.5em;
+    width: 75%;
+    font-size: 1.25em;
+    border: none;
+    padding: 0 0.5em;
+}
+
+#searchbox:focus {
+    outline: 1px solid #ccc;
+}
+
+#search-btn {
+    font-size: 1.25em;
+    height: 2.5em;
+    width: fit-content;
+    border: none;
+    margin-left: 0.5em;
+    padding: 0 0.5em;
+}
+
+/* Queue */
+
+#queue-title {
+    margin-top: 5%;
+    text-align: center;
+}
+
+#queue-container {
+    border: 1px solid rgb(255, 255, 255);
+    padding: 1em;
+    overflow-y: scroll;
+    max-height: 25%;
+}
+
+.song-card {
+    position: relative;
+    padding: 0.25em;
+    transition: 0.3s;
+}
+
+.song-card>button {
+    position: absolute;
+    width: 20%;
+    right: -7.5%;
+    top: 25%;
+    transform: translateX(-50%);
+}
+
+.song-card:hover {
+    background: rgba(27, 27, 27, 0.5);
+    color: #fff;
+}
+
+
+/* Web Player */
+
+.main-wrapper {
+    text-align: center;
+}
+
+.btn-spotify {
+    margin: 0.5em 0.25em;
 }

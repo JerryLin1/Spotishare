@@ -4,14 +4,18 @@ import { useParams } from "react-router-dom";
 import Client from "./client.js";
 import WebPlayback from "./WebPlayback.jsx";
 import Queue from "./Queue.jsx";
-import './css/Lobby.css';
 import { ClientContext } from "./contexts/ClientProvider.jsx";
+
+import { isLoggedIn, login } from ".";
+
+import "./css/Lobby.css";
 
 function Lobby(props) {
     let { roomId } = useParams();
     const client = useContext(ClientContext);
     const [members, setMembers] = useState([]); //useState([{ isHost: true, name: 'Tom Han', id: 'p.han.tom', country: 'CA', image: 'https://i.scdn.co/image/ab6775700000ee8508f4b5251c39729ba880fb66' }]);
     const [chat, setChat] = useState([]);
+    const [queue, updateQueue] = useState(["3dPtXHP0oXQ4HCWHsOA9js?si=8593d745abde4cb7", "185Wm4Mx09dQG0fUktklDm?si=8fd67a8eb5f04c99"]);
 
     const renderMembers = () => {
         let newMemberList = [];
@@ -29,7 +33,6 @@ function Lobby(props) {
                     </Col>
                     <Col style={{ display: "flex", justifyContent: "right" }}>
                         <img id="member-pfp" src={user.image}></img>
-
                     </Col>
                 </Row>
             );
@@ -50,20 +53,28 @@ function Lobby(props) {
         });
     };
 
+    const addToQueue = (id) => {
+        let newQueue = queue.slice();
+        queue.push(id);
+        newQueue.push(id);
+        updateQueue(newQueue);
+    };
+
     useEffect(() => {
         initializeUser();
 
         client.socket.on("receiveMessage", (chatInfo) => {
             console.log(chatInfo);
 
-            setChat(oldChat => [...oldChat,
-            <div>
-                <span>
-                    <strong>{chatInfo.nickname}</strong>: <span dangerouslySetInnerHTML={{ __html: processChatMessage(chatInfo.msg) }} />
-                </span>
-            </div>
+            setChat((oldChat) => [
+                ...oldChat,
+                <div>
+                    <span>
+                        <strong>{chatInfo.nickname}</strong>: <span dangerouslySetInnerHTML={{ __html: processChatMessage(chatInfo.msg) }} />
+                    </span>
+                </div>,
             ]);
-        })
+        });
 
         client.socket.on("updateClientList", (clients) => {
             client.clientsInRoom = clients;
@@ -73,12 +84,15 @@ function Lobby(props) {
 
     return (
         <Container fluid>
-
             <div id="title">SpotiShare</div>
             <Row>
                 <Col id="lobby-list" md="3">
                     <div>Current Listening Party Members:</div>
                     <div>{renderMembers()}</div>
+                </Col>
+                <Col md="6">
+                    <WebPlayback token={localStorage.getItem("spotify-access-token")} />
+                    <Queue queue={queue} />
                 </Col>
                 <Col>
                     <Card>
@@ -96,42 +110,31 @@ function Lobby(props) {
                         }}
                     >
                         <div id="sendBar">
-                            <input
-                                placeholder="Type a message..."
-                                type="text"
-                                id="chatInput"
-                            />
-                            <Button
-                                variant="outline-dark"
-                                type="submit"
-                                id="sendBtn"
-                            >
+                            <input placeholder="Type a message..." type="text" id="chatInput" />
+                            <Button variant="outline-dark" type="submit" id="sendBtn">
                                 Send Message
                             </Button>
                         </div>
                     </Form>
-                </Col>
-                <Col>
-                    {/* <WebPlayback token={localStorage.getItem("spotify-access-token")} /> */}
+
+                    <div id="searchArea">
+                        <input id="searchbox" type="text" placeholder="Artist, Song Name, Album..." />
+                        <button id="search-btn">Search!</button>
+                    </div>
+
+                    {/* <div id="song-list">{renderSongList()}</div> */}
                 </Col>
             </Row>
-
-
-
-
-
         </Container>
     );
 }
 
 // modified from https://stackoverflow.com/a/8943487
 function processChatMessage(text) {
-    var urlRegex = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+    var urlRegex = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi;
     return text.replace(urlRegex, function (url) {
         return `<a target="_blank" href="${url}"> ${url} </a>`;
     });
 }
-
-
 
 export default Lobby;

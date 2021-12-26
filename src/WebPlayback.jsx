@@ -100,14 +100,9 @@ function WebPlayback(props) {
         return (
             <>
                 <div className="container">
+                    <h3 style={{ textAlign: "center" }}>Currently Playing:</h3>
                     <div className="main-wrapper">
-                        <img
-                            height="500px"
-                            width="500px"
-                            src={current_track.album.images[0].url}
-                            className="now-playing__cover"
-                            alt=""
-                        />
+                        <img height="500px" width="500px" src={current_track.album.images[0].url} className="now-playing__cover" alt="cover image" />
 
                         <div className="now-playing__side">
                             <div className="now-playing__name">{current_track.name}</div>
