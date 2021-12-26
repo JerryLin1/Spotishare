@@ -19,7 +19,7 @@ var spotifyClientSecret = process.env.REACT_APP_SPOTIFY_CLIENTSECRET;
 var redirectUri = process.env.REACT_APP_REDIRECT_URI_LOCAL;
 
 // When using public ip
-var redirectUri = process.env.REACT_APP_REDIRECT_URI;
+// var redirectUri = process.env.REACT_APP_REDIRECT_URI;
 
 var SpotifyWebApi = require("spotify-web-api-node");
 const { RandomId } = require("./server/helperFunctions");
