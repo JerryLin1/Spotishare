@@ -144,7 +144,7 @@ app.get("/joinLobby", (req, res) => {
         });
 });
 
-app.get("/getDevices", (req, res) => {
+app.get("/playerReady", (req, res) => {
     // TODO: Check if the access token is valid
     var loggedInSpotifyApi = new SpotifyWebApi();
     loggedInSpotifyApi.setAccessToken(req.query.accessToken);
@@ -175,24 +175,14 @@ server.listen(port, () => {
 io.on("connection", (socket) => {
     console.log(`${socket.id} has connected.`);
     socket.room = undefined;
-    socket.nickname = `Player # ${socket.id.substring(0, 4).toUpperCase()}`;
 
     console.log(`${socket.id} has connected.`);
     socket.on("disconnect", () => {
         console.log(`${socket.id} has disconnected.`);
         if (socket.room in rooms) {
-            rooms[socket.room].clients[socket.id].nickname = rooms[socket.room].clients[socket.id].nickname + " (dc'd)";
-            rooms[socket.room].clients[socket.id].disconnected = true;
-            rooms[socket.room].disconnected++;
+            delete rooms[socket.room].clients[socket.id];
+            io.to(info.roomId).emit("updateClientList", rooms[info.roomId].clients);
         }
-    });
-
-    socket.on("createRoom", () => {
-        let roomId = randomId(8);
-        socket.emit("redirect", roomId + "/lobby");
-        rooms[roomId] = new Room();
-
-        console.log("room created " + roomId);
     });
 
     socket.on("joinRoom", (info) => {
