@@ -51,7 +51,7 @@ function WebPlayback(props) {
                     let strack = state.track_window.current_track.id;
                     let ppos = prevPlayerState.position;
                     let spos = state.position;
-                    if (ptrack != strack || Math.abs(ppos - spos) > 10000) {
+                    if (ptrack != strack) {
                         props.client.socket.emit("changeTrackRequest", {
                             trackId: state.track_window.current_track.id,
                         });
