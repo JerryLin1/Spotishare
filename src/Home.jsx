@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { Row, Col } from "react-bootstrap";
+import { Row, Col, Container, Button } from "react-bootstrap";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -49,26 +49,17 @@ function HomePage(props) {
     };
 
     return (
-        <div>
-            <button
-                onClick={() => {
-                    Login();
-                }}
+        <Container fluid>
+            <Button
+                onClick={() => login()}
                 id="sign-in"
             >
                 Sign in
-            </button>
+            </Button>
             <h1 id="title">SpotiShare</h1>
 
             <div>
-                <button
-                    onClick={() => {
-                        if (IsLoggedIn()) {
-                            console.log(IsLoggedIn());
-                            CreateLobby();
-                        } else Login();
-                    }}
-                >
+                <button onClick={() => isLoggedIn() ? createLobby() : login()}>
                     Create Lobby
                 </button>
             </div>
@@ -90,7 +81,7 @@ function HomePage(props) {
                             marginBottom: "0.5em",
                         }}
                         onClick={() => {
-                            if (IsLoggedIn()) {
+                            if (isLoggedIn()) {
                                 // just testing api stuff
                                 fetch(`/top?accessToken=${localStorage.getItem("spotify-access-token")}`)
                                     .then((e) => e.json())
@@ -122,10 +113,10 @@ function HomePage(props) {
                                     })
                                     .catch((err) => {
                                         console.log(err);
-                                        Login();
+                                        login();
                                     });
                             } else {
-                                Login();
+                                login();
                             }
                         }}
                     >
@@ -154,14 +145,14 @@ function HomePage(props) {
                     })}
                 </div>
             </div>
-        </div>
+        </Container>
     );
 }
 
-function IsLoggedIn() {
+function isLoggedIn() {
     return localStorage.getItem("spotify-access-token") && localStorage.getItem("spotify-access-token-expiry") > Date.now();
 }
-async function Login() {
+async function login() {
     fetch("/auth/login")
         .then((e) => e.json())
         .then((data) => {
@@ -172,15 +163,11 @@ async function Login() {
         });
 }
 
-async function CreateLobby() {
+async function createLobby() {
     fetch(`/createLobby?accessToken=${localStorage.getItem("spotify-access-token")}`)
         .then((e) => e.json())
-        .then((data) => {
-            window.location = data.roomId;
-        })
-        .catch((error) => {
-            alert(error);
-        });
+        .then((data) => window.location = data.roomId)
+        .catch((error) => alert(error));
 }
 
 export default HomePage;
