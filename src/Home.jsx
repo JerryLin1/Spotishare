@@ -2,12 +2,14 @@ import { useState } from "react";
 
 import { Row, Col } from "react-bootstrap";
 
+import json from "./temp.json";
+
 import "bootstrap/dist/css/bootstrap.min.css";
 
 function HomePage(props) {
     const [members, setMembers] = useState(["Royeek", "Yom", "Yerry"]);
     const [songs, setSongs] = useState(null);
-    const [queue, updateQueue] = useState(["3dPtXHP0oXQ4HCWHsOA9js?si=8593d745abde4cb7", "185Wm4Mx09dQG0fUktklDm?si=8fd67a8eb5f04c99"]);
+    const [queue, updateQueue] = useState([]);
 
     const renderMembers = () => {
         return (
@@ -41,11 +43,12 @@ function HomePage(props) {
         }
     };
 
-    const addToQueue = (id) => {
+    const addToQueue = (song) => {
         let newQueue = queue.slice();
-        queue.push(id);
-        newQueue.push(id);
+        queue.push(song);
+        newQueue.push(song);
         updateQueue(newQueue);
+        console.log(queue);
     };
 
     return (
@@ -91,7 +94,7 @@ function HomePage(props) {
                         }}
                         onClick={() => {
                             if (IsLoggedIn()) {
-                                // just testing api stuff
+                                // // just testing api stuff
                                 fetch(`/top?accessToken=${localStorage.getItem("spotify-access-token")}`)
                                     .then((e) => e.json())
                                     .then((data) => {
@@ -110,7 +113,12 @@ function HomePage(props) {
                                                         ></iframe>
                                                         <button
                                                             onClick={() => {
-                                                                addToQueue(e.id);
+                                                                addToQueue(
+                                                                    JSON.parse(
+                                                                        `{"id":"${e.id}","name":"${e.name}","artists":"${e.artists}","img":"${e.album.images[0]}"}`
+                                                                    )
+                                                                );
+                                                                // addToQueue(JSON.parse('{"name":"John", "age":30, "city":"New York"}'));
                                                             }}
                                                         >
                                                             Add
@@ -139,18 +147,43 @@ function HomePage(props) {
                 <h2 id="queue-title">Song Queue</h2>
                 <div id="queue-container">
                     {queue.map((item, key) => {
-                        return (
-                            <div key={key}>
-                                <iframe
-                                    src={`https://open.spotify.com/embed/track/${item}?utm_source=generator`}
-                                    width="100%"
-                                    height="80"
-                                    frameBorder="0"
-                                    allowFullScreen=""
-                                    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                                ></iframe>
-                            </div>
-                        );
+                        if (key === 0) {
+                            return (
+                                <div key={key}>
+                                    <h4>Currently Playing:</h4>
+                                    {/* <iframe
+                                        src={`https://open.spotify.com/embed/track/${item.id}?utm_source=generator`}
+                                        width="100%"
+                                        height="80"
+                                        frameBorder="0"
+                                        allowFullScreen=""
+                                        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                                    ></iframe> */}
+                                    {item.name} by{" "}
+                                    {() => {
+                                        artists = []
+                                        for (let i = 0; i < item.artists.length - 1; i++) {
+                                            artists.push(`${item.artists[0]}, `)
+                                        }
+                                            artists.push(`${item.artists[item.artists.length - 1]}`)
+                                    }}
+                                    <h4>Next in Queue:</h4>
+                                </div>
+                            );
+                        } else {
+                            return (
+                                <div key={key}>
+                                    <iframe
+                                        src={`https://open.spotify.com/embed/track/${item.id}?utm_source=generator`}
+                                        width="100%"
+                                        height="80"
+                                        frameBorder="0"
+                                        allowFullScreen=""
+                                        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                                    ></iframe>
+                                </div>
+                            );
+                        }
                     })}
                 </div>
             </div>
