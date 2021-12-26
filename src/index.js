@@ -26,6 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
         localStorage.getItem("spotify-access-token") &&
         localStorage.getItem("spotify-access-token-expiry") > Date.now()
     ) {
+        //TODO: Tell user to login?
     }
     if (window.location.pathname == "/auth/callback") {
         fetch("/auth/callback" + window.location.search)
@@ -34,7 +35,22 @@ document.addEventListener("DOMContentLoaded", () => {
                 localStorage.setItem("spotify-access-token", data.accessToken);
                 localStorage.setItem("spotify-access-token-expiry", Date.now() + data.expiresIn * 990);
                 localStorage.setItem("spotify-refresh-token", data.refreshToken);
-                window.location = "/";
+                window.location = localStorage.getItem("prev-location") || "/";
             });
     }
 });
+
+export function isLoggedIn() {
+    return localStorage.getItem("spotify-access-token") && localStorage.getItem("spotify-access-token-expiry") > Date.now();
+}
+export async function login() {
+    fetch("/auth/login")
+        .then((e) => e.json())
+        .then((data) => {
+            localStorage.setItem("prev-location", window.location)
+            window.location = data.redirectUri;
+        })
+        .catch((error) => {
+            console.log("Failed to prepare for Spotify Authentication");
+        });
+}

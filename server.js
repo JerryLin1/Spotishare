@@ -19,7 +19,7 @@ var spotifyClientSecret = process.env.REACT_APP_SPOTIFY_CLIENTSECRET;
 var redirectUri = process.env.REACT_APP_REDIRECT_URI_LOCAL;
 
 // When using public ip
-// var redirectUri = process.env.REACT_APP_REDIRECT_URI;
+var redirectUri = process.env.REACT_APP_REDIRECT_URI;
 
 var SpotifyWebApi = require("spotify-web-api-node");
 const { RandomId } = require("./server/helperFunctions");
@@ -181,8 +181,8 @@ io.on("connection", (socket) => {
     socket.on("disconnect", () => {
         console.log(`${socket.id} has disconnected.`);
         if (socket.room in rooms) {
-            io.to(socket.room).emit("updateClientList", rooms[socket.room].clients);
             delete rooms[socket.room].clients[socket.id];
+            io.to(socket.room).emit("updateClientList", rooms[socket.room].clients);
         }
     });
 
@@ -199,12 +199,12 @@ io.on("connection", (socket) => {
     });
     socket.on("changeTrackRequest", ({trackId})=> {
         console.log(trackId)
-        socket.broadcast.to(socket.room).emit("changeTrack", trackId)
+        socket.broadcast.to(socket.room).emit("changeTrack", {trackId})
     })
     socket.on("changeTrack", ({trackId, accessToken}) => {
         var loggedInSpotifyApi = new SpotifyWebApi();
         loggedInSpotifyApi.setAccessToken(accessToken);
-        loggedInSpotifyApi.play({context_uri: `spotify:track:${trackId}`})
+        loggedInSpotifyApi.play({uris: [`spotify:track:${trackId}`]})
     })
 });
 
