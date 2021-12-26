@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter, Route, MemoryRouter, Routes } from "react-router-dom";
+import { ClientProvider } from "./contexts/ClientProvider";
 import HomePage from "./Home";
 import Lobby from "./Lobby";
 import PreLobby from "./PreLobby";
@@ -8,7 +9,7 @@ import "./styles.css";
 
 ReactDOM.render(
     <React.StrictMode>
-        <div>
+        <ClientProvider>
             <BrowserRouter>
                 <Routes>
                     <Route path="/" element={<HomePage />}></Route>
@@ -16,7 +17,7 @@ ReactDOM.render(
 					<Route path="/:roomId/Lobby" element={<Lobby />}></Route>
                 </Routes>
             </BrowserRouter>
-        </div>
+        </ClientProvider>
     </React.StrictMode>,
     document.getElementById("root")
 );

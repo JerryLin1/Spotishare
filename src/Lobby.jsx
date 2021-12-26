@@ -1,14 +1,15 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Row, Col, Container, Image, Card, Form, Button } from "react-bootstrap";
 import { useParams } from "react-router-dom";
 import Client from "./client.js";
 import WebPlayback from "./WebPlayback.jsx";
 import Queue from "./Queue.jsx";
 import './css/Lobby.css';
+import { ClientContext } from "./contexts/ClientProvider.jsx";
 
 function Lobby(props) {
     let { roomId } = useParams();
-    const [client, setClient] = useState(new Client());
+    const client = useContext(ClientContext);
     const [members, setMembers] = useState([]); //useState([{ isHost: true, name: 'Tom Han', id: 'p.han.tom', country: 'CA', image: 'https://i.scdn.co/image/ab6775700000ee8508f4b5251c39729ba880fb66' }]);
     const [chat, setChat] = useState([]);
 
@@ -41,13 +42,9 @@ function Lobby(props) {
     const initializeUser = async () => {
         while (client.socket.id === undefined) await new Promise((resolve) => setTimeout(resolve, 1000));
         fetch(`/joinLobby?roomId=${roomId}&accessToken=${localStorage.getItem("spotify-access-token")}&socketid=${client.socket.id}`).then((data) => {
-            if (data.status == 200) {
+            if (data.status === 200) {
                 client.socket.emit("joinRoom", {
                     roomId: roomId,
-                });
-                client.socket.on("updateClientList", (clients) => {
-                    client.clientsInRoom = clients;
-                    setMembers(Object.values(clients));
                 });
             }
         });
@@ -59,11 +56,19 @@ function Lobby(props) {
         client.socket.on("receiveMessage", (chatInfo) => {
             console.log(chatInfo);
 
-            setChat(oldChat => [...oldChat, <span>
-                <strong>{chatInfo.nickname}</strong>: <span dangerouslySetInnerHTML={{ __html: processChatMessage(chatInfo.msg) }} />
-            </span>]);
-
+            setChat(oldChat => [...oldChat,
+            <div>
+                <span>
+                    <strong>{chatInfo.nickname}</strong>: <span dangerouslySetInnerHTML={{ __html: processChatMessage(chatInfo.msg) }} />
+                </span>
+            </div>
+            ]);
         })
+
+        client.socket.on("updateClientList", (clients) => {
+            client.clientsInRoom = clients;
+            setMembers(Object.values(clients));
+        });
     }, []);
 
     return (
