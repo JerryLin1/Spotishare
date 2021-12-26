@@ -29,7 +29,7 @@ function WebPlayback(props) {
 
         window.onSpotifyWebPlaybackSDKReady = () => {
             const player = new window.Spotify.Player({
-                name: 'Spomongus',
+                name: 'spomongus',
                 getOAuthToken: cb => { cb(props.token); },
                 volume: 0.5
             });
