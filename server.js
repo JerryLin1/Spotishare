@@ -144,6 +144,14 @@ app.get("/joinLobby", (req, res) => {
         });
 });
 
+app.get("/getDevices", (req, res) => {
+    // TODO: Check if the access token is valid
+    var loggedInSpotifyApi = new SpotifyWebApi();
+    loggedInSpotifyApi.setAccessToken(req.query.accessToken);
+    loggedInSpotifyApi.transferMyPlayback([req.query.deviceId], {play: true});
+});
+
+// TODO: Refresh access token? IDK what this is
 // function refreshAccessToken() {
 //     // clientId, clientSecret and refreshToken has been set on the api object previous to this call.
 //     spotifyApi.refreshAccessToken().then(
