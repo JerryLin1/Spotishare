@@ -112,7 +112,7 @@ function Lobby(props) {
                     </Form>
                 </Col>
                 <Col>
-                    {/* <WebPlayback token={localStorage.getItem("spotify-access-token")} /> */}
+                    <WebPlayback token={localStorage.getItem("spotify-access-token")} />
                 </Col>
             </Row>
 

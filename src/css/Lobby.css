@@ -30,6 +30,7 @@
 
 #chat { 
     min-height: 250px;
+    max-height: 500px;
     display: block;
 }
 
