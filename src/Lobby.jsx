@@ -105,7 +105,7 @@ function Lobby(props) {
                     <Card>
                         <Card.Header>Chat</Card.Header>
                         <div className="dropdown" onClick={toggleLobbyList}>
-                            <p style={{ margin: "0" }}>Current Listening Party Members:</p>
+                            <p style={{ margin: "0" }}>Currently listening: ({Object.keys(client.clientsInRoom).length})</p>
                             <CaretDownFill style={{ position: "absolute", right: "1em", top: "50%", transform: "translateY(-50%)" }} />
                         </div>
                         <div className="lobby-list">{renderMembers()}</div>
