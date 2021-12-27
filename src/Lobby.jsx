@@ -44,7 +44,7 @@ function Lobby(props) {
                     </Col>
                 </Row>
             );
-            
+
         }
 
         return newMemberList;
@@ -71,7 +71,10 @@ function Lobby(props) {
         initializeUser();
 
         client.socket.on("receiveMessage", (chatInfo) => {
-            console.log(chatInfo);
+            const chat = document.getElementById("chat");
+            console.log(chat.scrollTop + chat.clientHeight, chat.scrollHeight)
+            if (chat.scrollTop + chat.clientHeight >= chat.scrollHeight-200)
+                chat.scrollTop = chat.scrollHeight;
 
             setChat((oldChat) => [
                 ...oldChat,
@@ -81,6 +84,9 @@ function Lobby(props) {
                     </span>
                 </div>,
             ]);
+
+
+
         });
 
         client.socket.on("updateClientList", (clients) => {
@@ -98,10 +104,12 @@ function Lobby(props) {
             <div id="title">SpotiShare</div>
             <Row>
                 <Col md="8">
-                    <WebPlayback roomId = {roomId} token={localStorage.getItem("spotify-access-token")} />
+                    <WebPlayback roomId={roomId} token={localStorage.getItem("spotify-access-token")} />
                     <Queue queue={queue} />
                 </Col>
                 <Col>
+
+                    {/* CHAT */}
                     <Card>
                         <Card.Header>Chat</Card.Header>
                         <div className="dropdown" onClick={toggleLobbyList}>
