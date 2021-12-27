@@ -10,7 +10,7 @@
 }
 
 html {
-    background-color: #23d863;
+    background-color: #23da63;
 }
 
 body {
@@ -62,82 +62,10 @@ button:hover {
 #title {
     font-size: 3em;
     font-weight: 800;
+    margin-bottom: 0.5em;
+    pointer-events: none;
 }
 
 #title::selection {
     background: transparent;
-}
-
-#searchArea {
-    text-align: center;
-    margin-bottom: 1rem;
-}
-
-#searchbox {
-    height: 2.5em;
-    width: 75%;
-    font-size: 1.25em;
-    border: none;
-    padding: 0 0.5em;
-}
-
-#searchbox:focus {
-    outline: 1px solid #ccc;
-}
-
-#search-btn {
-    font-size: 1.25em;
-    height: 2.5em;
-    width: fit-content;
-    border: none;
-    margin-left: 0.5em;
-    padding: 0 0.5em;
-}
-
-
-
-
-
-/* Queue */
-
-#queue-title {
-    margin-top: 5%;
-    text-align: center;
-}
-
-#queue-container {
-    border: 1px solid #888;
-    width: 90%;
-    margin: 1em 5%;
-    padding: 1em;
-}
-
-.song-card {
-    position: relative;
-    padding: 0.25em;
-    transition: 0.3s;
-}
-
-.song-card>button {
-    position: absolute;
-    width: 20%;
-    right: -7.5%;
-    top: 25%;
-    transform: translateX(-50%);
-}
-
-.song-card:hover {
-    background: rgba(27, 27, 27, 0.5);
-    color: #fff;
-}
-
-
-/* Web Player */
-
-.main-wrapper {
-    text-align: center;
-}
-
-.btn-spotify {
-    margin: 0 0.25em;
 }

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
+import { PlayCircle, PauseCircle, SkipForwardCircle, SkipBackwardCircle } from "react-bootstrap-icons";
 import { io } from "socket.io-client";
 import { ClientContext } from "./contexts/ClientProvider";
 
@@ -102,6 +103,7 @@ function WebPlayback(props) {
         return (
             <>
                 <div className="container">
+                    <h3 style={{ textAlign: "center" }}>Currently Playing:</h3>
                     <div className="main-wrapper">
                         <img
                             height="500px"
@@ -121,7 +123,7 @@ function WebPlayback(props) {
                                     player.previousTrack();
                                 }}
                             >
-                                &lt;&lt;
+                                <SkipBackwardCircle />
                             </button>
 
                             <button
@@ -131,7 +133,7 @@ function WebPlayback(props) {
                                     client.socket.emit("togglePlayPause", "po");
                                 }}
                             >
-                                {is_paused ? "PLAY" : "PAUSE"}
+                                {is_paused ? <PlayCircle /> : <PauseCircle />}
                             </button>
 
                             <button
@@ -140,7 +142,7 @@ function WebPlayback(props) {
                                     player.nextTrack();
                                 }}
                             >
-                                &gt;&gt;
+                                <SkipForwardCircle />
                             </button>
                         </div>
                     </div>
