@@ -179,12 +179,17 @@ server.listen(port, () => {
 });
 
 io.on("connection", (socket) => {
-    console.log(`${socket.id} has connected.`);
+    // console.log(`${socket.id} has connected.`);
     socket.room = undefined;
 
     socket.on("disconnect", () => {
-        console.log(`${socket.id} has disconnected.`);
+        // console.log(`${socket.id} has disconnected.`);
         if (socket.room in rooms) {
+            sendToChat({
+                msg: `${rooms[socket.room].clients[socket.id].name} left the lobby.`,
+                type: "SERVER",
+                roomId: socket.room
+            })
             delete rooms[socket.room].clients[socket.id];
             io.to(socket.room).emit("updateClientList", rooms[socket.room].clients);
         }
@@ -194,6 +199,11 @@ io.on("connection", (socket) => {
         socket.join(info.roomId);
         socket.room = info.roomId;
         io.to(info.roomId).emit("updateClientList", rooms[info.roomId].clients);
+        sendToChat({
+            msg: `${rooms[socket.room].clients[socket.id].name} joined the lobby.`,
+            type: "SERVER",
+            roomId: socket.room
+        })
     });
 
     socket.on("togglePlayPause", () => {
