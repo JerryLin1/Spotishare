@@ -179,12 +179,17 @@ server.listen(port, () => {
 });
 
 io.on("connection", (socket) => {
-    console.log(`${socket.id} has connected.`);
+    // console.log(`${socket.id} has connected.`);
     socket.room = undefined;
 
     socket.on("disconnect", () => {
-        console.log(`${socket.id} has disconnected.`);
+        // console.log(`${socket.id} has disconnected.`);
         if (socket.room in rooms) {
+            sendToChat({
+                msg: `${rooms[socket.room].clients[socket.id].name} left the lobby.`,
+                type: "SERVER",
+                roomId: socket.room
+            })
             delete rooms[socket.room].clients[socket.id];
             io.to(socket.room).emit("updateClientList", rooms[socket.room].clients);
         }
@@ -194,6 +199,11 @@ io.on("connection", (socket) => {
         socket.join(info.roomId);
         socket.room = info.roomId;
         io.to(info.roomId).emit("updateClientList", rooms[info.roomId].clients);
+        sendToChat({
+            msg: `${rooms[socket.room].clients[socket.id].name} joined the lobby.`,
+            type: "SERVER",
+            roomId: socket.room
+        })
     });
 
     socket.on("togglePlayPause", () => {
@@ -203,15 +213,24 @@ io.on("connection", (socket) => {
     });
 
     socket.on("sendMessage", (msg) => {
-        sendToChat(msg, "USER", rooms[socket.room].clients[socket.id].name, socket.id);
+        sendToChat({msg, 
+            type: "USER", 
+            userName: rooms[socket.room].clients[socket.id].name, 
+            userId: socket.id,
+            roomId: socket.room});
     })
-    function sendToChat(msg, type, senderNickname, senderId) {
-        let chatMsg = { msg: msg, type: type, nickname: senderNickname, id: senderId };
-        rooms[socket.room].chatHistory.push(chatMsg);
-        io.to(socket.room).emit("receiveMessage", chatMsg);
+    function sendToChat({msg, type, userName, userId, roomId}) {
+        let chatMsg = {msg, type, userName, userId};
+        rooms[roomId].chatHistory.push(chatMsg);
+        io.to(roomId).emit("receiveMessage", chatMsg);
     }
     socket.on("changeTrackRequest", ({ trackId, track, state }) => {
         console.log(trackId)
+        sendToChat({
+            msg: `Now playing "${track.name}" by ${track.artists.map(artist => artist.name).join(", ")}`,
+            type: "SERVER",
+            roomId: socket.room
+        });
         socket.broadcast.to(socket.room).emit("changeTrack", { trackId })
     })
     socket.on("changeTrack", ({ trackId, accessToken }) => {

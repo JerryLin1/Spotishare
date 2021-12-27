@@ -70,13 +70,19 @@ function Lobby(props) {
     useEffect(() => {
         initializeUser();
 
-        client.socket.on("receiveMessage", ({ msg, type, nickname, id}) => {
-            console.log({ msg, type, nickname, id});
+        client.socket.on("receiveMessage", ({msg, type, userName, userId}) => {
+            console.log({msg, type, userName, userId});
+
+            const chat = document.getElementById("chat");
+            console.log(chat.scrollTop + chat.clientHeight, chat.scrollHeight)
+            if (chat.scrollTop + chat.clientHeight >= chat.scrollHeight-200)
+                chat.scrollTop = chat.scrollHeight;
+
             setChat((oldChat) => [
                 ...oldChat,
                 <div>
                     <span>
-                        { type == "USER" && <span><strong>{nickname}</strong>:</span>} <span dangerouslySetInnerHTML={{ __html: processChatMessage(msg) }} />
+                        { type == "USER" && <span><strong>{userName}</strong>:</span>} <span dangerouslySetInnerHTML={{ __html: processChatMessage(msg) }} />
                     </span>
                 </div>,
             ]);
