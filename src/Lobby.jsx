@@ -23,7 +23,7 @@ function Lobby(props) {
         "185Wm4Mx09dQG0fUktklDm?si=8fd67a8eb5f04c99",
         "3dPtXHP0oXQ4HCWHsOA9js?si=8593d745abde4cb7",
         "185Wm4Mx09dQG0fUktklDm?si=8fd67a8eb5f04c99",
-        "185Wm4Mx09dQG0fUktklDm?si=8fd67a8eb5f04c99", 
+        "185Wm4Mx09dQG0fUktklDm?si=8fd67a8eb5f04c99",
     ]);
 
     const renderMembers = () => {
@@ -45,7 +45,6 @@ function Lobby(props) {
                     </Col>
                 </Row>
             );
-            
         }
 
         return newMemberList;
@@ -99,14 +98,14 @@ function Lobby(props) {
             <div id="title">SpotiShare</div>
             <Row>
                 <Col md="8">
-                    <WebPlayback roomId = {roomId} token={localStorage.getItem("spotify-access-token")} />
+                    <WebPlayback roomId={roomId} token={localStorage.getItem("spotify-access-token")} />
                     <Queue queue={queue} />
                 </Col>
                 <Col>
                     <Card className="chat-container">
                         <Card.Header id="chat-header">Chat</Card.Header>
                         <div className="dropdown" onClick={toggleLobbyList}>
-                            <p style={{ margin: "0" }}>Currently listening: ({Object.keys(client.clientsInRoom).length})</p>
+                            <p style={{ margin: "0" }}>Currently listening: ({/*Object.keys(client.clientsInRoom).length*/ 2})</p>
                             <CaretDownFill style={{ position: "absolute", right: "1em", top: "50%", transform: "translateY(-50%)" }} />
                         </div>
                         <div className="lobby-list">{renderMembers()}</div>
@@ -129,7 +128,6 @@ function Lobby(props) {
                             </Button>
                         </div>
                     </Form>
-
 
                     <div id="searchArea">
                         <h3>Find a Song!</h3>
