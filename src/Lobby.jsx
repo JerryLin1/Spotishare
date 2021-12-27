@@ -70,19 +70,23 @@ function Lobby(props) {
     useEffect(() => {
         initializeUser();
 
-        client.socket.on("receiveMessage", ({msg, type, userName, userId}) => {
-            console.log({msg, type, userName, userId});
+        client.socket.on("receiveMessage", ({ msg, type, userName, userId }) => {
+            console.log({ msg, type, userName, userId });
 
             const chat = document.getElementById("chat");
-            console.log(chat.scrollTop + chat.clientHeight, chat.scrollHeight)
-            if (chat.scrollTop + chat.clientHeight >= chat.scrollHeight-200)
-                chat.scrollTop = chat.scrollHeight;
+            console.log(chat.scrollTop + chat.clientHeight, chat.scrollHeight);
+            if (chat.scrollTop + chat.clientHeight >= chat.scrollHeight - 200) chat.scrollTop = chat.scrollHeight;
 
             setChat((oldChat) => [
                 ...oldChat,
                 <div>
                     <span>
-                        { type == "USER" && <span><strong>{userName}</strong>:</span>} <span dangerouslySetInnerHTML={{ __html: processChatMessage(msg) }} />
+                        {type == "USER" && (
+                            <span>
+                                <strong>{userName}</strong>:
+                            </span>
+                        )}{" "}
+                        <span dangerouslySetInnerHTML={{ __html: processChatMessage(msg) }} />
                     </span>
                 </div>,
             ]);
@@ -95,14 +99,21 @@ function Lobby(props) {
     }, []);
 
     const toggleLobbyList = () => {
-        document.getElementsByClassName("lobby-list")[0].classList.toggle("visible");
+
+        if (document.getElementsByClassName("lobby-list")[0].classList.contains("visible")) {
+            document.getElementsByClassName("lobby-list")[0].className = "lobby-list"
+            document.getElementById("caret").style.transform = "translateY(-50%) rotate(0deg)"
+        } else {
+            document.getElementsByClassName("lobby-list")[0].className = "lobby-list visible"
+            document.getElementById("caret").style.transform = "translateY(-50%) rotate(180deg)"
+        }
     };
 
     return (
         <Container fluid>
             <div id="title">SpotiShare</div>
             <Row>
-                <Col md="8">
+                <Col xl="8">
                     <WebPlayback roomId={roomId} token={localStorage.getItem("spotify-access-token")} />
                     <Queue queue={queue} />
                 </Col>
@@ -110,8 +121,8 @@ function Lobby(props) {
                     <Card className="chat-container">
                         <Card.Header id="chat-header">Chat</Card.Header>
                         <div className="dropdown" onClick={toggleLobbyList}>
-                            <p style={{ margin: "0" }}>Currently listening: ({members != undefined ? members.length : 0})</p>
-                            <CaretDownFill style={{ position: "absolute", right: "1em", top: "50%", transform: "translateY(-50%)" }} />
+                            <p style={{ margin: "0" }}>Currently listening ({members != undefined ? members.length : 0})</p>
+                            <CaretDownFill id="caret" />
                         </div>
                         <div className="lobby-list">{renderMembers()}</div>
                         <Card.Body id="chat" style={{ overflowY: "scroll" }}>

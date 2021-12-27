@@ -11,7 +11,6 @@
 
 #chat-header {
     font-size: 2em;
-    border-radius: 0 !important;
 }
 
 #chat {
@@ -31,7 +30,7 @@
 #chatInput {
     width: 70%;
     border: none;
-    border-radius: 0.25rem !important;
+    border-radius: 0.25rem;
     padding-left: 0.5em;
 }
 
@@ -39,23 +38,21 @@
     font-size: 0.8em;
     border: solid rgba(56, 253, 89, 0.603) 2px;
     background-color: rgba(103, 255, 128, 0.603);
-    border-radius: 0.25rem !important;
+    border-radius: 0.25rem;
     width: 30%;
 }
-
 
 #searchArea {
     text-align: center;
     margin: 2rem auto;
     border-top: 1px solid #000;
-    border-radius: 0 !important;
     padding-top: 1em;
 }
 
 #searchbox {
-    height: 2.5em;
+    height: 3em;
     width: 75%;
-    font-size: 1.25em;
+    font-size: 90%;
     border: none;
     padding: 0 0.5em;
 }
@@ -65,24 +62,23 @@
 }
 
 #search-btn {
-    font-size: 1.25em;
-    height: 2.5em;
-    width: fit-content;
+    font-size: 90%;
+    height: 3em;
+    width: calc(20% - 0.5em);
     border: none;
     margin-left: 0.5em;
     padding: 0 0.5em;
 }
+
 
 .dropdown {
     width: 100%;
     height: 2.5em;
     padding: 0.5em;
     text-align: center;
-    background-color: #888;
+    background-color: rgb(145, 145, 145);
     color: #fff;
-    border-radius: 0 0 0.5em 0.5em !important;
     transition: 0.25s;
-
 }
 
 .dropdown:hover {
@@ -90,17 +86,24 @@
     background-color: rgb(105, 105, 105);
 }
 
+#caret {
+    position: absolute;
+    right: 1em;
+    top: 50%;
+    transform: translateY(-50%) rotate(0deg)
+}
+
 .lobby-list {
     position: absolute;
     width: 100%;
     top: 6.5em;
     background-color: rgba(204, 204, 204, 0.5);
-    overflow-y: hidden;
-    max-height: 0px;
+    opacity: 0;
+    transition: 0.3s;
 }
 
 .lobby-list.visible {
-    max-height: calc(30vh);
+    opacity: 1;
     overflow-y: scroll;
 }
 
@@ -142,7 +145,7 @@
     transition: 0.3s;
 }
 
-#chat { 
+#chat {
     min-height: 250px;
     max-height: 500px;
     display: block;
@@ -168,25 +171,31 @@
     text-align: center;
 }
 
-.btn-spotify {
+.spotifyBtn {
     background: transparent;
     margin: 0.5em 0.25em;
+    padding: 0.5em;
+    border-radius: 50%;
 }
 
-.btn-spotify>* {
-    min-width: 2em;
-    min-height: 2em;
+.spotifyBtn>* {
+    width: 2em;
+    height: 2em;
 }
 
-.now-playing__cover {
-    margin: 1em auto;
+
+.spotifyBtn:nth-child(4)>* {
+    width: 3em;
+    height: 3em;
 }
 
-.now-playing__name {
+
+#nowPlayingName {
     font-size: 2em;
     text-decoration: bold;
 }
 
-.now-playing__artist {
-    font-size: 1.25em;
+#nowPlayingArtist {
+    font-style: 1.25em;
+    margin: 0.5em auto;
 }
