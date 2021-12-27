@@ -62,6 +62,8 @@ function WebPlayback(props) {
                     if (ptrack != strack) {
                         client.socket.emit("changeTrackRequest", {
                             trackId: state.track_window.current_track.id,
+                            track: state.track_window.current_track,
+                            state: state
                         });
                         console.log(state);
                     }

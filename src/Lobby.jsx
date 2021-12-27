@@ -70,14 +70,13 @@ function Lobby(props) {
     useEffect(() => {
         initializeUser();
 
-        client.socket.on("receiveMessage", (chatInfo) => {
-            console.log(chatInfo);
-
+        client.socket.on("receiveMessage", ({ msg, type, nickname, id}) => {
+            console.log({ msg, type, nickname, id});
             setChat((oldChat) => [
                 ...oldChat,
                 <div>
                     <span>
-                        <strong>{chatInfo.nickname}</strong>: <span dangerouslySetInnerHTML={{ __html: processChatMessage(chatInfo.msg) }} />
+                        { type == "USER" && <span><strong>{nickname}</strong>:</span>} <span dangerouslySetInnerHTML={{ __html: processChatMessage(msg) }} />
                     </span>
                 </div>,
             ]);
@@ -105,7 +104,7 @@ function Lobby(props) {
                     <Card className="chat-container">
                         <Card.Header id="chat-header">Chat</Card.Header>
                         <div className="dropdown" onClick={toggleLobbyList}>
-                            <p style={{ margin: "0" }}>Currently listening: ({/*Object.keys(client.clientsInRoom).length*/ 2})</p>
+                            <p style={{ margin: "0" }}>Currently listening: ({members != undefined ? members.length : 0})</p>
                             <CaretDownFill style={{ position: "absolute", right: "1em", top: "50%", transform: "translateY(-50%)" }} />
                         </div>
                         <div className="lobby-list">{renderMembers()}</div>
