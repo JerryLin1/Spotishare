@@ -45,14 +45,13 @@ function Lobby(props) {
                     </Col>
                 </Row>
             );
+            
         }
 
         return newMemberList;
     };
 
-    // async function is modified from https://stackoverflow.com/a/56216283
-    const initializeUser = async () => {
-        while (client.socket.id === undefined) await new Promise((resolve) => setTimeout(resolve, 1000));
+    const initializeUser = () => {
         fetch(`/joinLobby?roomId=${roomId}&accessToken=${localStorage.getItem("spotify-access-token")}&socketid=${client.socket.id}`).then((data) => {
             if (data.status === 200) {
                 client.socket.emit("joinRoom", {
@@ -100,7 +99,7 @@ function Lobby(props) {
             <div id="title">SpotiShare</div>
             <Row>
                 <Col md="8">
-                    <WebPlayback token={localStorage.getItem("spotify-access-token")} />
+                    <WebPlayback roomId = {roomId} token={localStorage.getItem("spotify-access-token")} />
                     <Queue queue={queue} />
                 </Col>
                 <Col>
@@ -130,6 +129,7 @@ function Lobby(props) {
                             </Button>
                         </div>
                     </Form>
+
 
                     <div id="searchArea">
                         <h3>Find a Song!</h3>

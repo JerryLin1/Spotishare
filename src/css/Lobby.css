@@ -142,6 +142,12 @@
     transition: 0.3s;
 }
 
+#chat { 
+    min-height: 250px;
+    max-height: 500px;
+    display: block;
+}
+
 .song-card>button {
     position: absolute;
     width: 20%;
