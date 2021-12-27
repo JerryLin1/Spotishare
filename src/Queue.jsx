@@ -3,8 +3,8 @@ function Queue(props) {
 
     return (
         <div id="queue">
-            <h2 id="queue-title">Next In Queue</h2>
             <div id="queue-container">
+                <h2 id="queue-title">Next In Queue</h2>
                 {queue.map((item, key) => {
                     return (
                         <div key={key}>

@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { PlayCircle, PauseCircle, SkipForwardCircle, SkipBackwardCircle } from "react-bootstrap-icons";
+
 import { io } from "socket.io-client";
 
 const track = {
@@ -102,6 +104,7 @@ function WebPlayback(props) {
                 <div className="container">
                     <h3 style={{ textAlign: "center" }}>Currently Playing:</h3>
                     <div className="main-wrapper">
+                        
                         <img height="500px" width="500px" src={current_track.album.images[0].url} className="now-playing__cover" alt="cover image" />
 
                         <div className="now-playing__side">
@@ -114,7 +117,7 @@ function WebPlayback(props) {
                                     player.previousTrack();
                                 }}
                             >
-                                &lt;&lt;
+                                <SkipBackwardCircle />
                             </button>
 
                             <button
@@ -124,7 +127,7 @@ function WebPlayback(props) {
                                     props.client.socket.emit("togglePlayPause", "po");
                                 }}
                             >
-                                {is_paused ? "PLAY" : "PAUSE"}
+                                {is_paused ? <PlayCircle /> : <PauseCircle />}
                             </button>
 
                             <button
@@ -133,7 +136,7 @@ function WebPlayback(props) {
                                     player.nextTrack();
                                 }}
                             >
-                                &gt;&gt;
+                                <SkipForwardCircle />
                             </button>
                         </div>
                     </div>
