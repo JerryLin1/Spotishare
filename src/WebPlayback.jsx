@@ -19,13 +19,16 @@ function WebPlayback(props) {
     const [current_track, setTrack] = useState(track);
 
     useEffect(() => {
+
+        // Create new spotify player instance
         const script = document.createElement("script");
         script.src = "https://sdk.scdn.co/spotify-player.js";
         script.async = true;
-
         document.body.appendChild(script);
 
         window.onSpotifyWebPlaybackSDKReady = () => {
+
+            // Create tangible web player with the client's access token (requires Spotify premium)
             const player = new window.Spotify.Player({
                 name: "spomongus",
                 getOAuthToken: unlockPlayer => {
@@ -33,55 +36,53 @@ function WebPlayback(props) {
                 },
                 volume: 0.5,
             });
-
             setPlayer(player);
 
-            var prevPlayerState = undefined;
 
+            // Start playback on current device when the web player is ready
             player.addListener("ready", ({ device_id }) => {
                 console.log("Ready with Device ID", device_id);
-                fetch(`/playerReady?accessToken=${localStorage.getItem("spotify-access-token")}&deviceId=${device_id}`);
+                fetch(`/playerReady?accessToken=${localStorage.getItem("spotify-access-token")}&deviceId=${device_id}&roomId=${props.roomId}`);
             });
 
             player.addListener("not_ready", ({ device_id }) => {
                 console.log("Device ID has gone offline", device_id);
             });
 
+
+            let prevPlayerState = undefined;
             player.addListener("player_state_changed", (state) => {
-                if (prevPlayerState == undefined) prevPlayerState = state;
+                if (!state) return;
+                if (prevPlayerState === undefined) prevPlayerState = state;
                 else {
                     let ptrack = prevPlayerState.track_window.current_track.id;
                     let strack = state.track_window.current_track.id;
                     let ppos = prevPlayerState.position;
                     let spos = state.position;
                     if (ptrack != strack) {
-                        props.client.socket.emit("changeTrackRequest", {
+                        client.socket.emit("changeTrackRequest", {
                             trackId: state.track_window.current_track.id,
                         });
                         console.log(state);
                     }
                 }
 
-                if (!state) {
-                    return;
-                }
-
                 setTrack(state.track_window.current_track);
                 setPaused(state.paused);
+                player.getCurrentState().then(state => !state ? setActive(false) : setActive(true));
 
-                player.getCurrentState().then((state) => {
-                    !state ? setActive(false) : setActive(true);
-                });
                 prevPlayerState = state;
             });
 
             player.connect();
 
+            // Listen and enact playback changes
             client.socket.on("paused", (isPaused) => {
                 isPaused ? player.pause() : player.resume();
             });
+
             client.socket.on("changeTrack", ({ trackId }) => {
-                props.client.socket.emit("changeTrack", {
+                client.socket.emit("changeTrack", {
                     accessToken: localStorage.getItem("spotify-access-token"),
                     trackId: trackId,
                 });
@@ -109,7 +110,7 @@ function WebPlayback(props) {
                             height="500px"
                             width="500px"
                             src={current_track.album.images[0].url}
-                            id = "nowPlayingCover"
+                            id="nowPlayingCover"
                             alt=""
                         />
 
@@ -118,7 +119,7 @@ function WebPlayback(props) {
                             <div id="nowPlayingArtist">{current_track.artists[0].name}</div>
 
                             <button
-                                className = "spotifyBtn"
+                                className="spotifyBtn"
                                 onClick={() => {
                                     player.previousTrack();
                                 }}
@@ -130,7 +131,7 @@ function WebPlayback(props) {
                                 className="spotifyBtn"
                                 onClick={() => {
                                     player.togglePlay();
-                                    client.socket.emit("togglePlayPause", "po");
+                                    client.socket.emit("togglePlayPause");
                                 }}
                             >
                                 {is_paused ? <PlayCircle /> : <PauseCircle />}

@@ -32,6 +32,7 @@ var spotifyApi = new SpotifyWebApi({
 
 const rooms = {};
 
+
 // TODO: Implement "state" which is a security thing or something using a randomly generated string
 app.get("/auth/login", (req, res) => {
     const scope = [
@@ -153,6 +154,7 @@ app.get("/playerReady", (req, res) => {
     var loggedInSpotifyApi = new SpotifyWebApi();
     loggedInSpotifyApi.setAccessToken(req.query.accessToken);
     loggedInSpotifyApi.transferMyPlayback([req.query.deviceId], { play: true });
+
 });
 
 // TODO: Refresh access token? IDK what this is
@@ -208,14 +210,14 @@ io.on("connection", (socket) => {
         rooms[socket.room].chatHistory.push(chatMsg);
         io.to(socket.room).emit("receiveMessage", chatMsg);
     }
-    socket.on("changeTrackRequest", ({trackId})=> {
+    socket.on("changeTrackRequest", ({ trackId }) => {
         console.log(trackId)
-        socket.broadcast.to(socket.room).emit("changeTrack", {trackId})
+        socket.broadcast.to(socket.room).emit("changeTrack", { trackId })
     })
-    socket.on("changeTrack", ({trackId, accessToken}) => {
+    socket.on("changeTrack", ({ trackId, accessToken }) => {
         var loggedInSpotifyApi = new SpotifyWebApi();
         loggedInSpotifyApi.setAccessToken(accessToken);
-        loggedInSpotifyApi.play({uris: [`spotify:track:${trackId}`]})
+        loggedInSpotifyApi.play({ uris: [`spotify:track:${trackId}`] })
     })
 });
 
