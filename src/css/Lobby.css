@@ -5,9 +5,21 @@
 
 /***** CHAT *****/
 
+.chat-container {
+    margin-bottom: 0.1em;
+}
+
+#chat-header {
+    font-size: 2em;
+    border-radius: 0 !important;
+}
+
 #chat {
-    min-height: 30vh;
+    height: 50vh;
+    width: 100%;
     display: block;
+    overflow-y: scroll;
+    overflow-wrap: break-word;
 }
 
 #sendBar {
@@ -18,6 +30,9 @@
 
 #chatInput {
     width: 70%;
+    border: none;
+    border-radius: 0.25rem !important;
+    padding-left: 0.5em;
 }
 
 #sendBtn {
@@ -28,9 +43,13 @@
     width: 30%;
 }
 
+
 #searchArea {
     text-align: center;
-    margin: 1rem auto;
+    margin: 2rem auto;
+    border-top: 1px solid #000;
+    border-radius: 0 !important;
+    padding-top: 1em;
 }
 
 #searchbox {
@@ -61,7 +80,9 @@
     text-align: center;
     background-color: #888;
     color: #fff;
+    border-radius: 0 0 0.5em 0.5em !important;
     transition: 0.25s;
+
 }
 
 .dropdown:hover {
@@ -72,8 +93,8 @@
 .lobby-list {
     position: absolute;
     width: 100%;
-    top: 5em;
-    background-color: rgba(204, 204, 204, 0.575);
+    top: 6.5em;
+    background-color: rgba(204, 204, 204, 0.5);
     overflow-y: hidden;
     max-height: 0px;
 }
@@ -99,7 +120,6 @@
 
 #member-pfp {
     height: 70px;
-    border-radius: 50% !important;
 }
 
 /* Queue */
