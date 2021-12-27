@@ -16,10 +16,10 @@ var spotifyClientId = process.env.REACT_APP_SPOTIFY_CLIENTID;
 var spotifyClientSecret = process.env.REACT_APP_SPOTIFY_CLIENTSECRET;
 
 // When using localhost:3000
-var redirectUri = process.env.REACT_APP_REDIRECT_URI_LOCAL;
+// var redirectUri = process.env.REACT_APP_REDIRECT_URI_LOCAL;
 
 // When using public ip
-// var redirectUri = process.env.REACT_APP_REDIRECT_URI;
+var redirectUri = process.env.REACT_APP_REDIRECT_URI;
 
 var SpotifyWebApi = require("spotify-web-api-node");
 const { RandomId } = require("./server/helperFunctions");
@@ -210,7 +210,7 @@ io.on("connection", (socket) => {
         rooms[socket.room].chatHistory.push(chatMsg);
         io.to(socket.room).emit("receiveMessage", chatMsg);
     }
-    socket.on("changeTrackRequest", ({ trackId }) => {
+    socket.on("changeTrackRequest", ({ trackId, track, state }) => {
         console.log(trackId)
         socket.broadcast.to(socket.room).emit("changeTrack", { trackId })
     })
