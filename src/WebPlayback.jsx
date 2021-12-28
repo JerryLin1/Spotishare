@@ -106,8 +106,6 @@ function WebPlayback(props) {
                 <div className="container">
                     <div className="main-wrapper">
                         <img
-                            height="500px"
-                            width="500px"
                             src={current_track.album.images[0].url}
                             id="nowPlayingCover"
                             className="unselectable"

@@ -6,16 +6,6 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { isLoggedIn, login } from ".";
 
 function HomePage(props) {
-    const [songs, setSongs] = useState(null);
-
-    const renderSongList = () => {
-        if (songs === null) {
-            return null;
-        } else {
-            return songs;
-        }
-    };
-
     return (
         <Container fluid>
             <button onClick={() => login()} id="sign-in">

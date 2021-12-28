@@ -41,7 +41,9 @@ function Lobby(props) {
                         )}
                     </Col>
                     <Col style={{ display: "flex", justifyContent: "right", padding: "0" }}>
-                        <img id="member-pfp" src={user.image}></img>
+                        <div id="pfp-container">
+                            <img id="member-pfp" src={user.image} />
+                        </div>
                     </Col>
                 </Row>
             );
@@ -120,7 +122,7 @@ function Lobby(props) {
                             Chat
                         </Card.Header>
                         <div className="dropdown unselectable" onClick={toggleLobbyList}>
-                            <p style={{ margin: "0" }}>Currently listening ({members != undefined ? members.length : 0})</p>
+                            <p style={{ margin: "0" }}>Currently listening ({members ? members.length : 0})</p>
                             <CaretDownFill id="caret" />
                         </div>
                         <div className="lobby-list">{renderMembers()}</div>
@@ -155,17 +157,21 @@ function Lobby(props) {
                         <div id="result-list">
                             {queue.map((item, key) => {
                                 return (
-                                    <div key={key} className="song-card">
-                                        <iframe
-                                            src={`https://open.spotify.com/embed/track/${item}?utm_source=generator`}
-                                            width="100%"
-                                            height="80"
-                                            frameBorder="0"
-                                            allowFullScreen=""
-                                            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                                        ></iframe>
-                                        <button>Add</button>
-                                    </div>
+                                    <Row key={key} className="song-card">
+                                        <Col xs={10}>
+                                            <iframe
+                                                src={`https://open.spotify.com/embed/track/${item}?utm_source=generator`}
+                                                width="100%"
+                                                height="80"
+                                                frameBorder="0"
+                                                allowFullScreen=""
+                                                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                                            ></iframe>
+                                        </Col>
+                                        <Col style={{ display: "flex", alignItems: "center", padding: "0" }}>
+                                            <button>Add</button>
+                                        </Col>
+                                    </Row>
                                 );
                             })}
                         </div>

@@ -45,6 +45,10 @@ button:hover {
     background: #555;
 }
 
+.unselectable {
+    user-select: none;
+}
+
 /********* Home *********/
 
 #sign-in {
@@ -59,8 +63,5 @@ button:hover {
     font-size: 3em;
     font-weight: 800;
     margin-bottom: 0.5em;
-}
-
-.unselectable {
-    user-select: none;
+    text-align: left !important;
 }
