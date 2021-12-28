@@ -1,3 +1,16 @@
+/******* Pre Lobby *******/
+
+.pre-lobby>* {
+    text-align: center;
+}
+
+.pre-lobby-body {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%)
+}
+
 /******* Web Player *******/
 
 .main-wrapper {
@@ -21,6 +34,13 @@
     height: 3em;
 }
 
+#nowPlayingCover {
+    height: 50%;
+    width: 50%;
+    min-height: 400px;
+    min-width: 400px;
+    margin-bottom: 1em;
+}
 
 #nowPlayingName {
     font-size: 2em;
@@ -152,15 +172,29 @@
     font-size: 1.25em;
 }
 
-#member-pfp {
+#pfp-container {
+    position: relative;
     height: 70px;
+    width: 70px;
+    overflow: hidden;
+    border-radius: 50% !important;
+}
+
+#member-pfp {
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    object-fit: cover;
+    height: 140px;
+    width: 140px;
+    transform: scale(0.5);
 }
 
 /******* Queue *******/
 
 #queue-title {
     text-align: center;
-    background-color: #fff;
+    font-weight: bold;
     padding: 0.5em 0;
     width: 100%;
 }
@@ -168,16 +202,10 @@
 #queue-container {
     position: relative;
     margin-top: 2.5em;
-    border-left: 4px solid #fff;
-    border-top: 4px solid #fff;
-    border-bottom: 4px solid #fff;
+    border: 4px solid #fff;
     padding: 1em;
     overflow-y: scroll;
     height: 50vh;
-}
-
-#queue iframe {
-    width: 100%;
 }
 
 /******* song search *******/
@@ -186,6 +214,10 @@
     text-align: center;
     margin: 2.5em auto;
     max-height: 50vh;
+}
+
+#searchArea>h3:first-of-type {
+    margin-bottom: 0.5em;
 }
 
 #searchbox {
@@ -214,28 +246,22 @@
     margin-top: 0.5em;
     padding: 1em;
     overflow-y: scroll;
-    border-left: 4px solid #fff;
-    border-top: 4px solid #fff;
-    border-bottom: 4px solid #fff;
-    max-height: calc(50vh - 5.85em);
+    border: 4px solid #fff;
+    max-height: calc(50vh - 6.25em);
 }
 
 .song-card {
-    position: relative;
+    margin: 0;
     padding: 0.25em;
     transition: 0.3s;
+    width: 100%;
 }
 
-.song-card>iframe {
-    width: 75%;
-}
-
-.song-card>button {
-    position: absolute;
-    width: 20%;
-    right: -7.5%;
-    top: 25%;
-    transform: translateX(-50%);
+.song-card button {
+    align-items: center;
+    width: 100%;
+    height: 50%;
+    font-size: 0.9em;
 }
 
 .song-card:hover {
