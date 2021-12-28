@@ -107,7 +107,8 @@ function WebPlayback(props) {
                     <div className="main-wrapper">
                         <img height="500px" width="500px" src={current_track.album.images[0].url} id="nowPlayingCover" alt="" />
 
-                        <div id="nowPlayingSide">
+                        {client.isHost &&
+                            <div id="nowPlayingSide">
                             <div id="nowPlayingName">{current_track.name}</div>
                             <div id="nowPlayingArtist">{current_track.artists.map((artist) => artist.name).join(", ")}</div>
 
@@ -139,6 +140,9 @@ function WebPlayback(props) {
                                 <SkipForwardCircle />
                             </button>
                         </div>
+                        }
+
+
                     </div>
                 </div>
             </>

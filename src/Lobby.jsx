@@ -53,8 +53,8 @@ function Lobby(props) {
     const initializeUser = () => {
         fetch(`/joinLobby?roomId=${roomId}&accessToken=${localStorage.getItem("spotify-access-token")}&socketid=${client.socket.id}`).then((data) => {
             if (data.status === 200) {
-                client.socket.emit("joinRoom", {
-                    roomId: roomId,
+                client.socket.emit("joinRoom", { roomId: roomId }, (response) => {
+                    client.isHost = response.isHost;
                 });
             }
         });
@@ -74,8 +74,10 @@ function Lobby(props) {
             console.log({ msg, type, userName, userId });
 
             const chat = document.getElementById("chat");
+
             console.log(chat.scrollTop + chat.clientHeight, chat.scrollHeight);
-            if (chat.scrollTop + chat.clientHeight >= chat.scrollHeight - 200) chat.scrollTop = chat.scrollHeight;
+            if (chat.scrollTop + chat.clientHeight >= chat.scrollHeight - 200) 
+                chat.scrollTop = chat.scrollHeight;
 
             setChat((oldChat) => [
                 ...oldChat,
@@ -112,8 +114,12 @@ function Lobby(props) {
         <Container fluid>
             <div className="page-title unselectable">SpotiShare</div>
             <Row>
-                <Col xl="8">
-                    <WebPlayback roomId={roomId} token={localStorage.getItem("spotify-access-token")} />
+                <Col md="8">
+                    <WebPlayback
+                        roomId={roomId}
+                        disabled={client.isHost}
+                        token={localStorage.getItem("spotify-access-token")}
+                    />
                     <Queue queue={queue} />
                 </Col>
                 <Col>

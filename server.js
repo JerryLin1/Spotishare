@@ -195,7 +195,7 @@ io.on("connection", (socket) => {
         }
     });
 
-    socket.on("joinRoom", (info) => {
+    socket.on("joinRoom", (info, callback) => {
         socket.join(info.roomId);
         socket.room = info.roomId;
         io.to(info.roomId).emit("updateClientList", rooms[info.roomId].clients);
@@ -203,6 +203,9 @@ io.on("connection", (socket) => {
             msg: `${rooms[socket.room].clients[socket.id].name} joined the lobby.`,
             type: "SERVER",
             roomId: socket.room
+        })
+        callback({
+            isHost: rooms[socket.room].clients[socket.id].isHost
         })
     });
 
