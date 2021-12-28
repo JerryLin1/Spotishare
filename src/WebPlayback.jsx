@@ -110,19 +110,16 @@ function WebPlayback(props) {
                 <div className="container">
                     <div className="main-wrapper">
                         <img
-                            src={current_track.album.images[0].url}
-                            id="nowPlayingCover"
-                            className="unselectable"
-                            alt=""
-                        />
-
-                        {client.isHost && (
+                        src={current_track.album.images[0].url}
+                        id="nowPlayingCover"
+                        className="unselectable"
+                        alt=""
+                    />
+                        <div id="nowPlayingName">{current_track.name}</div>
+                        <div id="nowPlayingArtist">{current_track.artists.map((artist) => artist.name).join(", ")}</div>
+                        
+                        {client.isHost &&
                             <div id="nowPlayingSide">
-                                <div id="nowPlayingName">{current_track.name}</div>
-                                <div id="nowPlayingArtist">
-                                    {current_track.artists.map((artist) => artist.name).join(", ")}
-                                </div>
-
                                 <button
                                     className="spotifyBtn"
                                     onClick={() => {
@@ -151,7 +148,8 @@ function WebPlayback(props) {
                                     <SkipForwardCircle />
                                 </button>
                             </div>
-                        )}
+                        }
+
                     </div>
                 </div>
             </>
