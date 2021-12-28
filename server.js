@@ -119,6 +119,8 @@ app.get("/createLobby", (req, res) => {
         clients: {},
         paused: false,
         chatHistory: [],
+        currentTrack: "0vWg2qGAdSGGsgmyVgb4ox",
+        currentTrackStart: Date.now(),
     };
     res.send({ roomId: roomId });
     console.log(`Room ${roomId} created`);
@@ -150,9 +152,14 @@ app.get("/joinLobby", (req, res) => {
 
 app.get("/playerReady", (req, res) => {
     // TODO: Check if the access token is valid
+    let accessToken = req.query.accessToken;
+    let roomId = req.query.roomId;
     var loggedInSpotifyApi = new SpotifyWebApi();
-    loggedInSpotifyApi.setAccessToken(req.query.accessToken);
-    loggedInSpotifyApi.transferMyPlayback([req.query.deviceId], { play: true });
+    loggedInSpotifyApi.setAccessToken(accessToken);
+    loggedInSpotifyApi.transferMyPlayback([req.query.deviceId], { play: true }).then(() => {
+        if (rooms[req.query.roomId].currentTrack != undefined)
+            changeTrack(rooms[roomId].currentTrack, accessToken, rooms[roomId].currentTrackStart);
+    });
 });
 
 app.get("/search", (req, res) => {
@@ -237,7 +244,7 @@ io.on("connection", (socket) => {
         io.to(roomId).emit("receiveMessage", chatMsg);
     }
     socket.on("changeTrackRequest", ({ trackId, track, state }) => {
-        console.log(trackId);
+        console.log(`Now playing ${track.name}`);
         sendToChat({
             msg: `Now playing <strong>${track.name}</strong> by <strong>${track.artists
                 .map((artist) => artist.name)
@@ -245,14 +252,23 @@ io.on("connection", (socket) => {
             type: "SERVER",
             roomId: socket.room,
         });
+        rooms[socket.room].currentTrack = trackId;
+        rooms[socket.room].currentTrackStart = Date.now();
         socket.broadcast.to(socket.room).emit("changeTrack", { trackId });
     });
     socket.on("changeTrack", ({ trackId, accessToken }) => {
-        var loggedInSpotifyApi = new SpotifyWebApi();
-        loggedInSpotifyApi.setAccessToken(accessToken);
-        loggedInSpotifyApi.play({ uris: [`spotify:track:${trackId}`] });
+        changeTrack(trackId, accessToken);
     });
 });
+
+function changeTrack(trackId, accessToken, startDate) {
+    var loggedInSpotifyApi = new SpotifyWebApi();
+    loggedInSpotifyApi.setAccessToken(accessToken);
+    loggedInSpotifyApi.play({
+        uris: [`spotify:track:${trackId}`],
+        position_ms: startDate ? Date.now() - startDate : 0,
+    });
+}
 
 // Add new client like rooms[roomId].clients[socket.id] = new Client()
 function Client(roomId) {
