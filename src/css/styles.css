@@ -4,6 +4,7 @@
 
 * {
     font-family: 'Poppins';
+    border-radius: 0 !important;
 }
 
 html {
@@ -26,10 +27,6 @@ button:hover {
     background: rgb(41, 41, 41);
     color: #fff;
     cursor: default;
-}
-
-iframe {
-    border-radius: 0.75em;
 }
 
 ::-webkit-scrollbar {

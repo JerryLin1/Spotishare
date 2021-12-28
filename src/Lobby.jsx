@@ -76,20 +76,17 @@ function Lobby(props) {
             const chat = document.getElementById("chat");
 
             console.log(chat.scrollTop + chat.clientHeight, chat.scrollHeight);
-            if (chat.scrollTop + chat.clientHeight >= chat.scrollHeight - 200) 
-                chat.scrollTop = chat.scrollHeight;
+            if (chat.scrollTop + chat.clientHeight >= chat.scrollHeight - 200) chat.scrollTop = chat.scrollHeight;
 
             setChat((oldChat) => [
                 ...oldChat,
                 <div>
-                    <span>
-                        {type == "USER" && (
-                            <span>
-                                <strong>{userName}</strong>:
-                            </span>
-                        )}{" "}
-                        <span dangerouslySetInnerHTML={{ __html: processChatMessage(msg) }} />
-                    </span>
+                    {type == "USER" && (
+                        <span>
+                            <strong>{userName}</strong>:
+                        </span>
+                    )}{" "}
+                    <span dangerouslySetInnerHTML={{ __html: processChatMessage(msg) }} />
                 </div>,
             ]);
         });
@@ -114,13 +111,8 @@ function Lobby(props) {
         <Container fluid>
             <div className="page-title unselectable">SpotiShare</div>
             <Row>
-                <Col md="8">
-                    <WebPlayback
-                        roomId={roomId}
-                        disabled={client.isHost}
-                        token={localStorage.getItem("spotify-access-token")}
-                    />
-                    <Queue queue={queue} />
+                <Col xl="8">
+                    <WebPlayback roomId={roomId} disabled={client.isHost} token={localStorage.getItem("spotify-access-token")} />
                 </Col>
                 <Col>
                     <Card className="chat-container">
@@ -149,14 +141,35 @@ function Lobby(props) {
                             </Button>
                         </div>
                     </Form>
-
+                </Col>
+            </Row>
+            <Row>
+                <Col sm="6" xl="8">
+                    <Queue queue={queue} />
+                </Col>
+                <Col>
                     <div id="searchArea">
                         <h3 className="unselectable">Find a Song!</h3>
                         <input id="searchbox" type="text" placeholder="Artist, Song Name, Album..." />
                         <button id="search-btn">Search!</button>
+                        <div id="result-list">
+                            {queue.map((item, key) => {
+                                return (
+                                    <div key={key} className="song-card">
+                                        <iframe
+                                            src={`https://open.spotify.com/embed/track/${item}?utm_source=generator`}
+                                            width="100%"
+                                            height="80"
+                                            frameBorder="0"
+                                            allowFullScreen=""
+                                            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                                        ></iframe>
+                                        <button>Add</button>
+                                    </div>
+                                );
+                            })}
+                        </div>
                     </div>
-
-                    {/* <div id="song-list">{renderSongList()}</div> */}
                 </Col>
             </Row>
         </Container>

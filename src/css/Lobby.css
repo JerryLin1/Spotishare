@@ -1,9 +1,49 @@
+/******* Web Player *******/
+
+.main-wrapper {
+    text-align: center;
+}
+
+.spotifyBtn {
+    background: transparent;
+    margin: 0.5em 0.25em;
+    padding: 0.5em;
+    border-radius: 50% !important;
+}
+
+.spotifyBtn>* {
+    width: 2em;
+    height: 2em;
+}
+
+.spotifyBtn:nth-child(4)>* {
+    width: 3em;
+    height: 3em;
+}
+
+
+#nowPlayingName {
+    font-size: 2em;
+    font-weight: bold;
+}
+
+#nowPlayingArtist {
+    font-size: 1.2em;
+    margin: 0.5em auto;
+}
+
+/******* Chat *******/
+
 #chat-wrapper {
     width: 50%;
 }
 
-
-/***** CHAT *****/
+#chat {
+    min-height: 250px;
+    max-height: 500px;
+    display: block;
+    overflow-y: scroll;
+}
 
 .chat-container {
     margin-bottom: 0.1em;
@@ -37,7 +77,6 @@
     width: 74.5%;
     margin-right: 0.5%;
     border: none;
-    border-radius: 0.25rem;
     padding-left: 0.5em;
 }
 
@@ -47,40 +86,17 @@
 
 #sendBtn {
     font-size: 0.8em;
-    border: solid rgba(56, 253, 89, 0.603) 2px;
+    border: none;
     background-color: rgba(103, 255, 128, 0.603);
-    border-radius: 0.25rem;
     width: 30%;
+    padding: 0;
 }
 
-#searchArea {
-    text-align: center;
-    margin: 2rem auto;
-    border-top: 1px solid #000;
-    padding-top: 1em;
+#sendBtn:hover {
+    background-color: rgb(0, 236, 39);
+    border: 1px solid rgb(77, 255, 107);
+    ;
 }
-
-#searchbox {
-    height: 3em;
-    width: 75%;
-    font-size: 90%;
-    border: none;
-    padding: 0 0.5em;
-}
-
-#searchbox:focus {
-    outline: 1px solid #ccc;
-}
-
-#search-btn {
-    font-size: 90%;
-    height: 3em;
-    width: calc(20% - 0.5em);
-    border: none;
-    margin-left: 0.5em;
-    padding: 0 0.5em;
-}
-
 
 .dropdown {
     width: 100%;
@@ -109,7 +125,7 @@
     width: 100%;
     top: 6.5em;
     height: 0;
-    background-color: rgba(204, 204, 204, 0.5);
+    background-color: rgba(204, 204, 204, 0.6);
     opacity: 0;
     overflow-y: scroll;
     transition: 0.3s;
@@ -140,18 +156,68 @@
     height: 70px;
 }
 
-/* Queue */
+/******* Queue *******/
 
 #queue-title {
     text-align: center;
+    background-color: #fff;
+    padding: 0.5em 0;
+    width: 100%;
 }
 
 #queue-container {
-    margin-top: 5%;
-    border: 1px solid rgb(243, 243, 243);
+    position: relative;
+    margin-top: 2.5em;
+    border-left: 4px solid #fff;
+    border-top: 4px solid #fff;
+    border-bottom: 4px solid #fff;
     padding: 1em;
     overflow-y: scroll;
+    height: 50vh;
+}
+
+#queue iframe {
+    width: 100%;
+}
+
+/******* song search *******/
+
+#searchArea {
+    text-align: center;
+    margin: 2.5em auto;
     max-height: 50vh;
+}
+
+#searchbox {
+    height: 3em;
+    width: 75%;
+    font-size: 90%;
+    border: none;
+    padding: 0 0.5em;
+}
+
+#searchbox:focus {
+    outline: 1px solid #ccc;
+}
+
+#search-btn {
+    font-size: 90%;
+    height: 3em;
+    width: calc(20% - 0.5em);
+    border: none;
+    margin-left: 0.5em;
+    padding: 0;
+}
+
+#result-list {
+    text-align: initial;
+    margin-top: 0.5em;
+    padding: 1em;
+    overflow-y: scroll;
+    border-left: 4px solid #fff;
+    border-top: 4px solid #fff;
+    border-bottom: 4px solid #fff;
+    max-height: calc(50vh - 5.85em);
 }
 
 .song-card {
@@ -160,11 +226,8 @@
     transition: 0.3s;
 }
 
-#chat {
-    min-height: 250px;
-    max-height: 500px;
-    display: block;
-    overflow-y: scroll;
+.song-card>iframe {
+    width: 75%;
 }
 
 .song-card>button {
@@ -178,40 +241,4 @@
 .song-card:hover {
     background: rgba(27, 27, 27, 0.5);
     color: #fff;
-}
-
-
-/* Web Player */
-
-.main-wrapper {
-    text-align: center;
-}
-
-.spotifyBtn {
-    background: transparent;
-    margin: 0.5em 0.25em;
-    padding: 0.5em;
-    border-radius: 50%;
-}
-
-.spotifyBtn>* {
-    width: 2em;
-    height: 2em;
-}
-
-
-.spotifyBtn:nth-child(4)>* {
-    width: 3em;
-    height: 3em;
-}
-
-
-#nowPlayingName {
-    font-size: 2em;
-    text-decoration: bold;
-}
-
-#nowPlayingArtist {
-    font-style: 1.25em;
-    margin: 0.5em auto;
 }

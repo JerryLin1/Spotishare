@@ -4,13 +4,14 @@ function Queue(props) {
     return (
         <div id="queue">
             <div id="queue-container">
-                <h2 id="queue-title">Next In Queue</h2>
+                <h2 id="queue-title" className="unselectable">
+                    Next In Queue
+                </h2>
                 {queue.map((item, key) => {
                     return (
-                        <div key={key}>
+                        <div key={key} className="song-card">
                             <iframe
                                 src={`https://open.spotify.com/embed/track/${item}?utm_source=generator`}
-                                width="100%"
                                 height="80"
                                 frameBorder="0"
                                 allowFullScreen=""

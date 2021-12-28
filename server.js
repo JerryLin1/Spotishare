@@ -216,21 +216,23 @@ io.on("connection", (socket) => {
     });
 
     socket.on("sendMessage", (msg) => {
-        sendToChat({msg, 
-            type: "USER", 
-            userName: rooms[socket.room].clients[socket.id].name, 
+        sendToChat({
+            msg,
+            type: "USER",
+            userName: rooms[socket.room].clients[socket.id].name,
             userId: socket.id,
-            roomId: socket.room});
+            roomId: socket.room
+        });
     })
-    function sendToChat({msg, type, userName, userId, roomId}) {
-        let chatMsg = {msg, type, userName, userId};
+    function sendToChat({ msg, type, userName, userId, roomId }) {
+        let chatMsg = { msg, type, userName, userId };
         rooms[roomId].chatHistory.push(chatMsg);
         io.to(roomId).emit("receiveMessage", chatMsg);
     }
     socket.on("changeTrackRequest", ({ trackId, track, state }) => {
         console.log(trackId)
         sendToChat({
-            msg: `Now playing <b>${track.name}</b> by <b>${track.artists.map(artist => artist.name).join(", ")}</b>`,
+            msg: `Now playing <strong>${track.name}</strong> by <strong>${track.artists.map(artist => artist.name).join(", ")}</strong>`,
             type: "SERVER",
             roomId: socket.room
         });
