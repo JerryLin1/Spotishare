@@ -157,6 +157,16 @@ app.get("/playerReady", (req, res) => {
 
 });
 
+app.get("/search", (req, res) => {
+    console.log(req.query)
+    var loggedInSpotifyApi = new SpotifyWebApi();
+    loggedInSpotifyApi.setAccessToken(req.query.accessToken);
+    loggedInSpotifyApi.searchTracks(req.query.value, {limit: 2})
+    .then (data => {
+        res.send(data.body.tracks.items)
+    })
+})
+
 // TODO: Refresh access token? IDK what this is
 // function refreshAccessToken() {
 //     // clientId, clientSecret and refreshToken has been set on the api object previous to this call.

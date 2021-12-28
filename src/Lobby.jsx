@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { Row, Col, Container, Card, Form, Button } from "react-bootstrap";
 import { CaretDownFill, CaretUpFill } from "react-bootstrap-icons";
 import { useParams } from "react-router-dom";
@@ -25,11 +25,14 @@ function Lobby(props) {
         "185Wm4Mx09dQG0fUktklDm?si=8fd67a8eb5f04c99",
         "185Wm4Mx09dQG0fUktklDm?si=8fd67a8eb5f04c99",
     ]);
+    const [typingTimeout, updateTypingTimeout] = useState(undefined)
+    const [searchResults, setSearchResults] = useState([])
+
+    const searchInputRef = useRef(null)
 
     const renderMembers = () => {
         let newMemberList = [];
         for (const user of members) {
-            console.log(user);
             newMemberList.push(
                 <Row className="member-card">
                     <Col id="member-name">
@@ -71,11 +74,10 @@ function Lobby(props) {
         initializeUser();
 
         client.socket.on("receiveMessage", ({ msg, type, userName, userId }) => {
-            console.log({ msg, type, userName, userId });
 
             const chat = document.getElementById("chat");
 
-            console.log(chat.scrollTop + chat.clientHeight, chat.scrollHeight);
+            // console.log(chat.scrollTop + chat.clientHeight, chat.scrollHeight);
             if (chat.scrollTop + chat.clientHeight >= chat.scrollHeight - 200) chat.scrollTop = chat.scrollHeight;
 
             setChat((oldChat) => [
@@ -150,14 +152,23 @@ function Lobby(props) {
                 <Col>
                     <div id="searchArea">
                         <h3 className="unselectable">Find a Song!</h3>
-                        <input id="searchbox" type="text" placeholder="Artist, Song Name, Album..." />
+                        <input ref={searchInputRef} onInput={()=>{
+                            clearTimeout(typingTimeout);
+                            updateTypingTimeout(setTimeout(()=>{
+                                fetch(`/search?value=${searchInputRef.current.value}&accessToken=${localStorage.getItem("spotify-access-token")}`)
+                                .then(e => e.json())
+                                .then(data => {
+                                    setSearchResults(data)
+                                })
+                            }, 2000))
+                        }} id="searchbox" type="text" placeholder="Artist, Song Name, Album..." />
                         <button id="search-btn">Search!</button>
                         <div id="result-list">
-                            {queue.map((item, key) => {
+                            {searchResults.map((item, key) => {
                                 return (
                                     <div key={key} className="song-card">
                                         <iframe
-                                            src={`https://open.spotify.com/embed/track/${item}?utm_source=generator`}
+                                            src={`https://open.spotify.com/embed/track/${item.id}?utm_source=generator`}
                                             width="100%"
                                             height="80"
                                             frameBorder="0"
