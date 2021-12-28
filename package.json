@@ -46,7 +46,7 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "https://spotishare-test.herokuapp.com",
+
   "devDependencies": {
     "animejs": "^3.2.1",
     "react-bootstrap-icons": "^1.7.2"
