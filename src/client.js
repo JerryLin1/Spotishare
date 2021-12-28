@@ -40,5 +40,5 @@ export default class Client extends React.Component {
         if (msg != "") {
             this.socket.emit("sendMessage", msg);
         }
-    }
+    };
 }

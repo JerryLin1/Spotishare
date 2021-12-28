@@ -22,7 +22,14 @@ function Queue(props) {
                                     allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
                                 ></iframe>
                             </Col>
-                            <Col style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "0 0.5em" }}>
+                            <Col
+                                style={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    padding: "0 0.5em",
+                                }}
+                            >
                                 <button>Remove from Queue</button>
                             </Col>
                         </Row>

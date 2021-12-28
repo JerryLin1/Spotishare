@@ -41,7 +41,11 @@ function WebPlayback(props) {
             // Start playback on current device when the web player is ready
             player.addListener("ready", ({ device_id }) => {
                 console.log("Ready with Device ID", device_id);
-                fetch(`/playerReady?accessToken=${localStorage.getItem("spotify-access-token")}&deviceId=${device_id}&roomId=${props.roomId}`);
+                fetch(
+                    `/playerReady?accessToken=${localStorage.getItem(
+                        "spotify-access-token"
+                    )}&deviceId=${device_id}&roomId=${props.roomId}`
+                );
             });
 
             player.addListener("not_ready", ({ device_id }) => {
@@ -115,7 +119,9 @@ function WebPlayback(props) {
                         {client.isHost && (
                             <div id="nowPlayingSide">
                                 <div id="nowPlayingName">{current_track.name}</div>
-                                <div id="nowPlayingArtist">{current_track.artists.map((artist) => artist.name).join(", ")}</div>
+                                <div id="nowPlayingArtist">
+                                    {current_track.artists.map((artist) => artist.name).join(", ")}
+                                </div>
 
                                 <button
                                     className="spotifyBtn"

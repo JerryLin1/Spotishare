@@ -43,13 +43,15 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 export function isLoggedIn() {
-    return localStorage.getItem("spotify-access-token") && localStorage.getItem("spotify-access-token-expiry") > Date.now();
+    return (
+        localStorage.getItem("spotify-access-token") && localStorage.getItem("spotify-access-token-expiry") > Date.now()
+    );
 }
 export async function login() {
     fetch("/auth/login")
         .then((e) => e.json())
         .then((data) => {
-            localStorage.setItem("prev-location", window.location)
+            localStorage.setItem("prev-location", window.location);
             window.location = data.redirectUri;
         })
         .catch((error) => {

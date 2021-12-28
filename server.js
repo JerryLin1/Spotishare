@@ -32,7 +32,6 @@ var spotifyApi = new SpotifyWebApi({
 
 const rooms = {};
 
-
 // TODO: Implement "state" which is a security thing or something using a randomly generated string
 app.get("/auth/login", (req, res) => {
     const scope = [
@@ -141,12 +140,12 @@ app.get("/joinLobby", (req, res) => {
             client.image = data.body.images[0].url;
         })
         .then(() => {
-            rooms[roomId].clients[req.query.socketid] = client
+            rooms[roomId].clients[req.query.socketid] = client;
         })
         .then(() => {
             res.sendStatus(200);
         })
-        .catch((error) => console.log(error))
+        .catch((error) => console.log(error));
 });
 
 app.get("/playerReady", (req, res) => {
@@ -154,18 +153,16 @@ app.get("/playerReady", (req, res) => {
     var loggedInSpotifyApi = new SpotifyWebApi();
     loggedInSpotifyApi.setAccessToken(req.query.accessToken);
     loggedInSpotifyApi.transferMyPlayback([req.query.deviceId], { play: true });
-
 });
 
 app.get("/search", (req, res) => {
     var loggedInSpotifyApi = new SpotifyWebApi();
     loggedInSpotifyApi.setAccessToken(req.query.accessToken);
-    console.log(`Searching "${req.query.value}"`)
-    loggedInSpotifyApi.searchTracks(req.query.value, {limit: 10})
-    .then (data => {
-        res.send(data.body.tracks.items)
-    })
-})
+    console.log(`Searching "${req.query.value}"`);
+    loggedInSpotifyApi.searchTracks(req.query.value, { limit: 10 }).then((data) => {
+        res.send(data.body.tracks.items);
+    });
+});
 
 // TODO: Refresh access token? IDK what this is
 // function refreshAccessToken() {
@@ -198,8 +195,8 @@ io.on("connection", (socket) => {
             sendToChat({
                 msg: `${rooms[socket.room].clients[socket.id].name} left the lobby.`,
                 type: "SERVER",
-                roomId: socket.room
-            })
+                roomId: socket.room,
+            });
             delete rooms[socket.room].clients[socket.id];
             io.to(socket.room).emit("updateClientList", rooms[socket.room].clients);
         }
@@ -212,17 +209,17 @@ io.on("connection", (socket) => {
         sendToChat({
             msg: `${rooms[socket.room].clients[socket.id].name} joined the lobby.`,
             type: "SERVER",
-            roomId: socket.room
-        })
+            roomId: socket.room,
+        });
         callback({
-            isHost: rooms[socket.room].clients[socket.id].isHost
-        })
+            isHost: rooms[socket.room].clients[socket.id].isHost,
+        });
     });
 
     socket.on("togglePlayPause", () => {
         rooms[socket.room].paused = !rooms[socket.room].paused;
         io.to(socket.room).emit("paused", rooms[socket.room].paused);
-        console.log(rooms[socket.room].paused)
+        console.log(rooms[socket.room].paused);
     });
 
     socket.on("sendMessage", (msg) => {
@@ -231,31 +228,31 @@ io.on("connection", (socket) => {
             type: "USER",
             userName: rooms[socket.room].clients[socket.id].name,
             userId: socket.id,
-            roomId: socket.room
+            roomId: socket.room,
         });
-    })
+    });
     function sendToChat({ msg, type, userName, userId, roomId }) {
         let chatMsg = { msg, type, userName, userId };
         rooms[roomId].chatHistory.push(chatMsg);
         io.to(roomId).emit("receiveMessage", chatMsg);
     }
     socket.on("changeTrackRequest", ({ trackId, track, state }) => {
-        console.log(trackId)
+        console.log(trackId);
         sendToChat({
-            msg: `Now playing <strong>${track.name}</strong> by <strong>${track.artists.map(artist => artist.name).join(", ")}</strong>`,
+            msg: `Now playing <strong>${track.name}</strong> by <strong>${track.artists
+                .map((artist) => artist.name)
+                .join(", ")}</strong>`,
             type: "SERVER",
-            roomId: socket.room
+            roomId: socket.room,
         });
-        socket.broadcast.to(socket.room).emit("changeTrack", { trackId })
-    })
+        socket.broadcast.to(socket.room).emit("changeTrack", { trackId });
+    });
     socket.on("changeTrack", ({ trackId, accessToken }) => {
         var loggedInSpotifyApi = new SpotifyWebApi();
         loggedInSpotifyApi.setAccessToken(accessToken);
-        loggedInSpotifyApi.play({ uris: [`spotify:track:${trackId}`] })
-    })
+        loggedInSpotifyApi.play({ uris: [`spotify:track:${trackId}`] });
+    });
 });
-
-
 
 // Add new client like rooms[roomId].clients[socket.id] = new Client()
 function Client(roomId) {
