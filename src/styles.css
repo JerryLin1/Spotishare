@@ -33,12 +33,10 @@ button:hover {
 }
 
 ::-webkit-scrollbar-track {
-    border-radius: 0.5em;
     background: rgb(243, 243, 243);
 }
 
 ::-webkit-scrollbar-thumb {
-    border-radius: 0.5em;
     background: #888;
 }
 

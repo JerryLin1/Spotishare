@@ -3,6 +3,8 @@ import { PlayCircle, PauseCircle, SkipForwardCircle, SkipBackwardCircle } from "
 import { io } from "socket.io-client";
 import { ClientContext } from "./contexts/ClientProvider";
 
+import "./css/Lobby.css";
+
 const track = {
     name: "",
     album: {
@@ -19,7 +21,6 @@ function WebPlayback(props) {
     const [current_track, setTrack] = useState(track);
 
     useEffect(() => {
-
         // Create new spotify player instance
         const script = document.createElement("script");
         script.src = "https://sdk.scdn.co/spotify-player.js";
@@ -27,17 +28,15 @@ function WebPlayback(props) {
         document.body.appendChild(script);
 
         window.onSpotifyWebPlaybackSDKReady = () => {
-
             // Create tangible web player with the client's access token (requires Spotify premium)
             const player = new window.Spotify.Player({
                 name: "spomongus",
-                getOAuthToken: unlockPlayer => {
+                getOAuthToken: (unlockPlayer) => {
                     unlockPlayer(props.token);
                 },
                 volume: 0.5,
             });
             setPlayer(player);
-
 
             // Start playback on current device when the web player is ready
             player.addListener("ready", ({ device_id }) => {
@@ -48,7 +47,6 @@ function WebPlayback(props) {
             player.addListener("not_ready", ({ device_id }) => {
                 console.log("Device ID has gone offline", device_id);
             });
-
 
             let prevPlayerState = undefined;
             player.addListener("player_state_changed", (state) => {
@@ -63,7 +61,7 @@ function WebPlayback(props) {
                         client.socket.emit("changeTrackRequest", {
                             trackId: state.track_window.current_track.id,
                             track: state.track_window.current_track,
-                            state: state
+                            state: state,
                         });
                         console.log(state);
                     }
@@ -71,7 +69,7 @@ function WebPlayback(props) {
 
                 setTrack(state.track_window.current_track);
                 setPaused(state.paused);
-                player.getCurrentState().then(state => !state ? setActive(false) : setActive(true));
+                player.getCurrentState().then((state) => (!state ? setActive(false) : setActive(true)));
 
                 prevPlayerState = state;
             });
@@ -106,50 +104,44 @@ function WebPlayback(props) {
         return (
             <>
                 <div className="container">
-                    <h3 style={{ textAlign: "center" }}>Currently Playing:</h3>
                     <div className="main-wrapper">
-                        <img
-                            height="500px"
-                            width="500px"
-                            src={current_track.album.images[0].url}
-                            id="nowPlayingCover"
-                            alt=""
-                        />
+                        <img height="500px" width="500px" src={current_track.album.images[0].url} id="nowPlayingCover" alt="" />
 
                         {client.isHost &&
                             <div id="nowPlayingSide">
-                                <div id="nowPlayingName">{current_track.name}</div>
-                                <div id="nowPlayingArtist">{current_track.artists[0].name}</div>
+                            <div id="nowPlayingName">{current_track.name}</div>
+                            <div id="nowPlayingArtist">{current_track.artists.map((artist) => artist.name).join(", ")}</div>
 
-                                <button
-                                    className="spotifyBtn"
-                                    onClick={() => {
-                                        player.previousTrack();
-                                    }}
-                                >
-                                    <SkipBackwardCircle />
-                                </button>
+                            <button
+                                className="spotifyBtn"
+                                onClick={() => {
+                                    player.previousTrack();
+                                }}
+                            >
+                                <SkipBackwardCircle />
+                            </button>
 
-                                <button
-                                    className="spotifyBtn"
-                                    onClick={() => {
-                                        player.togglePlay();
-                                        client.socket.emit("togglePlayPause");
-                                    }}
-                                >
-                                    {is_paused ? <PlayCircle /> : <PauseCircle />}
-                                </button>
+                            <button
+                                className="spotifyBtn"
+                                onClick={() => {
+                                    player.togglePlay();
+                                    client.socket.emit("togglePlayPause");
+                                }}
+                            >
+                                {is_paused ? <PlayCircle /> : <PauseCircle />}
+                            </button>
 
-                                <button
-                                    className="spotifyBtn"
-                                    onClick={() => {
-                                        player.nextTrack();
-                                    }}
-                                >
-                                    <SkipForwardCircle />
-                                </button>
-                            </div>
+                            <button
+                                className="spotifyBtn"
+                                onClick={() => {
+                                    player.nextTrack();
+                                }}
+                            >
+                                <SkipForwardCircle />
+                            </button>
+                        </div>
                         }
+
 
                     </div>
                 </div>
