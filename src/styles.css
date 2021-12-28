@@ -28,6 +28,10 @@ button:hover {
     cursor: default;
 }
 
+iframe {
+    border-radius: 0.75em;
+}
+
 ::-webkit-scrollbar {
     width: 0.75em;
 }
@@ -54,13 +58,12 @@ button:hover {
     display: inline-block;
 }
 
-#title {
+.page-title {
     font-size: 3em;
     font-weight: 800;
     margin-bottom: 0.5em;
-    pointer-events: none;
 }
 
-#title::selection {
-    background: transparent;
+.unselectable {
+    user-select: none;
 }

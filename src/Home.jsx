@@ -21,7 +21,7 @@ function HomePage(props) {
             <button onClick={() => login()} id="sign-in">
                 Sign in
             </button>
-            <h1 id="title">SpotiShare</h1>
+            <h1 className="page-title unselectable">SpotiShare</h1>
 
             <div>
                 <button onClick={() => (isLoggedIn() ? createLobby() : login())}>Create Lobby</button>

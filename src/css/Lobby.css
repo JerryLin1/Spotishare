@@ -9,6 +9,12 @@
     margin-bottom: 0.1em;
 }
 
+@media screen and (max-width: 1200px) {
+    .chat-container {
+        margin: 0.5em auto;
+    }
+}
+
 #chat-header {
     font-size: 2em;
 }
@@ -28,10 +34,15 @@
 }
 
 #chatInput {
-    width: 70%;
+    width: 74.5%;
+    margin-right: 0.5%;
     border: none;
     border-radius: 0.25rem;
     padding-left: 0.5em;
+}
+
+#chatInput:focus {
+    outline: 1px solid #000;
 }
 
 #sendBtn {
@@ -97,19 +108,23 @@
     position: absolute;
     width: 100%;
     top: 6.5em;
+    height: 0;
     background-color: rgba(204, 204, 204, 0.5);
     opacity: 0;
+    overflow-y: scroll;
     transition: 0.3s;
 }
 
 .lobby-list.visible {
+    position: absolute;
+    height: calc(100% - 6.5em);
     opacity: 1;
     overflow-y: scroll;
 }
 
 .member-card {
     background-color: #fff;
-    height: 90px;
+    height: 90px !important;
     width: 80%;
     height: 0%;
     margin: 0.5em auto;
@@ -149,6 +164,7 @@
     min-height: 250px;
     max-height: 500px;
     display: block;
+    overflow-y: scroll;
 }
 
 .song-card>button {

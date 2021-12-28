@@ -227,7 +227,7 @@ io.on("connection", (socket) => {
     socket.on("changeTrackRequest", ({ trackId, track, state }) => {
         console.log(trackId)
         sendToChat({
-            msg: `Now playing "${track.name}" by ${track.artists.map(artist => artist.name).join(", ")}`,
+            msg: `Now playing <b>${track.name}</b> by <b>${track.artists.map(artist => artist.name).join(", ")}</b>`,
             type: "SERVER",
             roomId: socket.room
         });

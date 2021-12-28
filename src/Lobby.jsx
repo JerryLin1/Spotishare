@@ -99,19 +99,18 @@ function Lobby(props) {
     }, []);
 
     const toggleLobbyList = () => {
-
         if (document.getElementsByClassName("lobby-list")[0].classList.contains("visible")) {
-            document.getElementsByClassName("lobby-list")[0].className = "lobby-list"
-            document.getElementById("caret").style.transform = "translateY(-50%) rotate(0deg)"
+            document.getElementsByClassName("lobby-list")[0].className = "lobby-list";
+            document.getElementById("caret").style.transform = "translateY(-50%) rotate(0deg)";
         } else {
-            document.getElementsByClassName("lobby-list")[0].className = "lobby-list visible"
-            document.getElementById("caret").style.transform = "translateY(-50%) rotate(180deg)"
+            document.getElementsByClassName("lobby-list")[0].className = "lobby-list visible";
+            document.getElementById("caret").style.transform = "translateY(-50%) rotate(180deg)";
         }
     };
 
     return (
         <Container fluid>
-            <div id="title">SpotiShare</div>
+            <div className="page-title unselectable">SpotiShare</div>
             <Row>
                 <Col xl="8">
                     <WebPlayback roomId={roomId} token={localStorage.getItem("spotify-access-token")} />
@@ -119,15 +118,15 @@ function Lobby(props) {
                 </Col>
                 <Col>
                     <Card className="chat-container">
-                        <Card.Header id="chat-header">Chat</Card.Header>
-                        <div className="dropdown" onClick={toggleLobbyList}>
+                        <Card.Header id="chat-header" className="unselectable">
+                            Chat
+                        </Card.Header>
+                        <div className="dropdown unselectable" onClick={toggleLobbyList}>
                             <p style={{ margin: "0" }}>Currently listening ({members != undefined ? members.length : 0})</p>
                             <CaretDownFill id="caret" />
                         </div>
                         <div className="lobby-list">{renderMembers()}</div>
-                        <Card.Body id="chat" style={{ overflowY: "scroll" }}>
-                            {chat}
-                        </Card.Body>
+                        <Card.Body id="chat">{chat}</Card.Body>
                     </Card>
                     <Form
                         autoComplete="off"
@@ -146,7 +145,7 @@ function Lobby(props) {
                     </Form>
 
                     <div id="searchArea">
-                        <h3>Find a Song!</h3>
+                        <h3 className="unselectable">Find a Song!</h3>
                         <input id="searchbox" type="text" placeholder="Artist, Song Name, Album..." />
                         <button id="search-btn">Search!</button>
                     </div>
