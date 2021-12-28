@@ -116,38 +116,41 @@ function WebPlayback(props) {
                             alt=""
                         />
 
-                        <div id="nowPlayingSide">
-                            <div id="nowPlayingName">{current_track.name}</div>
-                            <div id="nowPlayingArtist">{current_track.artists[0].name}</div>
+                        {client.isHost &&
+                            <div id="nowPlayingSide">
+                                <div id="nowPlayingName">{current_track.name}</div>
+                                <div id="nowPlayingArtist">{current_track.artists[0].name}</div>
 
-                            <button
-                                className="spotifyBtn"
-                                onClick={() => {
-                                    player.previousTrack();
-                                }}
-                            >
-                                <SkipBackwardCircle />
-                            </button>
+                                <button
+                                    className="spotifyBtn"
+                                    onClick={() => {
+                                        player.previousTrack();
+                                    }}
+                                >
+                                    <SkipBackwardCircle />
+                                </button>
 
-                            <button
-                                className="spotifyBtn"
-                                onClick={() => {
-                                    player.togglePlay();
-                                    client.socket.emit("togglePlayPause");
-                                }}
-                            >
-                                {is_paused ? <PlayCircle /> : <PauseCircle />}
-                            </button>
+                                <button
+                                    className="spotifyBtn"
+                                    onClick={() => {
+                                        player.togglePlay();
+                                        client.socket.emit("togglePlayPause");
+                                    }}
+                                >
+                                    {is_paused ? <PlayCircle /> : <PauseCircle />}
+                                </button>
 
-                            <button
-                                className="spotifyBtn"
-                                onClick={() => {
-                                    player.nextTrack();
-                                }}
-                            >
-                                <SkipForwardCircle />
-                            </button>
-                        </div>
+                                <button
+                                    className="spotifyBtn"
+                                    onClick={() => {
+                                        player.nextTrack();
+                                    }}
+                                >
+                                    <SkipForwardCircle />
+                                </button>
+                            </div>
+                        }
+
                     </div>
                 </div>
             </>

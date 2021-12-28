@@ -16,10 +16,10 @@ var spotifyClientId = process.env.REACT_APP_SPOTIFY_CLIENTID;
 var spotifyClientSecret = process.env.REACT_APP_SPOTIFY_CLIENTSECRET;
 
 // When using localhost:3000
-// var redirectUri = process.env.REACT_APP_REDIRECT_URI_LOCAL;
+var redirectUri = process.env.REACT_APP_REDIRECT_URI_LOCAL;
 
 // When using public ip
-var redirectUri = process.env.REACT_APP_REDIRECT_URI;
+// var redirectUri = process.env.REACT_APP_REDIRECT_URI;
 
 var SpotifyWebApi = require("spotify-web-api-node");
 const { RandomId } = require("./server/helperFunctions");
@@ -195,7 +195,7 @@ io.on("connection", (socket) => {
         }
     });
 
-    socket.on("joinRoom", (info) => {
+    socket.on("joinRoom", (info, callback) => {
         socket.join(info.roomId);
         socket.room = info.roomId;
         io.to(info.roomId).emit("updateClientList", rooms[info.roomId].clients);
@@ -203,6 +203,9 @@ io.on("connection", (socket) => {
             msg: `${rooms[socket.room].clients[socket.id].name} joined the lobby.`,
             type: "SERVER",
             roomId: socket.room
+        })
+        callback({
+            isHost: rooms[socket.room].clients[socket.id].isHost
         })
     });
 
