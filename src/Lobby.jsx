@@ -68,9 +68,13 @@ function Lobby(props) {
             }`
         ).then((data) => {
             if (data.status === 200) {
-                client.socket.emit("joinRoom", { roomId: roomId }, (response) => {
-                    client.isHost = response.isHost;
-                });
+                client.socket.emit(
+                    "joinRoom",
+                    { roomId: roomId, accessToken: localStorage.getItem("spotify-access-token") },
+                    (response) => {
+                        client.isHost = response.isHost;
+                    }
+                );
             }
         });
     };
