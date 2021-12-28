@@ -179,7 +179,6 @@ function Lobby(props) {
                             type="text"
                             placeholder="Artist, Song Name, Album..."
                         />
-                        <button id="search-btn">Search!</button>
                         <div id="result-list">
                             {searchResults.map((item, key) => {
                                 return (
