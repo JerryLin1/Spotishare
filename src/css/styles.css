@@ -4,6 +4,7 @@
 
 * {
     font-family: 'Poppins';
+    border-radius: 0 !important;
 }
 
 html {
@@ -44,6 +45,10 @@ button:hover {
     background: #555;
 }
 
+.unselectable {
+    user-select: none;
+}
+
 /********* Home *********/
 
 #sign-in {
@@ -54,13 +59,9 @@ button:hover {
     display: inline-block;
 }
 
-#title {
+.page-title {
     font-size: 3em;
     font-weight: 800;
     margin-bottom: 0.5em;
-    pointer-events: none;
-}
-
-#title::selection {
-    background: transparent;
+    text-align: left !important;
 }

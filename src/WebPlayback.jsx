@@ -41,7 +41,11 @@ function WebPlayback(props) {
             // Start playback on current device when the web player is ready
             player.addListener("ready", ({ device_id }) => {
                 console.log("Ready with Device ID", device_id);
-                fetch(`/playerReady?accessToken=${localStorage.getItem("spotify-access-token")}&deviceId=${device_id}&roomId=${props.roomId}`);
+                fetch(
+                    `/playerReady?accessToken=${localStorage.getItem(
+                        "spotify-access-token"
+                    )}&deviceId=${device_id}&roomId=${props.roomId}`
+                );
             });
 
             player.addListener("not_ready", ({ device_id }) => {
@@ -105,14 +109,17 @@ function WebPlayback(props) {
             <>
                 <div className="container">
                     <div className="main-wrapper">
-                        <img height="500px" width="500px" src={current_track.album.images[0].url} id="nowPlayingCover" alt="" />
+                        <img
+                        src={current_track.album.images[0].url}
+                        id="nowPlayingCover"
+                        className="unselectable"
+                        alt=""
+                    />
                         <div id="nowPlayingName">{current_track.name}</div>
                         <div id="nowPlayingArtist">{current_track.artists.map((artist) => artist.name).join(", ")}</div>
                         
                         {client.isHost &&
                             <div id="nowPlayingSide">
-
-
                                 <button
                                     className="spotifyBtn"
                                     onClick={() => {
@@ -142,7 +149,6 @@ function WebPlayback(props) {
                                 </button>
                             </div>
                         }
-
 
                     </div>
                 </div>

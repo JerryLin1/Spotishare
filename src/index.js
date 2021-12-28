@@ -5,7 +5,8 @@ import { ClientProvider } from "./contexts/ClientProvider";
 import HomePage from "./Home";
 import Lobby from "./Lobby";
 import PreLobby from "./PreLobby";
-import "./styles.css";
+
+import "./css/styles.css";
 
 ReactDOM.render(
     <React.StrictMode>
@@ -14,7 +15,7 @@ ReactDOM.render(
                 <Routes>
                     <Route path="/" element={<HomePage />}></Route>
                     <Route path="/:roomId" element={<PreLobby />}></Route>
-					<Route path="/:roomId/Lobby" element={<Lobby />}></Route>
+                    <Route path="/:roomId/Lobby" element={<Lobby />}></Route>
                 </Routes>
             </BrowserRouter>
         </ClientProvider>
@@ -42,13 +43,15 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 export function isLoggedIn() {
-    return localStorage.getItem("spotify-access-token") && localStorage.getItem("spotify-access-token-expiry") > Date.now();
+    return (
+        localStorage.getItem("spotify-access-token") && localStorage.getItem("spotify-access-token-expiry") > Date.now()
+    );
 }
 export async function login() {
     fetch("/auth/login")
         .then((e) => e.json())
         .then((data) => {
-            localStorage.setItem("prev-location", window.location)
+            localStorage.setItem("prev-location", window.location);
             window.location = data.redirectUri;
         })
         .catch((error) => {

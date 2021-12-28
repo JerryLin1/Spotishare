@@ -1,12 +1,78 @@
+/******* Pre Lobby *******/
+
+.pre-lobby>* {
+    text-align: center;
+}
+
+.pre-lobby-body {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%)
+}
+
+/******* Web Player *******/
+
+.main-wrapper {
+    text-align: center;
+}
+
+.spotifyBtn {
+    background: transparent;
+    margin: 0.5em 0.25em;
+    padding: 0.5em;
+    border-radius: 50% !important;
+}
+
+.spotifyBtn>* {
+    width: 2em;
+    height: 2em;
+}
+
+.spotifyBtn:nth-child(4)>* {
+    width: 3em;
+    height: 3em;
+}
+
+#nowPlayingCover {
+    height: 50%;
+    width: 50%;
+    min-height: 400px;
+    min-width: 400px;
+    margin-bottom: 1em;
+}
+
+#nowPlayingName {
+    font-size: 2em;
+    font-weight: bold;
+}
+
+#nowPlayingArtist {
+    font-size: 1.2em;
+    margin: 0.5em auto;
+}
+
+/******* Chat *******/
+
 #chat-wrapper {
     width: 50%;
 }
 
-
-/***** CHAT *****/
+#chat {
+    min-height: 250px;
+    max-height: 500px;
+    display: block;
+    overflow-y: scroll;
+}
 
 .chat-container {
     margin-bottom: 0.1em;
+}
+
+@media screen and (max-width: 1200px) {
+    .chat-container {
+        margin: 0.5em auto;
+    }
 }
 
 #chat-header {
@@ -28,48 +94,29 @@
 }
 
 #chatInput {
-    width: 70%;
+    width: 74.5%;
+    margin-right: 0.5%;
     border: none;
-    border-radius: 0.25rem;
     padding-left: 0.5em;
+}
+
+#chatInput:focus {
+    outline: 1px solid #000;
 }
 
 #sendBtn {
     font-size: 0.8em;
-    border: solid rgba(56, 253, 89, 0.603) 2px;
+    border: none;
     background-color: rgba(103, 255, 128, 0.603);
-    border-radius: 0.25rem;
     width: 30%;
+    padding: 0;
 }
 
-#searchArea {
-    text-align: center;
-    margin: 2rem auto;
-    border-top: 1px solid #000;
-    padding-top: 1em;
+#sendBtn:hover {
+    background-color: rgb(0, 236, 39);
+    border: 1px solid rgb(77, 255, 107);
+    ;
 }
-
-#searchbox {
-    height: 3em;
-    width: 75%;
-    font-size: 90%;
-    border: none;
-    padding: 0 0.5em;
-}
-
-#searchbox:focus {
-    outline: 1px solid #ccc;
-}
-
-#search-btn {
-    font-size: 90%;
-    height: 3em;
-    width: calc(20% - 0.5em);
-    border: none;
-    margin-left: 0.5em;
-    padding: 0 0.5em;
-}
-
 
 .dropdown {
     width: 100%;
@@ -97,19 +144,23 @@
     position: absolute;
     width: 100%;
     top: 6.5em;
-    background-color: rgba(204, 204, 204, 0.5);
+    height: 0;
+    background-color: rgba(204, 204, 204, 0.6);
     opacity: 0;
+    overflow-y: scroll;
     transition: 0.3s;
 }
 
 .lobby-list.visible {
+    position: absolute;
+    height: calc(100% - 6.5em);
     opacity: 1;
     overflow-y: scroll;
 }
 
 .member-card {
     background-color: #fff;
-    height: 90px;
+    height: 90px !important;
     width: 80%;
     height: 0%;
     margin: 0.5em auto;
@@ -121,81 +172,99 @@
     font-size: 1.25em;
 }
 
-#member-pfp {
+#pfp-container {
+    position: relative;
     height: 70px;
+    width: 70px;
+    overflow: hidden;
+    border-radius: 50% !important;
 }
 
-/* Queue */
+#member-pfp {
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    object-fit: cover;
+    height: 140px;
+    width: 140px;
+    transform: scale(0.5);
+}
+
+/******* Queue *******/
 
 #queue-title {
     text-align: center;
+    font-weight: bold;
+    padding: 0.5em 0;
+    width: 100%;
 }
 
 #queue-container {
-    margin-top: 5%;
-    border: 1px solid rgb(243, 243, 243);
+    position: relative;
+    margin-top: 2.5em;
+    border: 4px solid #fff;
     padding: 1em;
     overflow-y: scroll;
+    height: 50vh;
+}
+
+/******* song search *******/
+
+#searchArea {
+    text-align: center;
+    margin: 2.5em auto;
     max-height: 50vh;
 }
 
+#searchArea>h3:first-of-type {
+    margin-bottom: 0.5em;
+}
+
+#searchbox {
+    height: 3em;
+    width: 75%;
+    font-size: 90%;
+    border: none;
+    padding: 0 0.5em;
+}
+
+#searchbox:focus {
+    outline: 1px solid #ccc;
+}
+
+#search-btn {
+    font-size: 90%;
+    height: 3em;
+    width: calc(20% - 0.5em);
+    border: none;
+    margin-left: 0.5em;
+    padding: 0;
+}
+
+#result-list {
+    text-align: initial;
+    margin-top: 0.5em;
+    padding: 1em;
+    overflow-y: scroll;
+    border: 4px solid #fff;
+    max-height: calc(50vh - 6.25em);
+}
+
 .song-card {
-    position: relative;
+    margin: 0;
     padding: 0.25em;
     transition: 0.3s;
+    width: 100%;
 }
 
-#chat {
-    min-height: 250px;
-    max-height: 500px;
-    display: block;
-}
-
-.song-card>button {
-    position: absolute;
-    width: 20%;
-    right: -7.5%;
-    top: 25%;
-    transform: translateX(-50%);
+.song-card button {
+    align-items: center;
+    width: 100%;
+    height: 50%;
+    font-size: 0.9em;
 }
 
 .song-card:hover {
     background: rgba(27, 27, 27, 0.5);
     color: #fff;
-}
-
-
-/* Web Player */
-
-.main-wrapper {
-    text-align: center;
-}
-
-.spotifyBtn {
-    background: transparent;
-    margin: 0.5em 0.25em;
-    padding: 0.5em;
-    border-radius: 50%;
-}
-
-.spotifyBtn>* {
-    width: 2em;
-    height: 2em;
-}
-
-
-.spotifyBtn:nth-child(4)>* {
-    width: 3em;
-    height: 3em;
-}
-
-
-#nowPlayingName {
-    font-size: 2em;
-    text-decoration: bold;
-}
-
-#nowPlayingArtist {
-    font-style: 1.25em;
-    margin: 0.5em auto;
 }
