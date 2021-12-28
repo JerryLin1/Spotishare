@@ -16,9 +16,8 @@ const io = new Server(server);
 var spotifyClientId = process.env.REACT_APP_SPOTIFY_CLIENTID;
 var spotifyClientSecret = process.env.REACT_APP_SPOTIFY_CLIENTSECRET;
 
-var redirectUri = process.env.NODE_ENV === "production" ?
-    process.env.REACT_APP_REDIRECT_URI :
-    process.env.REACT_APP_REDIRECT_URI_LOCAL;
+var redirectUri = process.env.NODE_ENV = process.env.REACT_APP_REDIRECT_URI_HEROKU;
+
 
 var SpotifyWebApi = require("spotify-web-api-node");
 const { RandomId } = require("./server/helperFunctions");
