@@ -116,7 +116,7 @@ function Lobby(props) {
 
     return (
         <Container fluid>
-            <div className="page-title unselectable">SpotiShare</div>
+            <h1 className="page-title unselectable">SpotiShare</h1>
             <Row>
                 <Col xl="8">
                     <WebPlayback roomId={roomId} disabled={client.isHost} token={localStorage.getItem("spotify-access-token")} />

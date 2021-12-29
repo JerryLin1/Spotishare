@@ -6,14 +6,11 @@ import { isLoggedIn, login } from ".";
 import { ClientContext } from "./contexts/ClientProvider";
 
 function HomePage(props) {
-    let client = useContext(ClientContext);
-    console.log(client);
-
     return (
         <Container fluid>
             <h1 className="page-title home unselectable">SpotiShare</h1>
             <button onClick={() => login()} id="sign-in">
-                {isLoggedIn() ? `Signed In!` : "Sign In"}
+                {isLoggedIn() ? `Hello ${JSON.parse(localStorage.getItem("client-data")).body.display_name}!` : "Sign In"}
             </button>
 
             <div style={{ width: "100%", textAlign: "center" }}>

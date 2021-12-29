@@ -11,7 +11,7 @@ function PreLobby(props) {
             <h1 className="page-title unselectable">SpotiShare</h1>
             <div className="pre-lobby-body">
                 <div>
-                    <h2>Press join to listen to moosic with friends! :D</h2>
+                    <h1>Press join to listen to moosic with friends! :D</h1>
                 </div>
 
                 <div style={{ margin: "2em auto" }}>
