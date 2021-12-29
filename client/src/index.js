@@ -39,6 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 localStorage.setItem("spotify-access-token", data.accessToken);
                 localStorage.setItem("spotify-access-token-expiry", Date.now() + data.expiresIn * 990);
                 localStorage.setItem("spotify-refresh-token", data.refreshToken);
+                localStorage.setItem("client-data", JSON.stringify(data.clientData));
                 window.location = localStorage.getItem("prev-location") || "/";
             });
     }
