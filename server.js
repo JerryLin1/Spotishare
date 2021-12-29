@@ -124,7 +124,10 @@ app.get("/createLobby", (req, res) => {
         clients: {},
         paused: false,
         chatHistory: [],
+<<<<<<< HEAD
         currentTrack: "",
+=======
+>>>>>>> fa688f4885362c4538df31339dad79b128009e27
         currentTrackStart: Date.now(),
     };
     res.send({ roomId: roomId });
@@ -237,7 +240,6 @@ io.on("connection", (socket) => {
     socket.on("togglePlayPause", () => {
         rooms[socket.room].paused = !rooms[socket.room].paused;
         io.to(socket.room).emit("paused", rooms[socket.room].paused);
-        console.log(rooms[socket.room].paused);
     });
 
     socket.on("sendMessage", (msg) => {
@@ -249,11 +251,13 @@ io.on("connection", (socket) => {
             roomId: socket.room,
         });
     });
+
     function sendToChat({ msg, type, userName, userId, roomId }) {
         let chatMsg = { msg, type, userName, userId };
         rooms[roomId].chatHistory.push(chatMsg);
         io.to(roomId).emit("receiveMessage", chatMsg);
     }
+
     socket.on("changeTrackRequest", ({ trackId, track, state }) => {
         console.log(`Now playing ${track.name}`);
         sendToChat({
@@ -267,9 +271,14 @@ io.on("connection", (socket) => {
         rooms[socket.room].currentTrackStart = Date.now();
         socket.broadcast.to(socket.room).emit("changeTrack", { trackId });
     });
+
     socket.on("changeTrack", ({ trackId, accessToken }) => {
         changeTrack(trackId, accessToken);
     });
+
+    socket.on("syncLobbyPosition", (spos) => {
+        socket.broadcast.to(socket.room).emit("updatePlaybackPos", spos);
+    })
 });
 
 function changeTrack(trackId, accessToken, startDate) {

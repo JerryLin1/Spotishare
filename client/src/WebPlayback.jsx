@@ -13,6 +13,8 @@ const track = {
     artists: [{ name: "" }],
 };
 
+const syncTolerance = 3000;
+
 function WebPlayback(props) {
     const client = useContext(ClientContext);
     const [is_paused, setPaused] = useState(false);
@@ -55,22 +57,29 @@ function WebPlayback(props) {
             let prevPlayerState = undefined;
             player.addListener("player_state_changed", (state) => {
                 if (!state) return;
-                if (prevPlayerState === undefined) prevPlayerState = state;
+                if (prevPlayerState === undefined) { 
+                    prevPlayerState = state;
+                    return; 
+                }
                 else {
                     let ptrack = prevPlayerState.track_window.current_track.id;
                     let strack = state.track_window.current_track.id;
                     let ppos = prevPlayerState.position;
                     let spos = state.position;
-                    if (ptrack != strack) {
+                    if (ptrack !== strack) {
                         client.socket.emit("changeTrackRequest", {
                             trackId: state.track_window.current_track.id,
                             track: state.track_window.current_track,
                             state: state,
                         });
-                        console.log(state);
+                    }
+                    if (Math.abs(spos-ppos) >= syncTolerance) {
+                        console.log("previous pos:", ppos, "current pos:", spos)
+                        client.socket.emit("syncLobbyPosition", spos);
                     }
                 }
 
+                // Update current track playback state
                 setTrack(state.track_window.current_track);
                 setPaused(state.paused);
                 player.getCurrentState().then((state) => (!state ? setActive(false) : setActive(true)));
@@ -91,6 +100,10 @@ function WebPlayback(props) {
                     trackId: trackId,
                 });
             });
+
+            client.socket.on("updatePlaybackPos", (spos) => {
+                player.seek(spos);
+            }) 
         };
     }, []);
 
@@ -110,14 +123,14 @@ function WebPlayback(props) {
                 <div className="container">
                     <div className="main-wrapper">
                         <img
-                        src={current_track.album.images[0].url}
-                        id="nowPlayingCover"
-                        className="unselectable"
-                        alt=""
-                    />
+                            src={current_track.album.images[0].url}
+                            id="nowPlayingCover"
+                            className="unselectable"
+                            alt=""
+                        />
                         <div id="nowPlayingName">{current_track.name}</div>
                         <div id="nowPlayingArtist">{current_track.artists.map((artist) => artist.name).join(", ")}</div>
-                        
+
                         {client.isHost &&
                             <div id="nowPlayingSide">
                                 <button
