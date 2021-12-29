@@ -143,8 +143,8 @@ function Lobby(props) {
                 <Col xs="12" md="6" xl="8" id="queue">
                     <Queue queue={queue} />
                 </Col>
-                <Col id="search-conatiner">
-                    <div id="searchArea">
+                <Col id="searchArea">
+                    <div>
                         <h3 className="unselectable">Find a Song!</h3>
                         <input
                             autoComplete="off"
@@ -173,13 +173,25 @@ function Lobby(props) {
                             {searchResults.map((item, key) => {
                                 return (
                                     <Row key={key} className="song-card">
-                                        <Col xs={12} xl={9} style={{ padding: "0.5em", alignItems: "center" }}>
-                                            <img className="unselectable" src={item.album.images[1].url} />
-                                            <div>
-                                                {item.name} by {item.artists.map((artist) => artist.name).join(", ")}
-                                            </div>
+                                        <Col xs={12} xl={9} style={{ padding: "0.5em" }}>
+                                            <Row style={{ width: "100%" }}>
+                                                <Col xs={5}>
+                                                    <img className="unselectable" src={item.album.images[2].url} />
+
+                                                    <div style={{ textAlign: "center", margin: "0.5em" }}>
+                                                        {item.duration_ms / 60000 - Math.floor(item.duration_ms / 60000) < 0.6
+                                                            ? String(item.duration_ms / 60000)[0]
+                                                            : String(item.duration_ms / 60000 + 1)[0]}
+                                                        :{Math.round((item.duration_ms / 60000 - Math.floor(item.duration_ms / 60000)) * 60)}
+                                                    </div>
+                                                </Col>
+                                                <Col xs={7}>
+                                                    <div style={{ marginBottom: "0.5em" }}>{item.name}</div>
+                                                    <div style={{ fontSize: "0.8em" }}>{item.artists.map((artist) => artist.name).join(", ")}</div>
+                                                </Col>
+                                            </Row>
                                         </Col>
-                                        <Col style={{ display: "flex", alignItems: "center" }}>
+                                        <Col>
                                             <button
                                                 onClick={() => {
                                                     addToQueue([item, JSON.parse(localStorage.getItem("client-data")).body.display_name]);
