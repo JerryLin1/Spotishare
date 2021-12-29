@@ -4,6 +4,7 @@ require("dotenv").config();
 // ============== Magic =================
 const { info } = require("console");
 const express = require("express");
+const path = require("path");
 const app = express();
 const http = require("http");
 const server = http.createServer(app);
@@ -15,11 +16,7 @@ const io = new Server(server);
 var spotifyClientId = process.env.REACT_APP_SPOTIFY_CLIENTID;
 var spotifyClientSecret = process.env.REACT_APP_SPOTIFY_CLIENTSECRET;
 
-// When using localhost:3000
 var redirectUri = process.env.REACT_APP_REDIRECT_URI_LOCAL;
-
-// When using public ip
-// var redirectUri = process.env.REACT_APP_REDIRECT_URI;
 
 var SpotifyWebApi = require("spotify-web-api-node");
 const { RandomId } = require("./server/helperFunctions");
@@ -34,6 +31,7 @@ const rooms = {};
 
 // TODO: Implement "state" which is a security thing or something using a randomly generated string
 app.get("/auth/login", (req, res) => {
+    console.log("TRYING TO LOG IN");
     const scope = [
         "ugc-image-upload",
         "user-read-playback-state",
@@ -74,7 +72,7 @@ app.get("/auth/login", (req, res) => {
 });
 // Mostly taken from https://github.com/thelinmichael/spotify-web-api-node#authorization
 // Look here too: https://glitch.com/edit/#!/spotify-audio-analysis?path=public%2Findex.js%3A41%3A2
-app.get("/auth/callback", (req, res) => {
+app.get("/auth/aftercallback", (req, res) => {
     var code = req.query.code;
     console.log(req.query);
     spotifyApi.authorizationCodeGrant(code).then(
@@ -83,11 +81,11 @@ app.get("/auth/callback", (req, res) => {
             var expiresIn = data.body.expires_in;
             // expiresIn is in seconds
             var refreshToken = data.body.refresh_token;
-            res.send({
+            res.send(JSON.stringify({
                 accessToken: accessToken,
                 expiresIn: expiresIn,
                 refreshToken: refreshToken,
-            });
+            }));
         },
         function (err) {
             console.log("Something went wrong!", err);
@@ -186,6 +184,12 @@ app.get("/search", (req, res) => {
 //         }
 //     );
 // }
+
+app.use(express.static(path.join(__dirname, 'client/build')));
+
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
+});
 
 const port = process.env.PORT || 6567;
 server.listen(port, () => {

@@ -31,9 +31,11 @@ document.addEventListener("DOMContentLoaded", () => {
         //TODO: Tell user to login?
     }
     if (window.location.pathname == "/auth/callback") {
-        fetch("/auth/callback" + window.location.search)
+        fetch("/auth/aftercallback" + window.location.search)
             .then((e) => e.json())
             .then((data) => {
+                console.log(data);
+                console.log(localStorage.getItem("prev-location"));
                 localStorage.setItem("spotify-access-token", data.accessToken);
                 localStorage.setItem("spotify-access-token-expiry", Date.now() + data.expiresIn * 990);
                 localStorage.setItem("spotify-refresh-token", data.refreshToken);
@@ -55,6 +57,6 @@ export async function login() {
             window.location = data.redirectUri;
         })
         .catch((error) => {
-            console.log("Failed to prepare for Spotify Authentication");
+            alert(error);
         });
 }
