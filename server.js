@@ -124,10 +124,6 @@ app.get("/createLobby", (req, res) => {
         clients: {},
         paused: false,
         chatHistory: [],
-<<<<<<< HEAD
-        currentTrack: "",
-=======
->>>>>>> fa688f4885362c4538df31339dad79b128009e27
         currentTrackStart: Date.now(),
     };
     res.send({ roomId: roomId });
