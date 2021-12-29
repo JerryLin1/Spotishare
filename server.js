@@ -81,11 +81,11 @@ app.get("/auth/callback", (req, res) => {
             var expiresIn = data.body.expires_in;
             // expiresIn is in seconds
             var refreshToken = data.body.refresh_token;
-            res.send({
+            res.send(JSON.stringify({
                 accessToken: accessToken,
                 expiresIn: expiresIn,
                 refreshToken: refreshToken,
-            });
+            }));
         },
         function (err) {
             console.log("Something went wrong!", err);
