@@ -47,7 +47,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
 export function isLoggedIn() {
     return (
-        localStorage.getItem("spotify-access-token") && localStorage.getItem("spotify-access-token-expiry") > Date.now()
+        localStorage.getItem("spotify-access-token") &&
+        localStorage.getItem("spotify-access-token-expiry") > Date.now() &&
+        localStorage.getItem("client-data")
     );
 }
 
