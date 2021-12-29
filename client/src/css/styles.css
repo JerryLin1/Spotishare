@@ -53,8 +53,9 @@ button:hover {
 
 #sign-in {
     position: absolute;
+    font-size: 1.25em;
     right: 1.5em;
-    top: 2.5em;
+    top: 2em;
     vertical-align: middle;
     display: inline-block;
 }
@@ -64,4 +65,31 @@ button:hover {
     font-weight: 800;
     margin-bottom: 0.5em;
     text-align: left !important;
+}
+
+.page-title.home {
+    text-align: center !important;
+    font-size: 6vw;
+}
+
+#create-lobby-btn {
+    margin-top: 25vh;
+    font-size: 2vw;
+    width: 25%;
+    min-width: 8em;
+}
+
+@media screen and (max-width: 1200px) {
+    .page-title.home {
+        font-size: 4em;
+    }
+
+    #create-lobby-btn {
+        font-size: 1.5em;
+    }
+
+    #sign-in {
+        position: inherit;
+        margin: auto;
+    }
 }

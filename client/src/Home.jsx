@@ -1,20 +1,25 @@
-import { useState } from "react";
-
-import { Row, Col, Container, Button } from "react-bootstrap";
+import { Container } from "react-bootstrap";
+import { useContext } from "react";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import { isLoggedIn, login } from ".";
+import { ClientContext } from "./contexts/ClientProvider";
 
 function HomePage(props) {
+    let client = useContext(ClientContext);
+    console.log(client);
+
     return (
         <Container fluid>
+            <h1 className="page-title home unselectable">SpotiShare</h1>
             <button onClick={() => login()} id="sign-in">
-                Sign in
+                {isLoggedIn() ? `Signed In!` : "Sign In"}
             </button>
-            <h1 className="page-title unselectable">SpotiShare</h1>
 
-            <div>
-                <button onClick={() => (isLoggedIn() ? createLobby() : login())}>Create Lobby</button>
+            <div style={{ width: "100%", textAlign: "center" }}>
+                <button id="create-lobby-btn" onClick={() => (isLoggedIn() ? createLobby() : login())}>
+                    Create Lobby
+                </button>
             </div>
         </Container>
     );

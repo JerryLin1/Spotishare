@@ -117,7 +117,7 @@ app.get("/createLobby", (req, res) => {
         clients: {},
         paused: false,
         chatHistory: [],
-        currentTrack: "0vWg2qGAdSGGsgmyVgb4ox",
+        currentTrack: "",
         currentTrackStart: Date.now(),
     };
     res.send({ roomId: roomId });
@@ -191,7 +191,7 @@ app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
 });
 
-const port = process.env.PORT || 6567;
+const port = process.env.PORT || 6567
 server.listen(port, () => {
     console.log(`Listening on port ${port}`);
 });

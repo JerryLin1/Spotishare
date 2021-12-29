@@ -49,6 +49,7 @@ export function isLoggedIn() {
         localStorage.getItem("spotify-access-token") && localStorage.getItem("spotify-access-token-expiry") > Date.now()
     );
 }
+
 export async function login() {
     fetch("/auth/login")
         .then((e) => e.json())
