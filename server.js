@@ -72,7 +72,7 @@ app.get("/auth/login", (req, res) => {
 });
 // Mostly taken from https://github.com/thelinmichael/spotify-web-api-node#authorization
 // Look here too: https://glitch.com/edit/#!/spotify-audio-analysis?path=public%2Findex.js%3A41%3A2
-app.get("/auth/callback", (req, res) => {
+app.get("/auth/aftercallback", (req, res) => {
     var code = req.query.code;
     console.log(req.query);
     spotifyApi.authorizationCodeGrant(code).then(
