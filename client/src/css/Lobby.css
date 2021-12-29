@@ -29,7 +29,7 @@
     height: 2em;
 }
 
-.spotifyBtn:nth-child(4)>* {
+.spotifyBtn:nth-child(2)>* {
     width: 3em;
     height: 3em;
 }
@@ -116,6 +116,12 @@
     border: 1px solid rgb(77, 255, 107);
 }
 
+@media screen and (max-width: 800px) {
+    #sendBtn {
+        font-size: 0.8em;
+    }
+}
+
 .dropdown {
     width: 100%;
     height: 2.5em;
@@ -135,7 +141,8 @@
     position: absolute;
     right: 1em;
     top: 50%;
-    transform: translateY(-50%) rotate(0deg)
+    transform: translateY(-50%) rotate(0deg);
+    transition: 0.3s;
 }
 
 .lobby-list {
@@ -143,7 +150,7 @@
     width: 100%;
     top: 6.5em;
     height: 0;
-    background-color: rgba(204, 204, 204, 0.6);
+    background-color: rgba(204, 204, 204, 0.8);
     opacity: 0;
     overflow-y: scroll;
     transition: 0.3s;
@@ -196,12 +203,18 @@
     width: 100%;
 }
 
+.song-card img {
+    width: 120px;
+    height: 120px;
+    display: block;
+    margin: auto;
+}
+
 .song-card button {
     align-items: center;
     width: 100%;
-    height: 50%;
+    height: 2.5em;
     font-size: 1em;
-    min-height: 2.5em;
 }
 
 .song-card:hover {
@@ -209,34 +222,10 @@
     color: #fff;
 }
 
-@media screen and (max-width: 400px) {
-    .song-card iframe {
-        transform: scale(0.8);
-    }
-}
-
-/******* Queue *******/
-
-#queue-title {
+.song-card>div>div {
+    font-size: 1.25em;
+    margin-top: 0.5em;
     text-align: center;
-    font-weight: bold;
-    padding: 0.5em 0;
-    width: 100%;
-}
-
-#queue-container {
-    position: relative;
-    margin-top: 2.5em;
-    border: 4px solid #fff;
-    padding: 1em;
-    overflow-y: scroll;
-    height: 50vh;
-}
-
-@media screen and (max-width: 800px) {
-    #queue {
-        width: 100%;
-    }
 }
 
 /******* song search *******/

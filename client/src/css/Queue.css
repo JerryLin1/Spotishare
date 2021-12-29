@@ -1,0 +1,26 @@
+#queue-title {
+    text-align: center;
+    font-weight: bold;
+    padding: 0.5em 0;
+    width: 100%;
+}
+
+#queue-container {
+    position: relative;
+    margin-top: 2.5em;
+    border: 4px solid #fff;
+    padding: 1em;
+    overflow-y: scroll;
+    height: 50vh;
+}
+
+.queue-img {
+    width: 150px !important;
+    height: 150px !important;
+}
+
+.queue-desc {
+    font-size: 1.25em;
+    margin-top: 0.5em;
+    text-align: center;
+}

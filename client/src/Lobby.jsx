@@ -17,14 +17,7 @@ function Lobby(props) {
     const client = useContext(ClientContext);
     const [members, setMembers] = useState([]); //useState([{ isHost: true, name: 'Tom Han', id: 'p.han.tom', country: 'CA', image: 'https://i.scdn.co/image/ab6775700000ee8508f4b5251c39729ba880fb66' }]);
     const [chat, setChat] = useState([]);
-    const [queue, updateQueue] = useState([
-        "3dPtXHP0oXQ4HCWHsOA9js?si=8593d745abde4cb7",
-        "3dPtXHP0oXQ4HCWHsOA9js?si=8593d745abde4cb7",
-        "185Wm4Mx09dQG0fUktklDm?si=8fd67a8eb5f04c99",
-        "3dPtXHP0oXQ4HCWHsOA9js?si=8593d745abde4cb7",
-        "185Wm4Mx09dQG0fUktklDm?si=8fd67a8eb5f04c99",
-        "185Wm4Mx09dQG0fUktklDm?si=8fd67a8eb5f04c99",
-    ]);
+    const [queue, updateQueue] = useState([]);
     const [typingTimeout, updateTypingTimeout] = useState(undefined);
     const [searchResults, setSearchResults] = useState([]);
 
@@ -58,21 +51,17 @@ function Lobby(props) {
     const initializeUser = () => {
         fetch(`/joinLobby?roomId=${roomId}&accessToken=${localStorage.getItem("spotify-access-token")}&socketid=${client.socket.id}`).then((data) => {
             if (data.status === 200) {
-                client.socket.emit(
-                    "joinRoom",
-                    { roomId: roomId, accessToken: localStorage.getItem("spotify-access-token") },
-                    (response) => {
-                        client.isHost = response.isHost;
-                    }
-                );
+                client.socket.emit("joinRoom", { roomId: roomId, accessToken: localStorage.getItem("spotify-access-token") }, (response) => {
+                    client.isHost = response.isHost;
+                });
             }
         });
     };
 
-    const addToQueue = (id) => {
+    const addToQueue = (song) => {
         let newQueue = queue.slice();
-        queue.push(id);
-        newQueue.push(id);
+        queue.push(song);
+        newQueue.push(song);
         updateQueue(newQueue);
     };
 
@@ -110,7 +99,7 @@ function Lobby(props) {
             document.getElementById("caret").style.transform = "translateY(-50%) rotate(0deg)";
         } else {
             document.getElementsByClassName("lobby-list")[0].className = "lobby-list visible";
-            document.getElementById("caret").style.transform = "translateY(-50%) rotate(180deg)";
+            document.getElementById("caret").style.transform = "translateY(-50%) rotate(-180deg)";
         }
     };
 
@@ -151,13 +140,14 @@ function Lobby(props) {
                 </Col>
             </Row>
             <Row>
-                <Col xs="6" xl="8" id="queue">
+                <Col xs="12" md="6" xl="8" id="queue">
                     <Queue queue={queue} />
                 </Col>
                 <Col id="search-conatiner">
                     <div id="searchArea">
                         <h3 className="unselectable">Find a Song!</h3>
                         <input
+                            autoComplete="off"
                             ref={searchInputRef}
                             onInput={() => {
                                 clearTimeout(typingTimeout);
@@ -183,18 +173,20 @@ function Lobby(props) {
                             {searchResults.map((item, key) => {
                                 return (
                                     <Row key={key} className="song-card">
-                                        <Col xs={10}>
-                                            <iframe
-                                                src={`https://open.spotify.com/embed/track/${item.id}?utm_source=generator`}
-                                                width="100%"
-                                                height="80"
-                                                frameBorder="0"
-                                                allowFullScreen=""
-                                                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                                            ></iframe>
+                                        <Col xs={12} xl={9} style={{ padding: "0.5em", alignItems: "center" }}>
+                                            <img className="unselectable" src={item.album.images[1].url} />
+                                            <div>
+                                                {item.name} by {item.artists.map((artist) => artist.name).join(", ")}
+                                            </div>
                                         </Col>
-                                        <Col style={{ display: "flex", alignItems: "center", padding: "0" }}>
-                                            <button>Add</button>
+                                        <Col style={{ display: "flex", alignItems: "center" }}>
+                                            <button
+                                                onClick={() => {
+                                                    addToQueue([item, JSON.parse(localStorage.getItem("client-data")).body.display_name]);
+                                                }}
+                                            >
+                                                Add
+                                            </button>
                                         </Col>
                                     </Row>
                                 );
