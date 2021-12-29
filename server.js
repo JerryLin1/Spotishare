@@ -81,11 +81,18 @@ app.get("/auth/aftercallback", (req, res) => {
             var expiresIn = data.body.expires_in;
             // expiresIn is in seconds
             var refreshToken = data.body.refresh_token;
-            res.send(JSON.stringify({
-                accessToken: accessToken,
-                expiresIn: expiresIn,
-                refreshToken: refreshToken,
-            }));
+            let loggedInSpotifyApi = new SpotifyWebApi();
+            loggedInSpotifyApi.setAccessToken(accessToken);
+            loggedInSpotifyApi.getMe().then((data) => {
+                res.send(
+                    JSON.stringify({
+                        accessToken: accessToken,
+                        expiresIn: expiresIn,
+                        refreshToken: refreshToken,
+                        clientData: data
+                    })
+                );
+            });
         },
         function (err) {
             console.log("Something went wrong!", err);
@@ -185,10 +192,10 @@ app.get("/search", (req, res) => {
 //     );
 // }
 
-app.use(express.static(path.join(__dirname, 'client/build')));
+app.use(express.static(path.join(__dirname, "client/build")));
 
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
+app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "client/build", "index.html"));
 });
 
 const port = process.env.PORT || 6567;
