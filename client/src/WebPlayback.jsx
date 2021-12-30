@@ -1,17 +1,10 @@
+import { set } from "animejs";
 import React, { useState, useEffect, useContext } from "react";
 import { PlayCircle, PauseCircle, SkipForwardCircle, SkipBackwardCircle } from "react-bootstrap-icons";
 import { io } from "socket.io-client";
 import { ClientContext } from "./contexts/ClientProvider";
 
 import "./css/Lobby.css";
-
-const track = {
-    name: "",
-    album: {
-        images: [{ url: "" }],
-    },
-    artists: [{ name: "" }],
-};
 
 const syncTolerance = 3000;
 
@@ -20,7 +13,9 @@ function WebPlayback(props) {
     const [is_paused, setPaused] = useState(false);
     const [is_active, setActive] = useState(false);
     const [player, setPlayer] = useState(undefined);
-    const [current_track, setTrack] = useState(track);
+    const [device_id, setDeviceId] = useState(undefined);
+    const [current_track, setTrack] = useState(undefined);
+
 
     useEffect(() => {
         // Create new spotify player instance
@@ -43,11 +38,21 @@ function WebPlayback(props) {
             // Start playback on current device when the web player is ready
             player.addListener("ready", ({ device_id }) => {
                 console.log("Ready with Device ID", device_id);
-                fetch(
-                    `/playerReady?accessToken=${localStorage.getItem(
-                        "spotify-access-token"
-                    )}&deviceId=${device_id}&roomId=${props.roomId}`
-                );
+                setActive(true);
+
+                const waitForPlayback = setInterval(() => client.socket.emit("playWhenReady", {
+                    device_id: device_id,
+                    accessToken: localStorage.getItem("spotify-access-token")
+                }, (response) => {
+                    if (response.playing) {
+                        clearInterval(waitForPlayback);
+                    }
+                }), 1000);
+                // fetch(
+                //     `/playerReady?accessToken=${localStorage.getItem(
+                //         "spotify-access-token"
+                //     )}&deviceId=${device_id}&roomId=${props.roomId}`
+                // );
             });
 
             player.addListener("not_ready", ({ device_id }) => {
@@ -57,9 +62,9 @@ function WebPlayback(props) {
             let prevPlayerState = undefined;
             player.addListener("player_state_changed", (state) => {
                 if (!state) return;
-                if (prevPlayerState === undefined) { 
+                if (prevPlayerState === undefined) {
                     prevPlayerState = state;
-                    return; 
+                    return;
                 }
                 else {
                     let ptrack = prevPlayerState.track_window.current_track.id;
@@ -73,7 +78,7 @@ function WebPlayback(props) {
                             state: state,
                         });
                     }
-                    if (Math.abs(spos-ppos) >= syncTolerance) {
+                    if (Math.abs(spos - ppos) >= syncTolerance) {
                         console.log("previous pos:", ppos, "current pos:", spos)
                         client.socket.emit("syncLobbyPosition", spos);
                     }
@@ -103,7 +108,7 @@ function WebPlayback(props) {
 
             client.socket.on("updatePlaybackPos", (spos) => {
                 player.seek(spos);
-            }) 
+            })
         };
     }, []);
 
@@ -117,6 +122,16 @@ function WebPlayback(props) {
                 </div>
             </>
         );
+    } else if (current_track === undefined) {
+        return (
+            <>
+                <div className="container">
+                    <div className="main-wrapper">
+                        <b> Player is ready! Add songs to the queue to start the listening session. </b>
+                    </div>
+                </div>
+            </>
+        )
     } else {
         return (
             <>

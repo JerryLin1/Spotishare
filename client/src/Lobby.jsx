@@ -182,6 +182,11 @@ function Lobby(props) {
                                         <Col style={{ display: "flex", alignItems: "center" }}>
                                             <button
                                                 onClick={() => {
+                                                    client.socket.emit("addToQueue",
+                                                        {
+                                                            songId: item.uri,
+                                                            accessToken: localStorage.getItem("spotify-access-token")
+                                                        });
                                                     addToQueue([item, JSON.parse(localStorage.getItem("client-data")).body.display_name]);
                                                 }}
                                             >

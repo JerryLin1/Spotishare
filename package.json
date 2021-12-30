@@ -24,7 +24,7 @@
     "react-bootstrap-icons": "^1.7.2"
   },
   "scripts": {
-    "start": "node server.js",
+    "start": "nodemon server.js",
     "heroku-postbuild": "cd client && npm install && npm run build"
   },
   "eslintConfig": {

@@ -10,7 +10,7 @@ function HomePage(props) {
         <Container fluid>
             <h1 className="page-title home unselectable">SpotiShare</h1>
             <button onClick={() => login()} id="sign-in">
-                {isLoggedIn() ? `Hello ${JSON.parse(localStorage.getItem("client-data")).body.display_name}!` : "Sign In"}
+                {localStorage.getItem("client-data") ? `Hello ${JSON.parse(localStorage.getItem("client-data")).body.display_name}!` : "Sign In"}
             </button>
 
             <div style={{ width: "100%", textAlign: "center" }}>
