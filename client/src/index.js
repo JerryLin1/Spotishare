@@ -24,18 +24,10 @@ ReactDOM.render(
 );
 
 document.addEventListener("DOMContentLoaded", () => {
-    if (
-        localStorage.getItem("spotify-access-token") &&
-        localStorage.getItem("spotify-access-token-expiry") > Date.now()
-    ) {
-        //TODO: Tell user to login?
-    }
     if (window.location.pathname == "/auth/callback") {
         fetch("/auth/aftercallback" + window.location.search)
             .then((e) => e.json())
             .then((data) => {
-                console.log(data);
-                console.log(localStorage.getItem("prev-location"));
                 localStorage.setItem("spotify-access-token", data.accessToken);
                 localStorage.setItem("spotify-access-token-expiry", Date.now() + data.expiresIn * 990);
                 localStorage.setItem("spotify-refresh-token", data.refreshToken);

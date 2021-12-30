@@ -77,28 +77,32 @@ app.get("/auth/aftercallback", (req, res) => {
     console.log(req.query);
     spotifyApi.authorizationCodeGrant(code).then(
         (data) => {
-            var accessToken = data.body.access_token;
-            var expiresIn = data.body.expires_in;
-            // expiresIn is in seconds
-            var refreshToken = data.body.refresh_token;
-            let loggedInSpotifyApi = new SpotifyWebApi();
-            loggedInSpotifyApi.setAccessToken(accessToken);
-            loggedInSpotifyApi.getMe().then((data) => {
-                res.send(
-                    JSON.stringify({
-                        accessToken: accessToken,
-                        expiresIn: expiresIn,
-                        refreshToken: refreshToken,
-                        clientData: data
-                    })
-                );
-            });
+            returnAuth(req, res, data);
         },
         function (err) {
             console.log("Something went wrong!", err);
         }
     );
 });
+
+function returnAuth(req, res, data) {
+    var accessToken = data.body.access_token;
+    var expiresIn = data.body.expires_in;
+    // expiresIn is in seconds
+    var refreshToken = data.body.refresh_token;
+    let loggedInSpotifyApi = new SpotifyWebApi();
+    loggedInSpotifyApi.setAccessToken(accessToken);
+    loggedInSpotifyApi.getMe().then((clientData) => {
+        res.send(
+            JSON.stringify({
+                accessToken: accessToken,
+                expiresIn: expiresIn,
+                refreshToken: refreshToken,
+                clientData: clientData,
+            })
+        );
+    });
+}
 
 // just to test the api stuff
 app.get("/top", (req, res) => {
@@ -143,14 +147,16 @@ app.get("/joinLobby", (req, res) => {
 
     // Initialize a new collaborative playlist for the lobby
     if (client.isHost) {
-        loggedInSpotifyApi.createPlaylist("New Spotishare Playlist",
-            {
-                'description': 'A new collaborative playlist for your Spotishare lobby!',
-                'public': 'false',
-                'collaborative': 'true'
-            }).then((data) => {
+        loggedInSpotifyApi
+            .createPlaylist("New Spotishare Playlist", {
+                description: "A new collaborative playlist for your Spotishare lobby!",
+                public: "false",
+                collaborative: "true",
+            })
+            .then((data) => {
                 rooms[roomId].playlist = data.body;
-            }).catch((err) => console.log(err))
+            })
+            .catch((err) => console.log(err));
     }
 
     loggedInSpotifyApi
@@ -168,7 +174,6 @@ app.get("/joinLobby", (req, res) => {
             res.sendStatus(200);
         })
         .catch((error) => console.log(error));
-
 });
 
 app.get("/playerReady", (req, res) => {
@@ -192,21 +197,17 @@ app.get("/search", (req, res) => {
     });
 });
 
-// TODO: Refresh access token? IDK what this is
-// function refreshAccessToken() {
-//     // clientId, clientSecret and refreshToken has been set on the api object previous to this call.
-//     spotifyApi.refreshAccessToken().then(
-//         function (data) {
-//             console.log("The access token has been refreshed!");
+app.get("/refreshAccessToken", (req, res) => {
+    attemptRefreshToken(req, res);
+});
 
-//             // Save the access token so that it's used in future calls
-//             spotifyApi.setAccessToken(data.body["access_token"]);
-//         },
-//         function (err) {
-//             console.log("Could not refresh access token", err);
-//         }
-//     );
-// }
+function attemptRefreshToken(req, res) {
+    spotifyApi.setRefreshToken(req.query.refreshToken);
+    spotifyApi.refreshAccessToken().then((data) => {
+        console.log(Date.now())
+        returnAuth(req, res, data);
+    });
+}
 
 app.use(express.static(path.join(__dirname, "client/build")));
 
@@ -214,7 +215,7 @@ app.get("*", (req, res) => {
     res.sendFile(path.join(__dirname, "client/build", "index.html"));
 });
 
-const port = process.env.PORT || 6567
+const port = process.env.PORT || 6567;
 server.listen(port, () => {
     console.log(`Listening on port ${port}`);
 });
@@ -254,17 +255,17 @@ io.on("connection", (socket) => {
         if (rooms[socket.room].playlist.tracks.items.length > 0) {
             var loggedInSpotifyApi = new SpotifyWebApi();
             loggedInSpotifyApi.setAccessToken(accessToken);
-            loggedInSpotifyApi.play({ device_id: device_id, context_uri: rooms[socket.room].playlist.uri })
+            loggedInSpotifyApi
+                .play({ device_id: device_id, context_uri: rooms[socket.room].playlist.uri })
                 .then((data) => {
                     rooms[socket.room].currentTrack = rooms[socket.room].playlist.tracks.items[0].track.id;
                     rooms[socket.room].currentTrackStart = Date.now();
                 });
-
         }
         callback({
-            playing: rooms[socket.room].playlist.tracks.items.length > 0
+            playing: rooms[socket.room].playlist.tracks.items.length > 0,
         });
-    })
+    });
 
     socket.on("togglePlayPause", () => {
         rooms[socket.room].paused = !rooms[socket.room].paused;
@@ -307,21 +308,22 @@ io.on("connection", (socket) => {
 
     socket.on("syncLobbyPosition", (spos) => {
         socket.broadcast.to(socket.room).emit("updatePlaybackPos", spos);
-    })
+    });
 
     socket.on("addToQueue", ({ songId, accessToken }) => {
         var loggedInSpotifyApi = new SpotifyWebApi();
         loggedInSpotifyApi.setAccessToken(accessToken);
-        loggedInSpotifyApi.addTracksToPlaylist(rooms[socket.room].playlist.id, [songId])
+        loggedInSpotifyApi
+            .addTracksToPlaylist(rooms[socket.room].playlist.id, [songId])
             .then((data) => {
-                // Update the room's playlist 
+                // Update the room's playlist
                 loggedInSpotifyApi.getPlaylist(rooms[socket.room].playlist.id).then((data) => {
                     rooms[socket.room].playlist = data.body;
                 });
-            }).catch((err) => console.log(err));
-    })
+            })
+            .catch((err) => console.log(err));
+    });
 });
-
 
 function changeTrack(trackId, accessToken, startDate) {
     var loggedInSpotifyApi = new SpotifyWebApi();

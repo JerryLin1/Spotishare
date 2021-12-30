@@ -9,8 +9,22 @@ function HomePage(props) {
     return (
         <Container fluid>
             <h1 className="page-title home unselectable">SpotiShare</h1>
-            <button onClick={() => login()} id="sign-in">
-                {localStorage.getItem("client-data") ? `Hello ${JSON.parse(localStorage.getItem("client-data")).body.display_name}!` : "Sign In"}
+            {(!isLoggedIn() || JSON.parse(localStorage.getItem("client-data")).body.product != "premium") && (
+                <div style={{ width: "100%", textAlign: "center" }}>
+                    Spotishare requires Spotify Premium, which lets you play any track, ad-free and with better audio
+                    quality. Go to <a  target= "__blank" href="https://www.spotify.com/premium">spotify.com/premium</a> to try it for free.
+                </div>
+            )}
+            {/* TODO: Shouldn't this be a sign out button instead */}
+            <button
+                onClick={() => {
+                    if (!isLoggedIn()) login();
+                }}
+                id="sign-in"
+            >
+                {localStorage.getItem("client-data")
+                    ? `Hello ${JSON.parse(localStorage.getItem("client-data")).body.display_name}!`
+                    : "Sign In"}
             </button>
 
             <div style={{ width: "100%", textAlign: "center" }}>
