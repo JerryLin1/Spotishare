@@ -1,5 +1,6 @@
 import React from "react";
 import io from "socket.io-client";
+import { isLoggedIn } from ".";
 
 export default class Client extends React.Component {
     constructor(props) {
@@ -15,6 +16,18 @@ export default class Client extends React.Component {
         this.socket.on("updateClientList", (clients) => {
             this.clientsInRoom = clients;
         });
+        if (isLoggedIn()) refreshAccessToken();
+        setInterval(() => {
+            refreshAccessToken();
+        }, 50000);
+        function refreshAccessToken() {
+            fetch(`/refreshAccessToken?refreshToken=${localStorage.getItem("spotify-refresh-token")}`)
+                .then((e) => e.json())
+                .then((data) => {
+                    localStorage.setItem("spotify-access-token", data.accessToken);
+                    localStorage.setItem("spotify-access-token-expiry", Date.now() + data.expiresIn * 990);
+                });
+        }
     }
 
     pushURL = (id) => {
