@@ -7,7 +7,7 @@ function Queue(props) {
         return (
             <div id="queue-container">
                 <h2 id="queue-title">There's nothing in the queue!</h2>
-                <h4 style={{ textAlign: "center" }}>Add some songs by searching them up on the right!</h4>
+                <h4 style={{ textAlign: "center" }}>Add some songs by searching some up!</h4>
             </div>
         );
     }
@@ -21,17 +21,26 @@ function Queue(props) {
                     user = item[1];
                 return (
                     <Row key={key} className="song-card">
-                        <Col xs={12} xl={9} style={{ padding: "0.5em", alignItems: "center" }}>
-                            <img className="queue-img unselectable" src={song.album.images[1].url} />
-                            <div className="queue-desc">
-                                {song.name} by {song.artists.map((artist) => artist.name).join(", ")} // Added by {user}
-                            </div>
+                        <Col xs={12} xl={10}>
+                            <Row style={{ width: "100%" }}>
+                                <Col xs={4}>
+                                    <img className="queue-img unselectable" src={song.album.images[1].url} />
+                                    <div style={{ textAlign: "center", margin: "0.5em auto" }}>
+                                        {song.duration_ms / 60000 - Math.floor(song.duration_ms / 60000) < 0.6
+                                            ? String(song.duration_ms / 60000)[0]
+                                            : String(song.duration_ms / 60000 + 1)[0]}
+                                        :{Math.round((song.duration_ms / 60000 - Math.floor(song.duration_ms / 60000)) * 60)}
+                                    </div>
+                                </Col>
+                                <Col xs={8} className="queue-desc">
+                                    <div style={{ marginBottom: "0.5em" }}>{song.name}</div>
+                                    <div style={{ fontSize: "0.8em" }}>{song.artists.map((artist) => artist.name).join(", ")}</div>
+                                </Col>
+                            </Row>
                         </Col>
                         <Col
+                            xl={2}
                             style={{
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
                                 padding: "0 0.5em",
                             }}
                         >

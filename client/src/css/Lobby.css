@@ -196,18 +196,20 @@
 }
 
 /******* Song Cards *******/
+
 .song-card {
+    display: flex;
+    align-items: center;
     margin: 0;
     padding: 0.25em;
     transition: 0.3s;
     width: 100%;
+    font-size: 0.8em;
 }
 
-.song-card img {
-    width: 120px;
-    height: 120px;
-    display: block;
-    margin: auto;
+.song-card>div>.row{
+    display: flex;
+    align-items: center;
 }
 
 .song-card button {
@@ -217,16 +219,16 @@
     font-size: 1em;
 }
 
+.song-card img {
+    display: block;
+    margin: auto;
+}
+
 .song-card:hover {
     background: rgba(27, 27, 27, 0.5);
     color: #fff;
 }
 
-.song-card>div>div {
-    font-size: 1.25em;
-    margin-top: 0.5em;
-    text-align: center;
-}
 
 /******* song search *******/
 
