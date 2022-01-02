@@ -7,12 +7,8 @@
     border-radius: 0 !important;
 }
 
-html {
-    background-color: #23da63;
-}
-
 body {
-    background: transparent;
+    background-color: #23da63;
     padding: 2em
 }
 
@@ -51,6 +47,8 @@ button:hover {
 
 .credits {
     position: fixed;
+    user-select: none;
+    z-index: 1;
     right: 1em;
     bottom: 0.5em;
     font-size: 0.8em;

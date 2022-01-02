@@ -121,64 +121,58 @@ function WebPlayback(props) {
     if (!is_active) {
         return (
             <>
-                <div className="container">
-                    <div className="main-wrapper">
-                        <b> Loading player... </b>
-                    </div>
+                <div className="web-player">
+                    <h4> Loading player... </h4>
                 </div>
             </>
         );
     } else if (current_track === undefined) {
         return (
             <>
-                <div className="container">
-                    <div className="main-wrapper" style={{ marginTop: "25%" }}>
-                        <h2> Player is ready! Add songs to the queue to start the listening session. </h2>
-                    </div>
+                <div className="web-player">
+                    <h2> Player is ready! Add songs to the queue to start the listening session. </h2>
                 </div>
             </>
         );
     } else {
         return (
             <>
-                <div className="container">
-                    <div className="main-wrapper">
-                        <img src={current_track.album.images[0].url} id="nowPlayingCover" className="unselectable" alt="" />
-                        <div id="nowPlayingName">{current_track.name}</div>
-                        <div id="nowPlayingArtist">{current_track.artists.map((artist) => artist.name).join(", ")}</div>
+                <div className="web-player">
+                    <img src={current_track.album.images[0].url} id="nowPlayingCover" className="unselectable" alt="" />
+                    <div id="nowPlayingName">{current_track.name}</div>
+                    <div id="nowPlayingArtist">{current_track.artists.map((artist) => artist.name).join(", ")}</div>
 
-                        {client.isHost && (
-                            <div id="nowPlayingSide">
-                                <button
-                                    className="spotifyBtn"
-                                    onClick={() => {
-                                        player.previousTrack();
-                                    }}
-                                >
-                                    <SkipBackwardCircle />
-                                </button>
+                    {client.isHost && (
+                        <div id="nowPlayingSide">
+                            <button
+                                className="spotifyBtn"
+                                onClick={() => {
+                                    player.previousTrack();
+                                }}
+                            >
+                                <SkipBackwardCircle />
+                            </button>
 
-                                <button
-                                    className="spotifyBtn"
-                                    onClick={() => {
-                                        player.togglePlay();
-                                        client.socket.emit("togglePlayPause");
-                                    }}
-                                >
-                                    {is_paused ? <PlayCircle /> : <PauseCircle />}
-                                </button>
+                            <button
+                                className="spotifyBtn"
+                                onClick={() => {
+                                    player.togglePlay();
+                                    client.socket.emit("togglePlayPause");
+                                }}
+                            >
+                                {is_paused ? <PlayCircle /> : <PauseCircle />}
+                            </button>
 
-                                <button
-                                    className="spotifyBtn"
-                                    onClick={() => {
-                                        player.nextTrack();
-                                    }}
-                                >
-                                    <SkipForwardCircle />
-                                </button>
-                            </div>
-                        )}
-                    </div>
+                            <button
+                                className="spotifyBtn"
+                                onClick={() => {
+                                    player.nextTrack();
+                                }}
+                            >
+                                <SkipForwardCircle />
+                            </button>
+                        </div>
+                    )}
                 </div>
             </>
         );

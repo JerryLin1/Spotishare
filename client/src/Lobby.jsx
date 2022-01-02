@@ -1,23 +1,20 @@
 import { useContext, useEffect, useRef, useState } from "react";
-import { Row, Col, Container, Card, Form, Button } from "react-bootstrap";
-import { CaretDownFill, CaretUpFill } from "react-bootstrap-icons";
+import { Row, Col, Container, Card, Form } from "react-bootstrap";
+import { CaretDownFill } from "react-bootstrap-icons";
 import { useParams } from "react-router-dom";
 
-import Client from "./client.js";
 import WebPlayback from "./WebPlayback.jsx";
 import Queue from "./Queue.jsx";
 import { ClientContext } from "./contexts/ClientProvider.jsx";
 
 import anime from "animejs";
 
-import { isLoggedIn, login } from ".";
-
 import "./css/Lobby.css";
 
 function Lobby(props) {
     let { roomId } = useParams();
     const client = useContext(ClientContext);
-    const [members, setMembers] = useState([]); //useState([{ isHost: true, name: 'Tom Han', id: 'p.han.tom', country: 'CA', image: 'https://i.scdn.co/image/ab6775700000ee8508f4b5251c39729ba880fb66' }]);
+    const [members, setMembers] = useState([]);
     const [chat, setChat] = useState([]);
     const [queue, updateQueue] = useState([]);
     const [typingTimeout, updateTypingTimeout] = useState(undefined);
@@ -69,11 +66,17 @@ function Lobby(props) {
 
     // search area expand animation
     const expandSearchArea = () => {
+        /**********  TODO: prevent scroll when search area is expanded and screen is not < 1200px **********/
         let searchArea = document.querySelector("#searchArea"),
             searchBox = document.querySelector("#searchbox");
+
         if (window.innerWidth <= 1200) {
             // TODO: don't play animation and just expand searcharea
-            // return;
+            searchArea.style.cssText = `position: absolute; width: 100vw; height: 100%; top: 0; background-color: rgba(33,33,33,0.75)`;
+            searchBox.style.cssText = "left: 50vw; transform: translateX(-50%); width: 60%";
+
+            document.querySelector("#searchArea-close").style.display = "block";
+            document.querySelector("#result-list").style.cssText = "opacity: 1; display: block";
         } else if (document.querySelector("#result-list").style.opacity == 1) {
             // prevent animation from playing again if already expanded
             return;
@@ -96,6 +99,7 @@ function Lobby(props) {
                 easing: "linear",
                 duration: 250,
                 complete: () => {
+                    document.querySelector("#result-list").style.display = "block";
                     anime({ targets: "#result-list", opacity: 1, duration: 100, easing: "linear" });
                     document.querySelector("#searchArea-close").style.display = "block";
                 },
@@ -108,11 +112,14 @@ function Lobby(props) {
         let searchArea = document.querySelector("#searchArea"),
             searchBox = document.querySelector("#searchbox");
         document.querySelector("#searchArea-close").style.display = "none";
-        if (window.innerHeight <= 1200) {
+        if (window.innerWidth <= 1200) {
             // TODO: don't play animation and just expand searcharea
-            // return;
+            document.querySelector("#result-list").style.cssText = "opacity: 0; display: none";
+            searchArea.style.cssText = "position: relative; width: 100%; height: 0";
+            searchBox.style.cssText = "left: 0; transform: none; width: 80%";
         } else {
             anime({ targets: "#result-list", opacity: 0, duration: 100, easing: "linear" });
+            document.querySelector("#result-list").style.display = "none";
 
             anime({
                 targets: searchArea,
@@ -221,18 +228,19 @@ function Lobby(props) {
                                         <Col xs={12} xl={9} style={{ padding: "0.5em" }}>
                                             <Row style={{ width: "100%" }}>
                                                 <Col xs={5}>
-                                                    <img className="unselectable" src={item.album.images[2].url} />
-
-                                                    <div style={{ textAlign: "center", margin: "0.5em" }}>
-                                                        {item.duration_ms / 60000 - Math.floor(item.duration_ms / 60000) < 0.6
-                                                            ? String(item.duration_ms / 60000)[0]
-                                                            : String(item.duration_ms / 60000 + 1)[0]}
-                                                        :{Math.round((item.duration_ms / 60000 - Math.floor(item.duration_ms / 60000)) * 60)}
+                                                    <div style={{ margin: "0.5em", textAlign: "center" }}>
+                                                        <img className="unselectable" src={item.album.images[1].url} />
+                                                        {String(item.duration_ms / 60000)[0]}:
+                                                        {Math.floor((item.duration_ms / 60000 - Math.floor(item.duration_ms / 60000)) * 60) >= 10
+                                                            ? Math.floor((item.duration_ms / 60000 - Math.floor(item.duration_ms / 60000)) * 60)
+                                                            : `0${Math.floor(
+                                                                  (item.duration_ms / 60000 - Math.floor(item.duration_ms / 60000)) * 60
+                                                              )}`}
                                                     </div>
                                                 </Col>
-                                                <Col xs={7}>
-                                                    <div style={{ marginBottom: "0.5em" }}>{item.name}</div>
-                                                    <div style={{ fontSize: "0.8em" }}>{item.artists.map((artist) => artist.name).join(", ")}</div>
+                                                <Col xs={{ offset: 2, span: 5 }} xl={{ offset: 0, span: 7 }}>
+                                                    <div className="song-card-name">{item.name}</div>
+                                                    <div className="song-card-artist">{item.artists.map((artist) => artist.name).join(", ")}</div>
                                                 </Col>
                                             </Row>
                                         </Col>
@@ -285,9 +293,9 @@ function Lobby(props) {
                     >
                         <div id="sendBar">
                             <input placeholder="Type a message..." type="text" id="chatInput" />
-                            <Button variant="outline-dark" type="submit" id="sendBtn">
+                            <button variant="outline-dark" type="submit" id="sendBtn">
                                 Send Message
-                            </Button>
+                            </button>
                         </div>
                     </Form>
                 </Col>

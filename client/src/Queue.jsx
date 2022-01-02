@@ -21,21 +21,23 @@ function Queue(props) {
                     user = item[1];
                 return (
                     <Row key={key} className="song-card">
-                        <Col xs={12} xl={10}>
+                        <Col>
                             <Row style={{ width: "100%" }}>
-                                <Col xs={5}>
-                                    <img className="unselectable" src={song.album.images[2].url} />
+                                <Col xs={5} style={{margin: "0.25em auto"}}>
                                     {/* TODO: fix time calculation */}
-                                    <div style={{ textAlign: "center", margin: "0.5em auto" }}>
-                                        {song.duration_ms / 60000 - Math.floor(song.duration_ms / 60000) < 0.6
-                                            ? String(song.duration_ms / 60000)[0]
-                                            : String(song.duration_ms / 60000 + 1)[0]}
-                                        :{Math.round((song.duration_ms / 60000 - Math.floor(song.duration_ms / 60000)) * 60)}
+                                    <div>
+                                        <img className="unselectable" src={song.album.images[2].url} />
+                                    </div>
+                                    <div style={{ textAlign: "center" }}>
+                                        {String(song.duration_ms / 60000)[0]}:
+                                        {Math.floor((song.duration_ms / 60000 - Math.floor(song.duration_ms / 60000)) * 60) >= 10
+                                            ? Math.floor((song.duration_ms / 60000 - Math.floor(song.duration_ms / 60000)) * 60)
+                                            : `0${Math.floor((song.duration_ms / 60000 - Math.floor(song.duration_ms / 60000)) * 60)}`}
                                     </div>
                                 </Col>
-                                <Col xs={7} className="queue-desc">
-                                    <div style={{ marginBottom: "0.5em" }}>{song.name}</div>
-                                    <div style={{ fontSize: "0.8em" }}>{song.artists.map((artist) => artist.name).join(", ")}</div>
+                                <Col xs={7}>
+                                    <div className="song-card-name">{song.name}</div>
+                                    <div className="song-card-artist">{song.artists.map((artist) => artist.name).join(", ")}</div>
                                 </Col>
                             </Row>
                         </Col>
