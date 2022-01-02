@@ -27,6 +27,7 @@ function PreLobby(props) {
                 {/* idk if its possible to see how many are in the lobby before inside the lobby */}
                 <div>Lobby currently has {0} people</div>
             </div>
+            <span className="credits">Created by Roseak Lin, Tom Han, Jerry Lin</span>
         </div>
     );
 }

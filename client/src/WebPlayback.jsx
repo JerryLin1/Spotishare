@@ -16,7 +16,6 @@ function WebPlayback(props) {
     const [device_id, setDeviceId] = useState(undefined);
     const [current_track, setTrack] = useState(undefined);
 
-
     useEffect(() => {
         // Create new spotify player instance
         const script = document.createElement("script");
@@ -40,14 +39,22 @@ function WebPlayback(props) {
                 console.log("Ready with Device ID", device_id);
                 setActive(true);
 
-                const waitForPlayback = setInterval(() => client.socket.emit("playWhenReady", {
-                    device_id: device_id,
-                    accessToken: localStorage.getItem("spotify-access-token")
-                }, (response) => {
-                    if (response.playing) {
-                        clearInterval(waitForPlayback);
-                    }
-                }), 1000);
+                const waitForPlayback = setInterval(
+                    () =>
+                        client.socket.emit(
+                            "playWhenReady",
+                            {
+                                device_id: device_id,
+                                accessToken: localStorage.getItem("spotify-access-token"),
+                            },
+                            (response) => {
+                                if (response.playing) {
+                                    clearInterval(waitForPlayback);
+                                }
+                            }
+                        ),
+                    1000
+                );
                 // fetch(
                 //     `/playerReady?accessToken=${localStorage.getItem(
                 //         "spotify-access-token"
@@ -65,8 +72,7 @@ function WebPlayback(props) {
                 if (prevPlayerState === undefined) {
                     prevPlayerState = state;
                     return;
-                }
-                else {
+                } else {
                     let ptrack = prevPlayerState.track_window.current_track.id;
                     let strack = state.track_window.current_track.id;
                     let ppos = prevPlayerState.position;
@@ -79,7 +85,7 @@ function WebPlayback(props) {
                         });
                     }
                     if (Math.abs(spos - ppos) >= syncTolerance) {
-                        console.log("previous pos:", ppos, "current pos:", spos)
+                        console.log("previous pos:", ppos, "current pos:", spos);
                         client.socket.emit("syncLobbyPosition", spos);
                     }
                 }
@@ -108,7 +114,7 @@ function WebPlayback(props) {
 
             client.socket.on("updatePlaybackPos", (spos) => {
                 player.seek(spos);
-            })
+            });
         };
     }, []);
 
@@ -126,27 +132,22 @@ function WebPlayback(props) {
         return (
             <>
                 <div className="container">
-                    <div className="main-wrapper">
-                        <b> Player is ready! Add songs to the queue to start the listening session. </b>
+                    <div className="main-wrapper" style={{ marginTop: "25%" }}>
+                        <h2> Player is ready! Add songs to the queue to start the listening session. </h2>
                     </div>
                 </div>
             </>
-        )
+        );
     } else {
         return (
             <>
                 <div className="container">
                     <div className="main-wrapper">
-                        <img
-                            src={current_track.album.images[0].url}
-                            id="nowPlayingCover"
-                            className="unselectable"
-                            alt=""
-                        />
+                        <img src={current_track.album.images[0].url} id="nowPlayingCover" className="unselectable" alt="" />
                         <div id="nowPlayingName">{current_track.name}</div>
                         <div id="nowPlayingArtist">{current_track.artists.map((artist) => artist.name).join(", ")}</div>
 
-                        {client.isHost &&
+                        {client.isHost && (
                             <div id="nowPlayingSide">
                                 <button
                                     className="spotifyBtn"
@@ -176,8 +177,7 @@ function WebPlayback(props) {
                                     <SkipForwardCircle />
                                 </button>
                             </div>
-                        }
-
+                        )}
                     </div>
                 </div>
             </>

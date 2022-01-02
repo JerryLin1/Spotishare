@@ -49,6 +49,13 @@ button:hover {
     user-select: none;
 }
 
+.credits {
+    position: fixed;
+    right: 1em;
+    bottom: 0.5em;
+    font-size: 0.8em;
+}
+
 /********* Home *********/
 
 #sign-in {
@@ -61,7 +68,7 @@ button:hover {
 }
 
 .page-title {
-    font-size: 3.5em;
+    font-size: 3em;
     font-weight: 800;
     margin-bottom: 0.5em;
     text-align: left !important;
@@ -80,8 +87,11 @@ button:hover {
     min-width: 8em;
 }
 
-
 @media screen and (max-width: 1200px) {
+    .page-title {
+        text-align: center !important;
+    }
+
     .page-title.home {
         margin-top: 1.25em;
         font-size: 5em;

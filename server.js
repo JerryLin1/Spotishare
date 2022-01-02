@@ -146,6 +146,7 @@ app.get("/joinLobby", (req, res) => {
     loggedInSpotifyApi.setAccessToken(req.query.accessToken);
 
     // Initialize a new collaborative playlist for the lobby
+    
     if (client.isHost) {
         loggedInSpotifyApi
             .createPlaylist("New Spotishare Playlist", {

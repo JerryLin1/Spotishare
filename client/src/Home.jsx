@@ -10,21 +10,25 @@ function HomePage(props) {
         <Container fluid>
             <h1 className="page-title home unselectable">SpotiShare</h1>
             {(!isLoggedIn() || JSON.parse(localStorage.getItem("client-data")).body.product != "premium") && (
-                <div style={{ width: "100%", textAlign: "center" }}>
-                    Spotishare requires Spotify Premium, which lets you play any track, ad-free and with better audio
-                    quality. Go to <a  target= "__blank" href="https://www.spotify.com/premium">spotify.com/premium</a> to try it for free.
-                </div>
+                <p style={{ width: "100vw", textAlign: "center", position: "absolute", left: 0, bottom: "2.5em" }}>
+                    Spotishare requires Spotify Premium, which lets you play any track, ad-free and with better audio quality. Go to{" "}
+                    <a target="__blank" href="https://www.spotify.com/premium">
+                        spotify.com/premium
+                    </a>{" "}
+                    to try it for free.
+                </p>
             )}
             {/* TODO: Shouldn't this be a sign out button instead */}
             <button
                 onClick={() => {
                     if (!isLoggedIn()) login();
+                    else {
+                        /* Logout */
+                    }
                 }}
                 id="sign-in"
             >
-                {localStorage.getItem("client-data")
-                    ? `Hello ${JSON.parse(localStorage.getItem("client-data")).body.display_name}!`
-                    : "Sign In"}
+                {localStorage.getItem("client-data") ? `Hello ${JSON.parse(localStorage.getItem("client-data")).body.display_name}!` : "Sign In"}
             </button>
 
             <div style={{ width: "100%", textAlign: "center" }}>
@@ -32,6 +36,7 @@ function HomePage(props) {
                     Create Lobby
                 </button>
             </div>
+            <span className="credits">Created by Roseak Lin, Tom Han, Jerry Lin</span>
         </Container>
     );
 }

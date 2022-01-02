@@ -23,8 +23,9 @@ function Queue(props) {
                     <Row key={key} className="song-card">
                         <Col xs={12} xl={10}>
                             <Row style={{ width: "100%" }}>
-                                <Col xs={4}>
-                                    <img className="queue-img unselectable" src={song.album.images[1].url} />
+                                <Col xs={5}>
+                                    <img className="unselectable" src={song.album.images[2].url} />
+                                    {/* TODO: fix time calculation */}
                                     <div style={{ textAlign: "center", margin: "0.5em auto" }}>
                                         {song.duration_ms / 60000 - Math.floor(song.duration_ms / 60000) < 0.6
                                             ? String(song.duration_ms / 60000)[0]
@@ -32,14 +33,15 @@ function Queue(props) {
                                         :{Math.round((song.duration_ms / 60000 - Math.floor(song.duration_ms / 60000)) * 60)}
                                     </div>
                                 </Col>
-                                <Col xs={8} className="queue-desc">
+                                <Col xs={7} className="queue-desc">
                                     <div style={{ marginBottom: "0.5em" }}>{song.name}</div>
                                     <div style={{ fontSize: "0.8em" }}>{song.artists.map((artist) => artist.name).join(", ")}</div>
                                 </Col>
                             </Row>
                         </Col>
                         <Col
-                            xl={2}
+                            xl={12}
+                            xs={12}
                             style={{
                                 padding: "0 0.5em",
                             }}

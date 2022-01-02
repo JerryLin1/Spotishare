@@ -8,6 +8,8 @@ import WebPlayback from "./WebPlayback.jsx";
 import Queue from "./Queue.jsx";
 import { ClientContext } from "./contexts/ClientProvider.jsx";
 
+import anime from "animejs";
+
 import { isLoggedIn, login } from ".";
 
 import "./css/Lobby.css";
@@ -65,6 +67,76 @@ function Lobby(props) {
         updateQueue(newQueue);
     };
 
+    // search area expand animation
+    const expandSearchArea = () => {
+        let searchArea = document.querySelector("#searchArea"),
+            searchBox = document.querySelector("#searchbox");
+        if (window.innerWidth <= 1200) {
+            // TODO: don't play animation and just expand searcharea
+            // return;
+        } else if (document.querySelector("#result-list").style.opacity == 1) {
+            // prevent animation from playing again if already expanded
+            return;
+        } else {
+            searchArea.style.cssText = "position: absolute; width: 100vw; height: 12em";
+            searchBox.style.cssText = "left: 50vw; transform: translateX(-50%)";
+
+            anime({
+                targets: searchArea,
+                height: `${window.innerHeight / 16}em`,
+                width: "100vw",
+                backgroundColor: "rgba(33,33,33,0.75)",
+                easing: "linear",
+                duration: 250,
+            });
+
+            anime({
+                targets: searchBox,
+                width: ["calc(33.33333% - 4em)", "60%"],
+                easing: "linear",
+                duration: 250,
+                complete: () => {
+                    anime({ targets: "#result-list", opacity: 1, duration: 100, easing: "linear" });
+                    document.querySelector("#searchArea-close").style.display = "block";
+                },
+            });
+        }
+    };
+
+    // search collapse area animation
+    const shrinkSearchArea = () => {
+        let searchArea = document.querySelector("#searchArea"),
+            searchBox = document.querySelector("#searchbox");
+        document.querySelector("#searchArea-close").style.display = "none";
+        if (window.innerHeight <= 1200) {
+            // TODO: don't play animation and just expand searcharea
+            // return;
+        } else {
+            anime({ targets: "#result-list", opacity: 0, duration: 100, easing: "linear" });
+
+            anime({
+                targets: searchArea,
+                height: [`${window.innerHeight / 16}em`, "12em"],
+                backgroundColor: "rgba(0,0,0,0)",
+                easing: "linear",
+                duration: 250,
+                complete: () => {
+                    searchArea.style.cssText = "position: relative; width: 100%; height: 0";
+                },
+            });
+
+            anime({
+                targets: searchBox,
+                width: "calc(33.33333% - 4em)",
+                easing: "linear",
+                duration: 250,
+                complete: () => {
+                    searchBox.style.cssText = "left: 0; transform: none; width: 80%";
+                },
+            });
+        }
+    };
+
     useEffect(() => {
         initializeUser();
 
@@ -105,47 +177,20 @@ function Lobby(props) {
 
     return (
         <Container fluid>
-            <h1 className="page-title unselectable">SpotiShare</h1>
             <Row>
-                <Col xl="8">
-                    <WebPlayback roomId={roomId} disabled={client.isHost} token={localStorage.getItem("spotify-access-token")} />
+                <Col xs={12} xl={3}>
+                    <h1 className="page-title unselectable">SpotiShare</h1>
                 </Col>
-                <Col>
-                    <Card className="chat-container">
-                        <Card.Header id="chat-header" className="unselectable">
-                            Chat
-                        </Card.Header>
-                        <div className="dropdown unselectable" onClick={toggleLobbyList}>
-                            <p style={{ margin: "0" }}>Currently listening ({members ? members.length : 0})</p>
-                            <CaretDownFill id="caret" />
-                        </div>
-                        <div className="lobby-list">{renderMembers()}</div>
-                        <Card.Body id="chat">{chat}</Card.Body>
-                    </Card>
-                    <Form
-                        autoComplete="off"
-                        onSubmit={(event) => {
-                            event.preventDefault();
-                            client.sendMessage(document.getElementById("chatInput").value);
-                            document.getElementById("chatInput").value = "";
+                <Col xs={12} xl={{ offset: 1, span: 5 }} style={{ marginTop: "1em" }}>
+                    <div id="searchArea-close" onClick={() => shrinkSearchArea()}>
+                        &times;
+                    </div>
+                    <div
+                        onFocus={() => {
+                            expandSearchArea();
                         }}
+                        id="searchArea"
                     >
-                        <div id="sendBar">
-                            <input placeholder="Type a message..." type="text" id="chatInput" />
-                            <Button variant="outline-dark" type="submit" id="sendBtn">
-                                Send Message
-                            </Button>
-                        </div>
-                    </Form>
-                </Col>
-            </Row>
-            <Row>
-                <Col xs="12" md="6" xl="8" id="queue">
-                    <Queue queue={queue} />
-                </Col>
-                <Col id="searchArea">
-                    <div>
-                        <h3 className="unselectable">Find a Song!</h3>
                         <input
                             autoComplete="off"
                             ref={searchInputRef}
@@ -194,11 +239,10 @@ function Lobby(props) {
                                         <Col>
                                             <button
                                                 onClick={() => {
-                                                    client.socket.emit("addToQueue",
-                                                        {
-                                                            songId: item.uri,
-                                                            accessToken: localStorage.getItem("spotify-access-token")
-                                                        });
+                                                    client.socket.emit("addToQueue", {
+                                                        songId: item.uri,
+                                                        accessToken: localStorage.getItem("spotify-access-token"),
+                                                    });
                                                     addToQueue([item, JSON.parse(localStorage.getItem("client-data")).body.display_name]);
                                                 }}
                                             >
@@ -212,6 +256,43 @@ function Lobby(props) {
                     </div>
                 </Col>
             </Row>
+            <Row>
+                <Col xs={12} xl={3}>
+                    <Queue queue={queue} />
+                </Col>
+                <Col xs={12} xl={6}>
+                    <WebPlayback roomId={roomId} disabled={client.isHost} token={localStorage.getItem("spotify-access-token")} />
+                </Col>
+                <Col xs={12} xl={3}>
+                    <Card className="chat-container">
+                        <Card.Header id="chat-header" className="unselectable">
+                            Chat
+                        </Card.Header>
+                        <div className="dropdown unselectable" onClick={toggleLobbyList}>
+                            <p style={{ margin: "0" }}>Currently listening ({members ? members.length : 0})</p>
+                            <CaretDownFill id="caret" />
+                        </div>
+                        <div className="lobby-list">{renderMembers()}</div>
+                        <Card.Body id="chat">{chat}</Card.Body>
+                    </Card>
+                    <Form
+                        autoComplete="off"
+                        onSubmit={(event) => {
+                            event.preventDefault();
+                            client.sendMessage(document.getElementById("chatInput").value);
+                            document.getElementById("chatInput").value = "";
+                        }}
+                    >
+                        <div id="sendBar">
+                            <input placeholder="Type a message..." type="text" id="chatInput" />
+                            <Button variant="outline-dark" type="submit" id="sendBtn">
+                                Send Message
+                            </Button>
+                        </div>
+                    </Form>
+                </Col>
+            </Row>
+            <span className="credits">Created by Roseak Lin, Tom Han, Jerry Lin</span>
         </Container>
     );
 }
