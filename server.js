@@ -260,7 +260,7 @@ io.on("connection", (socket) => {
             loggedInSpotifyApi
                 .play({ device_id: device_id, uris: [rooms[socket.room].queue[currentPos].uri] })
                 .then((data) => {
-                    rooms[socket.room].currentTrack = rooms[socket.room].playlist.tracks.items[0].track.id;
+                    rooms[socket.room].currentTrack = rooms[socket.room].queue[currentPos].id;
                     rooms[socket.room].currentTrackStart = Date.now();
                 });
         }
@@ -313,6 +313,7 @@ io.on("connection", (socket) => {
     });
 
     socket.on("addToQueue", ({ track, trackId, accessToken }) => {
+        console.log(track);
         rooms[socket.room].queue.push(track)
         // var loggedInSpotifyApi = new SpotifyWebApi();
         // loggedInSpotifyApi.setAccessToken(accessToken);
