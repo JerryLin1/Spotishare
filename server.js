@@ -130,7 +130,7 @@ app.get("/createLobby", (req, res) => {
         currentTrack: undefined,
         currentTrackStart: Date.now(),
         queue: [],
-        currentQueuePos: 0
+        currentQueuePos: 0,
     };
     res.send({ roomId: roomId });
 
@@ -147,19 +147,8 @@ app.get("/joinLobby", (req, res) => {
     loggedInSpotifyApi.setAccessToken(req.query.accessToken);
 
     // Initialize a new collaborative playlist for the lobby
-    
-    // if (client.isHost) {
-    //     loggedInSpotifyApi
-    //         .createPlaylist("New Spotishare Playlist", {
-    //             description: "A new collaborative playlist for your Spotishare lobby!",
-    //             public: "false",
-    //             collaborative: "true",
-    //         })
-    //         .then((data) => {
-    //             rooms[roomId].playlist = data.body;
-    //         })
-    //         .catch((err) => console.log(err));
-    // }
+
+    if (client.isHost) rooms[roomId].hostToken = req.query.accessToken;
 
     loggedInSpotifyApi
         .getMe()
@@ -252,22 +241,9 @@ io.on("connection", (socket) => {
         });
     });
 
-    socket.on("playWhenReady", ({ device_id, accessToken }, callback) => {
-        if (rooms[socket.room].queue.length > 0) {
-            var loggedInSpotifyApi = new SpotifyWebApi();
-            loggedInSpotifyApi.setAccessToken(accessToken);
-            let currentPos = rooms[socket.room].currentQueuePos
-            loggedInSpotifyApi
-                .play({ device_id: device_id, uris: [rooms[socket.room].queue[currentPos].uri] })
-                .then((data) => {
-                    rooms[socket.room].currentTrack = rooms[socket.room].playlist.tracks.items[0].track.id;
-                    rooms[socket.room].currentTrackStart = Date.now();
-                });
-        }
-        callback({
-            playing: rooms[socket.room].queue.length > 0,
-        });
-    });
+    socket.on("initializeClientDevice", (device_id) =>
+        rooms[socket.room].clients[socket.id].deviceId = device_id
+    )
 
     socket.on("togglePlayPause", () => {
         rooms[socket.room].paused = !rooms[socket.room].paused;
@@ -294,7 +270,10 @@ io.on("connection", (socket) => {
                 case "playlist":
                     loggedInSpotifyApi.getPlaylist(spotifyID)
                     .then(data => {
-                        console.log(data.body)
+                        console.log(data.body.tracks.items)
+                        for (item of data.body.tracks.items) {
+                            console.log(item.track.name)
+                        }
                     })
                     break;
                 case "album":
@@ -337,44 +316,67 @@ io.on("connection", (socket) => {
         });
         rooms[socket.room].currentTrack = trackId;
         rooms[socket.room].currentTrackStart = Date.now();
-        socket.broadcast.to(socket.room).emit("changeTrack", { trackId });
+        socket.broadcast.to(socket.room).emit("changeTrack", trackId);
     });
 
     socket.on("changeTrack", ({ trackId, accessToken }) => {
-        changeTrack(trackId, accessToken);
+        var loggedInSpotifyApi = new SpotifyWebApi();
+        loggedInSpotifyApi.setAccessToken(accessToken);
+
+        loggedInSpotifyApi.play({
+            device_id: rooms[socket.room].clients[socket.id].deviceId,
+            uris: [`spotify:track:${trackId}`],
+        }).then((data) => {
+            waitForTrackEnd();
+        });
     });
+
+    // Helper for socket.on("changeTrack", ...)
+    // Creates a ref to check every second if the current track has ended
+    // If so, events are fired to handle what to do next
+    function waitForTrackEnd() {
+        let checkIfFinished = setInterval(() => {
+            const currentTrackInfo = rooms[socket.room].queue[rooms[socket.room].currentQueuePos];
+            var loggedInSpotifyApi = new SpotifyWebApi();
+            loggedInSpotifyApi.setAccessToken(rooms[socket.room].hostToken);
+
+            loggedInSpotifyApi.getMyCurrentPlaybackState()
+                .then((data) => {
+                    if (data.body.is_playing && data.body.progress_ms + 1500 >= currentTrackInfo.duration_ms) {
+                        console.log("Track in queue has ended; firing changeTrack");
+                        rooms[socket.room].currentQueuePos++;
+                        if (rooms[socket.room].currentQueuePos < rooms[socket.room].queue.length) {
+                            console.log("Change track firing...")
+                            io.to(socket.room).emit("changeTrack", rooms[socket.room].queue[rooms[socket.room].currentQueuePos].id);
+                        } else {
+                            console.log("End of queue firing...")
+                            io.to(socket.room).emit("endOfQueue");
+                        }
+                        clearInterval(checkIfFinished);
+                    }
+                })
+        }, 1000)
+    }
 
     socket.on("syncLobbyPosition", (spos) => {
         socket.broadcast.to(socket.room).emit("updatePlaybackPos", spos);
     });
 
     socket.on("addToQueue", ({ track, trackId, accessToken }) => {
-        addToQueue(track, socket.room);
-        // var loggedInSpotifyApi = new SpotifyWebApi();
-        // loggedInSpotifyApi.setAccessToken(accessToken);
-        // loggedInSpotifyApi
-        //     .addTracksToPlaylist(rooms[socket.room].playlist.id, [trackId])
-        //     .then((data) => {
-        //         // Update the room's playlist
-        //         loggedInSpotifyApi.getPlaylist(rooms[socket.room].playlist.id).then((data) => {
-        //             rooms[socket.room].playlist = data.body;
-        //         });
-        //     })
-        //     .catch((err) => console.log(err));
+        addToQueue(track, socket.room)
+
+        // If the queue is at its end
+        if (rooms[socket.room].queue.length === rooms[socket.room].currentQueuePos + 1) {
+            rooms[socket.room].currentTrack = track.id;
+            io.to(socket.room).emit("changeTrack", track.id);
+        }
+
     });
     function addToQueue(track, roomId) {
         rooms[roomId].queue.push(track);
     }
 });
 
-function changeTrack(trackId, accessToken, startDate) {
-    var loggedInSpotifyApi = new SpotifyWebApi();
-    loggedInSpotifyApi.setAccessToken(accessToken);
-    loggedInSpotifyApi.play({
-        uris: [`spotify:track:${trackId}`],
-        position_ms: startDate ? Date.now() - startDate : 0,
-    });
-}
 
 // Add new client like rooms[roomId].clients[socket.id] = new Client()
 function Client(roomId) {
