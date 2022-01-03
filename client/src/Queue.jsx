@@ -1,7 +1,17 @@
 import { Row, Col } from "react-bootstrap";
+import { CaretDownFill } from "react-bootstrap-icons";
 import "./css/Queue.css";
 
 function Queue(props) {
+    const toggleLobbyList = () => {
+        if (document.getElementsByClassName("lobby-list")[0].classList.contains("visible")) {
+            document.getElementsByClassName("lobby-list")[0].className = "lobby-list";
+            document.getElementById("caret").style.transform = "translateY(-50%) rotate(0deg)";
+        } else {
+            document.getElementsByClassName("lobby-list")[0].className = "lobby-list visible";
+            document.getElementById("caret").style.transform = "translateY(-50%) rotate(-180deg)";
+        }
+    };
     const queue = props.queue;
     if (queue.length === 0) {
         return (
@@ -23,7 +33,7 @@ function Queue(props) {
                     <Row key={key} className="song-card">
                         <Col>
                             <Row style={{ width: "100%" }}>
-                                <Col xs={5} style={{margin: "0.25em auto"}}>
+                                <Col xs={5} style={{ margin: "0.25em auto" }}>
                                     {/* TODO: fix time calculation */}
                                     <div>
                                         <img className="unselectable" src={song.album.images[2].url} />
@@ -50,6 +60,7 @@ function Queue(props) {
                         >
                             <button>Remove</button>
                         </Col>
+                        <div className="lobby-list">"LOLKOLOL</div>
                     </Row>
                 );
             })}

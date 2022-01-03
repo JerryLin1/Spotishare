@@ -314,7 +314,6 @@ io.on("connection", (socket) => {
 
             loggedInSpotifyApi.getMyCurrentPlaybackState()
                 .then((data) => {
-                    console.log("checking if finished", data.body.progress_ms);
                     if (data.body.is_playing && data.body.progress_ms + 1000 >= currentTrackInfo.duration_ms) {
                         console.log("Track in queue has ended; firing changeTrack");
                         rooms[socket.room].currentQueuePos++;

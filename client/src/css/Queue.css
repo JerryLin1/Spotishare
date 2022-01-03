@@ -10,13 +10,17 @@
     background-color: #fff;
     padding: 1em;
     overflow-y: scroll;
-    height: 75vh;
+    height: 60vh;
     font-size: 0.75em;
 }
 
 #queue-container img {
     width: initial;
     height: initial;
+}
+
+.queue.dropdown {
+    
 }
 
 @media screen and (max-width: 1200px) {

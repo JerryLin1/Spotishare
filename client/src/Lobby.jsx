@@ -70,7 +70,7 @@ function Lobby(props) {
         if (document.querySelector("#result-list").style.opacity === "1") {
             return;
         } else if (window.innerWidth <= 1200) {
-            searchArea.style.cssText = `position: fixed !important ; width: 100vw; height: 100%; top: 0; background-color: rgba(33,33,33,0.75)`;
+            searchArea.style.cssText = `position: fixed !important ; width: 100vw; height: 100%; top: 0; background-color: rgba(25,25,25,0.75)`;
             searchBox.style.cssText = "left: 50vw; transform: translateX(-50%); width: 60%";
 
             setTimeout(() => {
@@ -170,13 +170,23 @@ function Lobby(props) {
         });
     }, []);
 
-    const toggleLobbyList = () => {
-        if (document.getElementsByClassName("lobby-list")[0].classList.contains("visible")) {
-            document.getElementsByClassName("lobby-list")[0].className = "lobby-list";
-            document.getElementById("caret").style.transform = "translateY(-50%) rotate(0deg)";
+    const toggleLobbyList = (dropdown) => {
+        if (dropdown === "export") {
+            if (document.getElementsByClassName("lobby-list")[0].classList.contains("visible")) {
+                document.getElementsByClassName("lobby-list")[0].className = "lobby-list";
+                document.querySelector("#caret").style.transform = "translateY(-50%) rotate(0deg)";
+            } else {
+                document.getElementsByClassName("lobby-list")[0].className = "lobby-list visible";
+                document.querySelector("#caret").style.transform = "translateY(-50%) rotate(-180deg)";
+            }
         } else {
-            document.getElementsByClassName("lobby-list")[0].className = "lobby-list visible";
-            document.getElementById("caret").style.transform = "translateY(-50%) rotate(-180deg)";
+            if (document.getElementsByClassName("lobby-list")[0].classList.contains("visible")) {
+                document.getElementsByClassName("lobby-list")[0].className = "lobby-list";
+                document.querySelector(".card #caret").style.transform = "translateY(-50%) rotate(0deg)";
+            } else {
+                document.getElementsByClassName("lobby-list")[0].className = "lobby-list visible";
+                document.querySelector(".card #caret").style.transform = "translateY(-50%) rotate(-180deg)";
+            }
         }
     };
 
@@ -187,13 +197,11 @@ function Lobby(props) {
                     <h1 className="page-title unselectable">SpotiShare</h1>
                 </Col>
                 <Col xs={12} xl={{ offset: 1, span: 5 }} style={{ marginTop: "1em" }}>
-                    <div id="searchArea-close" onClick={() => shrinkSearchArea()}>
+                    <div id="searchArea-close" onClick={shrinkSearchArea}>
                         &times;
                     </div>
                     <div
-                        onFocus={() => {
-                            expandSearchArea();
-                        }}
+                        onFocus={expandSearchArea}
                         onClick={(e) => {
                             console.log(document.querySelector("#result-list").style.display);
                             if (document.querySelector("#result-list").style.display === "block" && e.target.id === "searchArea") {
@@ -272,6 +280,12 @@ function Lobby(props) {
             <Row>
                 <Col xs={12} xl={3}>
                     <Queue queue={queue} />
+                    {/* Exact same dropdown from lobby */}
+                    <div className="dropdown unselectable" onClick={() => toggleLobbyList("export")}>
+                        <p style={{ margin: "0" }}>Export Playlist</p>
+                        <CaretDownFill id="caret" />
+                    </div>
+                    <div id="export-settings">LOLOL</div>
                 </Col>
                 <Col xs={12} xl={6}>
                     <WebPlayback roomId={roomId} disabled={client.isHost} token={localStorage.getItem("spotify-access-token")} />
@@ -281,7 +295,7 @@ function Lobby(props) {
                         <Card.Header id="chat-header" className="unselectable">
                             Chat
                         </Card.Header>
-                        <div className="dropdown unselectable" onClick={toggleLobbyList}>
+                        <div className="dropdown unselectable" onClick={() => toggleLobbyList("members")}>
                             <p style={{ margin: "0" }}>Currently listening ({members ? members.length : 0})</p>
                             <CaretDownFill id="caret" />
                         </div>

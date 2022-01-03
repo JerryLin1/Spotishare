@@ -69,15 +69,9 @@
     width: 50%;
 }
 
-#chat {
-    min-height: 250px;
-    max-height: 500px;
-    display: block;
-    overflow-y: scroll;
-}
-
 .chat-container {
     margin: 0.5em auto;
+    height: 60vh;
 }
 
 #chat-header {
@@ -126,7 +120,7 @@
     height: 2.5em;
     padding: 0.5em;
     text-align: center;
-    background-color: rgb(145, 145, 145);
+    background-color: rgb(122, 122, 122);
     color: #fff;
     transition: 0.25s;
 }
@@ -156,8 +150,7 @@
 }
 
 .lobby-list.visible {
-    position: absolute;
-    height: calc(100% - 6.5em);
+    height: 50vh;
     opacity: 1;
     overflow-y: scroll;
 }
@@ -289,7 +282,6 @@
     display: none;
     z-index: 3;
     font-size: 3em;
-    text-shadow: 0px 0px #000;
     color: #fff;
     position: absolute;
     top: 17.5%;
