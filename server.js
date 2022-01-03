@@ -364,16 +364,14 @@ io.on("connection", (socket) => {
 
     socket.on("addToQueue", ({ track, trackId, accessToken }) => {
         addToQueue(track, socket.room)
-
+    });
+    function addToQueue(track, roomId) {
+        rooms[roomId].queue.push(track);
         // If the queue is at its end
         if (rooms[socket.room].queue.length === rooms[socket.room].currentQueuePos + 1) {
             rooms[socket.room].currentTrack = track.id;
             io.to(socket.room).emit("changeTrack", track.id);
         }
-
-    });
-    function addToQueue(track, roomId) {
-        rooms[roomId].queue.push(track);
     }
 });
 
