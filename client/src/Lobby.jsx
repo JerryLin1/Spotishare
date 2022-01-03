@@ -252,7 +252,8 @@ function Lobby(props) {
                                             <button
                                                 onClick={() => {
                                                     client.socket.emit("addToQueue", {
-                                                        songId: item.uri,
+                                                        track: item,
+                                                        trackId: item.uri,
                                                         accessToken: localStorage.getItem("spotify-access-token"),
                                                     });
                                                     addToQueue([item, JSON.parse(localStorage.getItem("client-data")).body.display_name]);

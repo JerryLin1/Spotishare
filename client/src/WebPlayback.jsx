@@ -105,7 +105,7 @@ function WebPlayback(props) {
                 isPaused ? player.pause() : player.resume();
             });
 
-            client.socket.on("changeTrack", ({ trackId }) => {
+            client.socket.on("changeTrack", (trackId) => {
                 client.socket.emit("changeTrack", {
                     accessToken: localStorage.getItem("spotify-access-token"),
                     trackId: trackId,
@@ -115,6 +115,10 @@ function WebPlayback(props) {
             client.socket.on("updatePlaybackPos", (spos) => {
                 player.seek(spos);
             });
+
+            client.socket.on("endOfQueue", () => {
+                // TODO: Prompt the lobby to add more tracks
+            })
         };
     }, []);
 
