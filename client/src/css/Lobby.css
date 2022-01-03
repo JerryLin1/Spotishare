@@ -10,6 +10,7 @@
 
 .pre-lobby-body {
     position: absolute;
+    width: 100%;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%)
@@ -101,7 +102,7 @@
     width: 74.5%;
     margin-right: 0.5%;
     border: none;
-    padding-left: 0.5em;
+    padding: 0.75em;
 }
 
 #chatInput:focus {
@@ -184,13 +185,9 @@
 }
 
 #member-pfp {
-    position: absolute;
-    top: -50%;
-    left: -50%;
     object-fit: cover;
-    height: 140px;
-    width: 140px;
-    transform: scale(0.5);
+    height: 70px;
+    width: 70px;
 }
 
 /******* Song Cards *******/
@@ -261,7 +258,7 @@
     height: 3em;
     width: 80%;
     border: none;
-    padding: 0 0.5em;
+    padding: 0 0.75em;
 }
 
 #searchbox:focus {
@@ -291,7 +288,8 @@
 #searchArea-close {
     display: none;
     z-index: 3;
-    font-size: 50px;
+    font-size: 3em;
+    text-shadow: 0px 0px #000;
     color: #fff;
     position: absolute;
     top: 17.5%;
@@ -321,5 +319,21 @@
 
     .web-player {
         margin-top: 1em;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .song-card {
+        font-size: 0.675em;
+    }
+
+    .song-card img {
+        width: 64px;
+        height: 64px;
+    }
+
+    #member-pfp {
+        width: 56px;
+        height: 56px;
     }
 }

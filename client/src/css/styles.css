@@ -58,7 +58,6 @@ button:hover {
 
 #sign-in {
     position: absolute;
-    font-size: 1.25em;
     right: 1.5em;
     top: 2em;
     vertical-align: middle;
@@ -93,10 +92,6 @@ button:hover {
     .page-title.home {
         margin-top: 1.25em;
         font-size: 5em;
-    }
-
-    #sign-in {
-        font-size: 1.25em;
     }
 
     #create-lobby-btn {

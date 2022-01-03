@@ -25,7 +25,8 @@ function PreLobby(props) {
                     </button>
                 </div>
                 {/* idk if its possible to see how many are in the lobby before inside the lobby */}
-                <div>Lobby currently has {0} people</div>
+                {/* <div>Lobby currently has {0} people</div> */}
+                <div style={{ fontSize: "1.25em", marginTop: "1em" }}>Room ID: {roomId}</div>
             </div>
             <span className="credits">Created by Roseak Lin, Tom Han, Jerry Lin</span>
         </div>

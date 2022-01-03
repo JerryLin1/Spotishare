@@ -35,10 +35,8 @@ function Lobby(props) {
                             </svg>
                         )}
                     </Col>
-                    <Col style={{ display: "flex", justifyContent: "right", padding: "0" }}>
-                        <div id="pfp-container">
-                            <img id="member-pfp" src={user.image} />
-                        </div>
+                    <Col style={{ display: "flex", justifyContent: "right", alignItems: "center", padding: "0" }}>
+                        <img id="member-pfp" src={user.image} />
                     </Col>
                 </Row>
             );
@@ -69,17 +67,13 @@ function Lobby(props) {
         /**********  TODO: prevent scroll when search area is expanded and screen is not < 1200px **********/
         let searchArea = document.querySelector("#searchArea"),
             searchBox = document.querySelector("#searchbox");
-
         if (window.innerWidth <= 1200) {
-            // TODO: don't play animation and just expand searcharea
-            searchArea.style.cssText = `position: absolute; width: 100vw; height: 100%; top: 0; background-color: rgba(33,33,33,0.75)`;
+            searchArea.style.cssText = `position: fixed !important ; width: 100vw; height: 100%; top: 0; background-color: rgba(33,33,33,0.75)`;
             searchBox.style.cssText = "left: 50vw; transform: translateX(-50%); width: 60%";
 
-            document.querySelector("#searchArea-close").style.display = "block";
-            document.querySelector("#result-list").style.cssText = "opacity: 1; display: block";
-        } else if (document.querySelector("#result-list").style.opacity == 1) {
-            // prevent animation from playing again if already expanded
-            return;
+            setTimeout(() => {
+                document.querySelector("#result-list").style.cssText = "opacity: 1; display: block";
+            }, 25);
         } else {
             searchArea.style.cssText = "position: absolute; width: 100vw; height: 12em";
             searchBox.style.cssText = "left: 50vw; transform: translateX(-50%)";
@@ -196,6 +190,12 @@ function Lobby(props) {
                         onFocus={() => {
                             expandSearchArea();
                         }}
+                        onClick={(e) => {
+                            console.log(document.querySelector("#result-list").style.display);
+                            if (document.querySelector("#result-list").style.display === "block" && e.target.id === "searchArea") {
+                                shrinkSearchArea();
+                            }
+                        }}
                         id="searchArea"
                     >
                         <input
@@ -227,7 +227,7 @@ function Lobby(props) {
                                     <Row key={key} className="song-card">
                                         <Col xs={12} xl={9} style={{ padding: "0.5em" }}>
                                             <Row style={{ width: "100%" }}>
-                                                <Col xs={5}>
+                                                <Col xs={6}>
                                                     <div style={{ margin: "0.5em", textAlign: "center" }}>
                                                         <img className="unselectable" src={item.album.images[1].url} />
                                                         {String(item.duration_ms / 60000)[0]}:
@@ -238,7 +238,7 @@ function Lobby(props) {
                                                               )}`}
                                                     </div>
                                                 </Col>
-                                                <Col xs={{ offset: 2, span: 5 }} xl={{ offset: 0, span: 7 }}>
+                                                <Col xs={{ offset: 1, span: 5 }} xl={{ offset: 0, span: 6 }}>
                                                     <div className="song-card-name">{item.name}</div>
                                                     <div className="song-card-artist">{item.artists.map((artist) => artist.name).join(", ")}</div>
                                                 </Col>
@@ -300,7 +300,6 @@ function Lobby(props) {
                     </Form>
                 </Col>
             </Row>
-            <span className="credits">Created by Roseak Lin, Tom Han, Jerry Lin</span>
         </Container>
     );
 }
