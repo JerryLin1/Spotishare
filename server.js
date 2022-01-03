@@ -306,15 +306,14 @@ io.on("connection", (socket) => {
             }
             //albumOrTrack: album
             //spotifyID: 0BwWUstDMUbgq2NYONRqlu
-        } else {
-            sendToChat({
-                msg,
-                type: "USER",
-                userName: rooms[socket.room].clients[socket.id].name,
-                userId: socket.id,
-                roomId: socket.room,
-            });
         }
+        sendToChat({
+            msg,
+            type: "USER",
+            userName: rooms[socket.room].clients[socket.id].name,
+            userId: socket.id,
+            roomId: socket.room,
+        });
     });
 
     function sendToChat({ msg, type, userName, userId, roomId }) {
