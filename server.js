@@ -362,9 +362,11 @@ io.on("connection", (socket) => {
         socket.broadcast.to(socket.room).emit("updatePlaybackPos", spos);
     });
 
-    socket.on("addToQueue", ({ track, trackId, accessToken }) => {
+    socket.on("addToQueue", ({ track, newQueueItem }) => {
         addToQueue(track, socket.room)
+        socket.broadcast.to(socket.room).emit("updateQueue", newQueueItem);
     });
+
     function addToQueue(track, roomId) {
         rooms[roomId].queue.push(track);
         // If the queue is at its end

@@ -57,7 +57,6 @@ function Lobby(props) {
 
     const addToQueue = (song) => {
         let newQueue = queue.slice();
-        queue.push(song);
         newQueue.push(song);
         updateQueue(newQueue);
     };
@@ -140,6 +139,10 @@ function Lobby(props) {
 
     useEffect(() => {
         initializeUser();
+
+        client.socket.on("updateQueue", (song) => {
+            addToQueue(song);
+        })
 
         client.socket.on("receiveMessage", ({ msg, type, userName, userId }) => {
             const chat = document.getElementById("chat");
@@ -249,8 +252,7 @@ function Lobby(props) {
                                                 onClick={() => {
                                                     client.socket.emit("addToQueue", {
                                                         track: item,
-                                                        trackId: item.uri,
-                                                        accessToken: localStorage.getItem("spotify-access-token"),
+                                                        newQueueItem: [item, JSON.parse(localStorage.getItem("client-data")).body.display_name],
                                                     });
                                                     addToQueue([item, JSON.parse(localStorage.getItem("client-data")).body.display_name]);
                                                 }}
