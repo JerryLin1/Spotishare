@@ -64,10 +64,12 @@ function Lobby(props) {
 
     // search area expand animation
     const expandSearchArea = () => {
-        /**********  TODO: prevent scroll when search area is expanded and screen is not < 1200px **********/
+        /**********  TODO: fix random re-expand when clicking on song card **********/
         let searchArea = document.querySelector("#searchArea"),
             searchBox = document.querySelector("#searchbox");
-        if (window.innerWidth <= 1200) {
+        if (document.querySelector("#result-list").style.opacity === "1") {
+            return;
+        } else if (window.innerWidth <= 1200) {
             searchArea.style.cssText = `position: fixed !important ; width: 100vw; height: 100%; top: 0; background-color: rgba(33,33,33,0.75)`;
             searchBox.style.cssText = "left: 50vw; transform: translateX(-50%); width: 60%";
 
@@ -95,7 +97,9 @@ function Lobby(props) {
                 complete: () => {
                     document.querySelector("#result-list").style.display = "block";
                     anime({ targets: "#result-list", opacity: 1, duration: 100, easing: "linear" });
-                    document.querySelector("#searchArea-close").style.display = "block";
+                    if (window.innerHeight > 700) {
+                        document.querySelector("#searchArea-close").style.display = "block";
+                    }
                 },
             });
         }
