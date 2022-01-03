@@ -251,13 +251,52 @@ io.on("connection", (socket) => {
     });
 
     socket.on("sendMessage", (msg) => {
-        sendToChat({
-            msg,
-            type: "USER",
-            userName: rooms[socket.room].clients[socket.id].name,
-            userId: socket.id,
-            roomId: socket.room,
-        });
+        // Modified from https://stackoverflow.com/a/64866894
+        const regEx =
+            /^(?:spotify:|(?:https?:\/\/(?:open|play)\.spotify\.com\/))(?:embed)?\/?(album|track|playlist)(?::|\/)((?:[0-9a-zA-Z]){22})/;
+        const match = msg.match(regEx);
+        if (match) {
+            var loggedInSpotifyApi = new SpotifyWebApi();
+            loggedInSpotifyApi.setAccessToken(rooms[socket.room].hostToken);
+            const albumTrackOrPlaylist = match[1];
+            const spotifyID = match[2];
+            switch (albumTrackOrPlaylist) {
+                case "track":
+                    loggedInSpotifyApi.getTrack(spotifyID)
+                    .then(data => {
+                        addToQueue(data.body, socket.room)
+                    })
+                    break;
+                case "playlist":
+                    loggedInSpotifyApi.getPlaylist(spotifyID)
+                    .then(data => {
+                        console.log(data.body.tracks.items)
+                        for (item of data.body.tracks.items) {
+                            console.log(item.track.name)
+                        }
+                    })
+                    break;
+                case "album":
+                    loggedInSpotifyApi.getAlbum(spotifyID)
+                    .then(data => {
+                        for (track of data.body.tracks.items) {
+                            console.log(track.name)
+                            addToQueue(track, socket.room)
+                        }
+                    })
+                    break;
+            }
+            //albumOrTrack: album
+            //spotifyID: 0BwWUstDMUbgq2NYONRqlu
+        } else {
+            sendToChat({
+                msg,
+                type: "USER",
+                userName: rooms[socket.room].clients[socket.id].name,
+                userId: socket.id,
+                roomId: socket.room,
+            });
+        }
     });
 
     function sendToChat({ msg, type, userName, userId, roomId }) {
@@ -324,7 +363,7 @@ io.on("connection", (socket) => {
     });
 
     socket.on("addToQueue", ({ track, trackId, accessToken }) => {
-        rooms[socket.room].queue.push(track);
+        addToQueue(track, socket.room)
 
         // If the queue is at its end
         if (rooms[socket.room].queue.length === rooms[socket.room].currentQueuePos + 1) {
@@ -333,6 +372,9 @@ io.on("connection", (socket) => {
         }
 
     });
+    function addToQueue(track, roomId) {
+        rooms[roomId].queue.push(track);
+    }
 });
 
 
