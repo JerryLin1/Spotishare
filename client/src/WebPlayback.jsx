@@ -1,6 +1,6 @@
 import { set } from "animejs";
 import React, { useState, useEffect, useContext } from "react";
-import { PlayCircle, PauseCircle, SkipForwardCircle, SkipBackwardCircle } from "react-bootstrap-icons";
+import { PlayCircle, PauseCircle, SkipForwardCircle, SkipBackwardCircle, SegmentedNav } from "react-bootstrap-icons";
 import { io } from "socket.io-client";
 import { ClientContext } from "./contexts/ClientProvider";
 
@@ -13,7 +13,7 @@ function WebPlayback(props) {
     const [is_paused, setPaused] = useState(false);
     const [is_active, setActive] = useState(false);
     const [player, setPlayer] = useState(undefined);
-    const [device_id, setDeviceId] = useState(undefined);
+    const [endOfQueue, setEndOfQueue] = useState(false);
     const [current_track, setTrack] = useState(undefined);
 
     useEffect(() => {
@@ -38,28 +38,7 @@ function WebPlayback(props) {
             player.addListener("ready", ({ device_id }) => {
                 console.log("Ready with Device ID", device_id);
                 setActive(true);
-
-                const waitForPlayback = setInterval(
-                    () =>
-                        client.socket.emit(
-                            "playWhenReady",
-                            {
-                                device_id: device_id,
-                                accessToken: localStorage.getItem("spotify-access-token"),
-                            },
-                            (response) => {
-                                if (response.playing) {
-                                    clearInterval(waitForPlayback);
-                                }
-                            }
-                        ),
-                    1000
-                );
-                // fetch(
-                //     `/playerReady?accessToken=${localStorage.getItem(
-                //         "spotify-access-token"
-                //     )}&deviceId=${device_id}&roomId=${props.roomId}`
-                // );
+                client.socket.emit("initializeClientDevice", device_id);
             });
 
             player.addListener("not_ready", ({ device_id }) => {
@@ -106,6 +85,7 @@ function WebPlayback(props) {
             });
 
             client.socket.on("changeTrack", (trackId) => {
+                setEndOfQueue(false);
                 client.socket.emit("changeTrack", {
                     accessToken: localStorage.getItem("spotify-access-token"),
                     trackId: trackId,
@@ -118,8 +98,11 @@ function WebPlayback(props) {
 
             client.socket.on("endOfQueue", () => {
                 // TODO: Prompt the lobby to add more tracks
+                console.log("fired end")
+                setEndOfQueue(true);
             })
         };
+
     }, []);
 
     if (!is_active) {
@@ -135,6 +118,14 @@ function WebPlayback(props) {
             <>
                 <div className="web-player">
                     <h2> Player is ready! Add songs to the queue to start the listening session. </h2>
+                </div>
+            </>
+        );
+    } else if (endOfQueue) {
+        return (
+            <>
+                <div className="web-player">
+                    <h2>You've reached the end of the queue. Add more songs keep the listening session going!</h2>
                 </div>
             </>
         );

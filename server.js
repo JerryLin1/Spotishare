@@ -130,7 +130,7 @@ app.get("/createLobby", (req, res) => {
         currentTrack: undefined,
         currentTrackStart: Date.now(),
         queue: [],
-        currentQueuePos: 0
+        currentQueuePos: 0,
     };
     res.send({ roomId: roomId });
 
@@ -241,23 +241,9 @@ io.on("connection", (socket) => {
         });
     });
 
-    socket.on("playWhenReady", ({ device_id, accessToken }, callback) => {
-        if (rooms[socket.room].queue.length > 0) {
-            var loggedInSpotifyApi = new SpotifyWebApi();
-            loggedInSpotifyApi.setAccessToken(accessToken);
-            let currentPos = rooms[socket.room].currentQueuePos
-            loggedInSpotifyApi
-                .play({ device_id: device_id, uris: [rooms[socket.room].queue[currentPos].uri] })
-                .then((data) => {
-                    rooms[socket.room].currentTrack = rooms[socket.room].queue[currentPos].id;
-                    rooms[socket.room].currentTrackStart = Date.now();
-                    waitForTrackEnd();
-                });
-        }
-        callback({
-            playing: rooms[socket.room].queue.length > 0,
-        });
-    });
+    socket.on("initializeClientDevice", (device_id) =>
+        rooms[socket.room].clients[socket.id].deviceId = device_id
+    )
 
     socket.on("togglePlayPause", () => {
         rooms[socket.room].paused = !rooms[socket.room].paused;
@@ -297,14 +283,17 @@ io.on("connection", (socket) => {
     socket.on("changeTrack", ({ trackId, accessToken }) => {
         var loggedInSpotifyApi = new SpotifyWebApi();
         loggedInSpotifyApi.setAccessToken(accessToken);
+
         loggedInSpotifyApi.play({
+            device_id: rooms[socket.room].clients[socket.id].deviceId,
             uris: [`spotify:track:${trackId}`],
         }).then((data) => {
             waitForTrackEnd();
         });
     });
 
-    // Creates a ref to check every second whether the current track has ended
+    // Helper for socket.on("changeTrack", ...)
+    // Creates a ref to check every second if the current track has ended
     // If so, events are fired to handle what to do next
     function waitForTrackEnd() {
         let checkIfFinished = setInterval(() => {
@@ -314,13 +303,14 @@ io.on("connection", (socket) => {
 
             loggedInSpotifyApi.getMyCurrentPlaybackState()
                 .then((data) => {
-                    if (data.body.is_playing && data.body.progress_ms + 1000 >= currentTrackInfo.duration_ms) {
+                    if (data.body.is_playing && data.body.progress_ms + 1500 >= currentTrackInfo.duration_ms) {
                         console.log("Track in queue has ended; firing changeTrack");
                         rooms[socket.room].currentQueuePos++;
                         if (rooms[socket.room].currentQueuePos < rooms[socket.room].queue.length) {
                             console.log("Change track firing...")
                             io.to(socket.room).emit("changeTrack", rooms[socket.room].queue[rooms[socket.room].currentQueuePos].id);
                         } else {
+                            console.log("End of queue firing...")
                             io.to(socket.room).emit("endOfQueue");
                         }
                         clearInterval(checkIfFinished);
@@ -335,18 +325,13 @@ io.on("connection", (socket) => {
 
     socket.on("addToQueue", ({ track, trackId, accessToken }) => {
         rooms[socket.room].queue.push(track);
-        console.log(rooms[socket.room].queue.length);
-        // var loggedInSpotifyApi = new SpotifyWebApi();
-        // loggedInSpotifyApi.setAccessToken(accessToken);
-        // loggedInSpotifyApi
-        //     .addTracksToPlaylist(rooms[socket.room].playlist.id, [trackId])
-        //     .then((data) => {
-        //         // Update the room's playlist
-        //         loggedInSpotifyApi.getPlaylist(rooms[socket.room].playlist.id).then((data) => {
-        //             rooms[socket.room].playlist = data.body;
-        //         });
-        //     })
-        //     .catch((err) => console.log(err));
+
+        // If the queue is at its end
+        if (rooms[socket.room].queue.length === rooms[socket.room].currentQueuePos + 1) {
+            rooms[socket.room].currentTrack = track.id;
+            io.to(socket.room).emit("changeTrack", track.id);
+        }
+
     });
 });
 
