@@ -381,7 +381,7 @@ io.on("connection", (socket) => {
 
     socket.on("addToQueue", ({ track, newQueueItem }) => {
         addToQueue(track, socket.room)
-        socket.broadcast.to(socket.room).emit("updateQueue", newQueueItem);
+        socket.broadcast.to(socket.room).emit("updateQueue", { newQueueItem });
     });
 
     function addToQueue(track, roomId) {
