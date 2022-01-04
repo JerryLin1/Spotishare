@@ -170,7 +170,7 @@ function Lobby(props) {
         });
     }, []);
 
-    const toggleLobbyList = (dropdown) => {
+    const toggleDropdown = (dropdown) => {
         if (dropdown === "export") {
             if (document.getElementsByClassName("lobby-list")[0].classList.contains("visible")) {
                 document.getElementsByClassName("lobby-list")[0].className = "lobby-list";
@@ -281,11 +281,11 @@ function Lobby(props) {
                 <Col xs={12} xl={3}>
                     <Queue queue={queue} />
                     {/* Exact same dropdown from lobby */}
-                    <div className="dropdown unselectable" onClick={() => toggleLobbyList("export")}>
+                    <div className="dropdown unselectable" onClick={() => toggleDropdown("export")}>
                         <p style={{ margin: "0" }}>Export Playlist</p>
                         <CaretDownFill id="caret" />
                     </div>
-                    <div id="export-settings">LOLOL</div>
+                    <div className="export-settings">LOLOL</div>
                 </Col>
                 <Col xs={12} xl={6}>
                     <WebPlayback roomId={roomId} disabled={client.isHost} token={localStorage.getItem("spotify-access-token")} />
@@ -295,7 +295,7 @@ function Lobby(props) {
                         <Card.Header id="chat-header" className="unselectable">
                             Chat
                         </Card.Header>
-                        <div className="dropdown unselectable" onClick={() => toggleLobbyList("members")}>
+                        <div className="dropdown unselectable" onClick={() => toggleDropdown("members")}>
                             <p style={{ margin: "0" }}>Currently listening ({members ? members.length : 0})</p>
                             <CaretDownFill id="caret" />
                         </div>

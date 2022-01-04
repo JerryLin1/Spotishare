@@ -19,8 +19,19 @@
     height: initial;
 }
 
-.queue.dropdown {
-    
+.export-settings {
+    width: 100%;
+    height: 0;
+    background-color: rgba(204, 204, 204, 0.8);
+    opacity: 0;
+    overflow-y: scroll;
+    transition: 0.3s;
+}
+
+.export-settings.visible {
+    height: 5em;
+    opacity: 1;
+    overflow-y: scroll;
 }
 
 @media screen and (max-width: 1200px) {

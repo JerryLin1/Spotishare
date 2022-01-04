@@ -79,7 +79,7 @@
 }
 
 #chat {
-    height: 50vh;
+    height: 100%;
     width: 100%;
     display: block;
     overflow-y: scroll;
@@ -139,9 +139,7 @@
 }
 
 .lobby-list {
-    position: absolute;
     width: 100%;
-    top: 6.5em;
     height: 0;
     background-color: rgba(204, 204, 204, 0.8);
     opacity: 0;
@@ -150,7 +148,7 @@
 }
 
 .lobby-list.visible {
-    height: 50vh;
+    height: calc(100% - 6.45em);
     opacity: 1;
     overflow-y: scroll;
 }
