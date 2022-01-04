@@ -20,25 +20,27 @@ function Queue(props) {
             <h2 id="queue-title" className="unselectable">
                 Next In Queue
             </h2>
-            {queue.map((item, key) => {
+            {queue.map((queueItem, key) => {
+                let track = queueItem.track,
+                    user = queueItem.user;
                 return (
                     <Row key={key} className="song-card">
                         <Col>
                             <Row style={{ width: "100%" }}>
                                 <Col xs={5} style={{ margin: "0.25em auto" }}>
                                     <div>
-                                        <img className="unselectable" src={item.album.images[2].url} />
+                                        <img className="unselectable" src={track.album.images[2].url} />
                                     </div>
                                     <div style={{ textAlign: "center" }}>
-                                        {String(item.duration_ms / 60000)[0]}:
-                                        {Math.floor((item.duration_ms / 60000 - Math.floor(item.duration_ms / 60000)) * 60) >= 10
-                                            ? Math.floor((item.duration_ms / 60000 - Math.floor(item.duration_ms / 60000)) * 60)
-                                            : `0${Math.floor((item.duration_ms / 60000 - Math.floor(item.duration_ms / 60000)) * 60)}`}
+                                        {String(track.duration_ms / 60000)[0]}:
+                                        {Math.floor((track.duration_ms / 60000 - Math.floor(track.duration_ms / 60000)) * 60) >= 10
+                                            ? Math.floor((track.duration_ms / 60000 - Math.floor(track.duration_ms / 60000)) * 60)
+                                            : `0${Math.floor((track.duration_ms / 60000 - Math.floor(track.duration_ms / 60000)) * 60)}`}
                                     </div>
                                 </Col>
                                 <Col xs={7}>
-                                    <div className="song-card-name">{item.name}</div>
-                                    <div className="song-card-artist">{item.artists.map((artist) => artist.name).join(", ")}</div>
+                                    <div className="song-card-name">{track.name}</div>
+                                    <div className="song-card-artist">{track.artists.map((artist) => artist.name).join(", ")}</div>
                                 </Col>
                             </Row>
                         </Col>

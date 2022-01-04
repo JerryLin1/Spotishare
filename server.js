@@ -251,6 +251,7 @@ io.on("connection", (socket) => {
     });
 
     socket.on("sendMessage", (msg) => {
+        let name = rooms[socket.room].clients[socket.id].name
         // Modified from https://stackoverflow.com/a/64866894
         const regEx =
             /^(?:spotify:|(?:https?:\/\/(?:open|play)\.spotify\.com\/))(?:embed)?\/?(album|track|playlist)(?::|\/)((?:[0-9a-zA-Z]){22})/;
@@ -263,7 +264,7 @@ io.on("connection", (socket) => {
             switch (albumTrackOrPlaylist) {
                 case "track":
                     loggedInSpotifyApi.getTrack(spotifyID).then((data) => {
-                        addToQueue(data.body, socket.room);
+                        addToQueue(data.body, name, socket.room);
                     });
                     break;
                 case "playlist":
@@ -287,11 +288,11 @@ io.on("connection", (socket) => {
                                 }
                             }
                         })().then(() => {
-                            let c = 1;
+                            // let c = 1;
                             for (track of tracks) {
-                                addToQueue(track, socket.room);
-                                console.log(c + " " + track.name);
-                                c++;
+                                addToQueue(track, name, socket.room);
+                                // console.log(c + " " + track.name);
+                                // c++;
                             }
                         });
                     });
@@ -299,7 +300,8 @@ io.on("connection", (socket) => {
                 case "album":
                     loggedInSpotifyApi.getAlbum(spotifyID).then((data) => {
                         for (track of data.body.tracks.items) {
-                            addToQueue(track, socket.room);
+                            track.album = {images: data.body.images}
+                            addToQueue(track, name, socket.room);
                         }
                     });
                     break;
@@ -310,7 +312,7 @@ io.on("connection", (socket) => {
         sendToChat({
             msg,
             type: "USER",
-            userName: rooms[socket.room].clients[socket.id].name,
+            userName: name,
             userId: socket.id,
             roomId: socket.room,
         });
@@ -379,9 +381,8 @@ io.on("connection", (socket) => {
         socket.broadcast.to(socket.room).emit("updatePlaybackPos", spos);
     });
 
-    socket.on("addToQueue", ({ track, newQueueItem }) => {
-        addToQueue(track, socket.room)
-        socket.broadcast.to(socket.room).emit("addQueueItem", { newQueueItem });
+    socket.on("addToQueue", ({ track, user, newQueueItem }) => {
+        addToQueue(track, user, socket.room)
     });
 
     socket.on("removeFromQueue", ({ key }) => {
@@ -389,13 +390,14 @@ io.on("connection", (socket) => {
         io.to(socket.room).emit("removeQueueItem", { key });
     })
 
-    function addToQueue(track, roomId) {
+    function addToQueue(track, user, roomId) {
         rooms[roomId].queue.push(track);
         // If the queue is at its end
-        if (rooms[socket.room].queue.length === rooms[socket.room].currentQueuePos + 1) {
-            rooms[socket.room].currentTrack = track.id;
-            io.to(socket.room).emit("changeTrack", track.id);
+        if (rooms[roomId].queue.length === rooms[roomId].currentQueuePos + 1) {
+            rooms[roomId].currentTrack = track.id;
+            io.to(roomId).emit("changeTrack", track.id);
         }
+        io.to(socket.room).emit("addQueueItem", { track, user });
     }
 });
 
