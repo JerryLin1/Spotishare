@@ -59,10 +59,10 @@ function Queue(props) {
                                 {client.isHost ? "Remove" : "Vote to remove"}
                             </button>
                         </Col>
+                        <div className="added-by">Added by {user}</div>
                     </Row>
                 );
             })}
-           
         </div>
     );
 }

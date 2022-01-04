@@ -225,7 +225,7 @@
 }
 
 .song-card:hover {
-    background: rgba(27, 27, 27, 0.5);
+    background: #888;
     color: #fff;
 }
 
@@ -251,7 +251,7 @@
     height: 3em;
     width: 80%;
     border: none;
-    padding: 0 0.75em;
+    padding: 0 0.5em;
 }
 
 #searchbox:focus {

@@ -21,7 +21,7 @@
 
 .export-settings {
     position: absolute;
-    width: calc(25% - 2em - calc(.5 * 1rem));
+    width: calc(25% - 2.5em);
     height: 0;
     background-color: rgb(204, 204, 204);
     opacity: 0;
@@ -30,15 +30,31 @@
 }
 
 .export-settings.visible {
-    
+    overflow-y: scroll;
+    padding: 1em;
     height: 7.5em;
     opacity: 1;
-    
+}
+
+.export-settings button {
+    width: 100%;
+    margin: 0.5em auto;
+}
+
+.added-by {
+    width: 100%;
+    text-align: center;
+    font-size: 0.75em;
+    margin-top: 0.5em;
 }
 
 @media screen and (max-width: 1200px) {
     #queue-container {
         margin-top: 5em !important;
+    }
+
+    .export-settings {
+        width: calc(100% - 5.5em);
     }
 }
 

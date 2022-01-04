@@ -1,6 +1,6 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import { Row, Col, Container, Card, Form } from "react-bootstrap";
-import { CaretDownFill } from "react-bootstrap-icons";
+import { CaretDownFill, Spotify } from "react-bootstrap-icons";
 import { useParams } from "react-router-dom";
 
 import WebPlayback from "./WebPlayback.jsx";
@@ -158,7 +158,7 @@ function Lobby(props) {
     useEffect(() => {
         initializeUser();
 
-        client.socket.on("addQueueItem", ( newQueueItem ) => {
+        client.socket.on("addQueueItem", (newQueueItem) => {
             addToQueue(newQueueItem);
         });
 
@@ -282,11 +282,21 @@ function Lobby(props) {
             <Row>
                 <Col xs={12} xl={3}>
                     <Queue queue={queue} />
-                    <div className="dropdown unselectable" onClick={() => toggleDropdown("export-settings")}>
+                    <div className="dropdown unselectable" style={{marginTop:"0.5em"}} onClick={() => toggleDropdown("export-settings")}>
                         Export Playlist
                         <CaretDownFill className="caret" />
                     </div>
-                    <div className="export-settings">LOLOL</div>
+                    <div className="export-settings">
+                        <button>
+                            Export playlist to Spotify <Spotify fill="#23da63" />
+                        </button>
+                        <button>
+                            Export only good songs to Spotify <Spotify fill="#23da63" />
+                        </button>
+                        <button>
+                            soptify <Spotify fill="#23da63" />
+                        </button>
+                    </div>
                 </Col>
                 <Col xs={12} xl={6}>
                     <WebPlayback roomId={roomId} disabled={client.isHost} token={localStorage.getItem("spotify-access-token")} />
