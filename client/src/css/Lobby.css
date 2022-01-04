@@ -20,10 +20,10 @@
 
 .web-player {
     display: flex;
-    flex-direction: column;
     align-items: center;
-    text-align: center;
+    flex-direction: column;
     justify-content: center;
+    text-align: center;
     min-height: 100%;
     min-width: 100%;
 }
@@ -130,7 +130,7 @@
     background-color: rgb(105, 105, 105);
 }
 
-#caret {
+.caret {
     position: absolute;
     right: 1em;
     top: 50%;
@@ -139,6 +139,8 @@
 }
 
 .lobby-list {
+    position: absolute;
+    top: 6.5em;
     width: 100%;
     height: 0;
     background-color: rgba(204, 204, 204, 0.8);
@@ -148,8 +150,6 @@
 }
 
 .lobby-list.visible {
-    position: absolute;
-    top: 6.5em;
     height: calc(100% - 6.5em);
     opacity: 1;
     overflow-y: scroll;
@@ -234,7 +234,7 @@
 
 #searchArea {
     position: relative;
-    left: 0;
+    left: 0 !important;
     top: 0;
     z-index: 1;
 }

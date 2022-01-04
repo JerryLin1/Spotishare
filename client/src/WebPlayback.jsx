@@ -98,11 +98,10 @@ function WebPlayback(props) {
 
             client.socket.on("endOfQueue", () => {
                 // TODO: Prompt the lobby to add more tracks
-                console.log("fired end")
+                console.log("fired end");
                 setEndOfQueue(true);
-            })
+            });
         };
-
     }, []);
 
     if (!is_active) {

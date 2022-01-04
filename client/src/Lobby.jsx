@@ -62,7 +62,7 @@ function Lobby(props) {
     const removeFromQueue = (key) => {
         updateQueue((oldQueue) => {
             let newQueue = [...oldQueue];
-            newQueue.splice(key,1);
+            newQueue.splice(key, 1);
             return newQueue;
         });
     };
@@ -144,6 +144,17 @@ function Lobby(props) {
         }
     };
 
+    const toggleDropdown = (dropdown) => {
+        const map = { "export-settings": 0, "lobby-list": 1 };
+        if (document.getElementsByClassName(`${dropdown}`)[0].classList.contains("visible")) {
+            document.getElementsByClassName(`${dropdown}`)[0].className = `${dropdown}`;
+            document.getElementsByClassName("caret")[map[`${dropdown}`]].style.transform = "translateY(-50%) rotate(0deg)";
+        } else {
+            document.getElementsByClassName(`${dropdown}`)[0].className = `${dropdown} visible`;
+            document.getElementsByClassName("caret")[map[`${dropdown}`]].style.transform = "translateY(-50%) rotate(-180deg)";
+        }
+    };
+
     useEffect(() => {
         initializeUser();
 
@@ -153,7 +164,7 @@ function Lobby(props) {
 
         client.socket.on("removeQueueItem", ({ key }) => {
             removeFromQueue(key);
-        })
+        });
 
         client.socket.on("receiveMessage", ({ msg, type, userName, userId }) => {
             const chat = document.getElementById("chat");
@@ -178,26 +189,6 @@ function Lobby(props) {
             setMembers(Object.values(clients));
         });
     }, []);
-
-    const toggleDropdown = (dropdown) => {
-        if (dropdown === "export") {
-            if (document.getElementsByClassName("lobby-list")[0].classList.contains("visible")) {
-                document.getElementsByClassName("lobby-list")[0].className = "lobby-list";
-                document.querySelector("#caret").style.transform = "translateY(-50%) rotate(0deg)";
-            } else {
-                document.getElementsByClassName("lobby-list")[0].className = "lobby-list visible";
-                document.querySelector("#caret").style.transform = "translateY(-50%) rotate(-180deg)";
-            }
-        } else {
-            if (document.getElementsByClassName("lobby-list")[0].classList.contains("visible")) {
-                document.getElementsByClassName("lobby-list")[0].className = "lobby-list";
-                document.querySelector(".card #caret").style.transform = "translateY(-50%) rotate(0deg)";
-            } else {
-                document.getElementsByClassName("lobby-list")[0].className = "lobby-list visible";
-                document.querySelector(".card #caret").style.transform = "translateY(-50%) rotate(-180deg)";
-            }
-        }
-    };
 
     return (
         <Container fluid>
@@ -224,6 +215,9 @@ function Lobby(props) {
                             ref={searchInputRef}
                             onInput={() => {
                                 clearTimeout(typingTimeout);
+                                if (searchInputRef.current.value === "") {
+                                    return;
+                                }
                                 updateTypingTimeout(
                                     setTimeout(() => {
                                         fetch(
@@ -272,7 +266,7 @@ function Lobby(props) {
                                                         track: item,
                                                         newQueueItem: [item, JSON.parse(localStorage.getItem("client-data")).body.display_name],
                                                     });
-                                                    addToQueue([item, JSON.parse(localStorage.getItem("client-data")).body.display_name]);
+                                                    addToQueue(item);
                                                 }}
                                             >
                                                 Add
@@ -288,10 +282,9 @@ function Lobby(props) {
             <Row>
                 <Col xs={12} xl={3}>
                     <Queue queue={queue} />
-                    {/* Exact same dropdown from lobby */}
-                    <div className="dropdown unselectable" onClick={() => toggleDropdown("export")}>
-                        <p style={{ margin: "0" }}>Export Playlist</p>
-                        <CaretDownFill id="caret" />
+                    <div className="dropdown unselectable" onClick={() => toggleDropdown("export-settings")}>
+                        Export Playlist
+                        <CaretDownFill className="caret" />
                     </div>
                     <div className="export-settings">LOLOL</div>
                 </Col>
@@ -303,9 +296,9 @@ function Lobby(props) {
                         <Card.Header id="chat-header" className="unselectable">
                             Chat
                         </Card.Header>
-                        <div className="dropdown unselectable" onClick={() => toggleDropdown("members")}>
+                        <div className="dropdown unselectable" onClick={() => toggleDropdown("lobby-list")}>
                             <p style={{ margin: "0" }}>Currently listening ({members ? members.length : 0})</p>
-                            <CaretDownFill id="caret" />
+                            <CaretDownFill className="caret" />
                         </div>
                         <div className="lobby-list">{renderMembers()}</div>
                         <Card.Body id="chat">{chat}</Card.Body>

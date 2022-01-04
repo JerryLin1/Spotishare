@@ -5,15 +5,6 @@ import { ClientContext } from "./contexts/ClientProvider.jsx";
 import { useContext } from "react";
 
 function Queue(props) {
-    const toggleLobbyList = () => {
-        if (document.getElementsByClassName("lobby-list")[0].classList.contains("visible")) {
-            document.getElementsByClassName("lobby-list")[0].className = "lobby-list";
-            document.getElementById("caret").style.transform = "translateY(-50%) rotate(0deg)";
-        } else {
-            document.getElementsByClassName("lobby-list")[0].className = "lobby-list visible";
-            document.getElementById("caret").style.transform = "translateY(-50%) rotate(-180deg)";
-        }
-    };
     const queue = props.queue;
     const client = useContext(ClientContext);
     if (queue.length === 0) {
@@ -30,27 +21,24 @@ function Queue(props) {
                 Next In Queue
             </h2>
             {queue.map((item, key) => {
-                let song = item[0],
-                    user = item[1];
                 return (
                     <Row key={key} className="song-card">
                         <Col>
                             <Row style={{ width: "100%" }}>
                                 <Col xs={5} style={{ margin: "0.25em auto" }}>
-                                    {/* TODO: fix time calculation */}
                                     <div>
-                                        <img className="unselectable" src={song.album.images[2].url} />
+                                        <img className="unselectable" src={item.album.images[2].url} />
                                     </div>
                                     <div style={{ textAlign: "center" }}>
-                                        {String(song.duration_ms / 60000)[0]}:
-                                        {Math.floor((song.duration_ms / 60000 - Math.floor(song.duration_ms / 60000)) * 60) >= 10
-                                            ? Math.floor((song.duration_ms / 60000 - Math.floor(song.duration_ms / 60000)) * 60)
-                                            : `0${Math.floor((song.duration_ms / 60000 - Math.floor(song.duration_ms / 60000)) * 60)}`}
+                                        {String(item.duration_ms / 60000)[0]}:
+                                        {Math.floor((item.duration_ms / 60000 - Math.floor(item.duration_ms / 60000)) * 60) >= 10
+                                            ? Math.floor((item.duration_ms / 60000 - Math.floor(item.duration_ms / 60000)) * 60)
+                                            : `0${Math.floor((item.duration_ms / 60000 - Math.floor(item.duration_ms / 60000)) * 60)}`}
                                     </div>
                                 </Col>
                                 <Col xs={7}>
-                                    <div className="song-card-name">{song.name}</div>
-                                    <div className="song-card-artist">{song.artists.map((artist) => artist.name).join(", ")}</div>
+                                    <div className="song-card-name">{item.name}</div>
+                                    <div className="song-card-artist">{item.artists.map((artist) => artist.name).join(", ")}</div>
                                 </Col>
                             </Row>
                         </Col>
@@ -61,16 +49,18 @@ function Queue(props) {
                                 padding: "0 0.5em",
                             }}
                         >
-                            <button onClick={() => {
-                                client.socket.emit("removeFromQueue", {key: key});
-                            }}>
+                            <button
+                                onClick={() => {
+                                    client.socket.emit("removeFromQueue", { key: key });
+                                }}
+                            >
                                 {client.isHost ? "Remove" : "Vote to remove"}
                             </button>
                         </Col>
-                        <div className="lobby-list">"LOLKOLOL</div>
                     </Row>
                 );
             })}
+           
         </div>
     );
 }
