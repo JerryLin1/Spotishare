@@ -1,8 +1,11 @@
 import { Row, Col } from "react-bootstrap";
 import "./css/Queue.css";
+import { ClientContext } from "./contexts/ClientProvider.jsx"; 
+import { useContext } from "react";
 
 function Queue(props) {
     const queue = props.queue;
+    const client = useContext(ClientContext);
     if (queue.length === 0) {
         return (
             <div id="queue-container">
@@ -48,7 +51,7 @@ function Queue(props) {
                                 padding: "0 0.5em",
                             }}
                         >
-                            <button>Remove</button>
+                            <button>{client.isHost ? "Remove" : "Vote to remove"}</button>
                         </Col>
                     </Row>
                 );

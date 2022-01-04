@@ -56,7 +56,7 @@ function Lobby(props) {
     };
 
     const addToQueue = (song) => {
-        let newQueue = queue.slice();
+        let newQueue = [...queue];
         newQueue.push(song);
         updateQueue(newQueue);
     };
