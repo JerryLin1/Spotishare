@@ -69,18 +69,17 @@ function Lobby(props) {
 
     // search area expand animation
     const expandSearchArea = () => {
-        /**********  TODO: prevent scroll when search area is expanded and screen is not < 1200px **********/
+        /**********  TODO: fix random re-expand when clicking on song card **********/
         let searchArea = document.querySelector("#searchArea"),
             searchBox = document.querySelector("#searchbox");
         if (window.innerWidth <= 1200) {
-            searchArea.style.cssText = `position: fixed !important ; width: 100vw; height: 100%; top: 0; background-color: rgba(33,33,33,0.75)`;
+            searchArea.style.cssText = `position: fixed !important; width: 100vw; height: 100%; top: 0; background-color: rgba(25,25,25,0.75)`;
             searchBox.style.cssText = "left: 50vw; transform: translateX(-50%); width: 60%";
 
-            setTimeout(() => {
-                document.querySelector("#result-list").style.cssText = "opacity: 1; display: block";
-            }, 25);
+            document.querySelector("#result-list").style.cssText = "opacity: 1; display: block";
+            document.querySelector("#searchArea-close").style.display = "block";
         } else {
-            searchArea.style.cssText = "position: absolute; width: 100vw; height: 12em";
+            searchArea.style.cssText = "position: fixed !important; width: 100vw; height: 12em";
             searchBox.style.cssText = "left: 50vw; transform: translateX(-50%)";
 
             anime({
@@ -100,7 +99,9 @@ function Lobby(props) {
                 complete: () => {
                     document.querySelector("#result-list").style.display = "block";
                     anime({ targets: "#result-list", opacity: 1, duration: 100, easing: "linear" });
-                    document.querySelector("#searchArea-close").style.display = "block";
+                    if (window.innerHeight > 700) {
+                        document.querySelector("#searchArea-close").style.display = "block";
+                    }
                 },
             });
         }
@@ -148,7 +149,7 @@ function Lobby(props) {
 
         client.socket.on("addQueueItem", ({ newQueueItem }) => {
             addToQueue(newQueueItem);
-        })
+        });
 
         client.socket.on("removeQueueItem", ({ key }) => {
             removeFromQueue(key);
@@ -157,7 +158,6 @@ function Lobby(props) {
         client.socket.on("receiveMessage", ({ msg, type, userName, userId }) => {
             const chat = document.getElementById("chat");
 
-            // console.log(chat.scrollTop + chat.clientHeight, chat.scrollHeight);
             if (chat.scrollTop + chat.clientHeight >= chat.scrollHeight - 200) chat.scrollTop = chat.scrollHeight;
 
             setChat((oldChat) => [
@@ -179,13 +179,23 @@ function Lobby(props) {
         });
     }, []);
 
-    const toggleLobbyList = () => {
-        if (document.getElementsByClassName("lobby-list")[0].classList.contains("visible")) {
-            document.getElementsByClassName("lobby-list")[0].className = "lobby-list";
-            document.getElementById("caret").style.transform = "translateY(-50%) rotate(0deg)";
+    const toggleDropdown = (dropdown) => {
+        if (dropdown === "export") {
+            if (document.getElementsByClassName("lobby-list")[0].classList.contains("visible")) {
+                document.getElementsByClassName("lobby-list")[0].className = "lobby-list";
+                document.querySelector("#caret").style.transform = "translateY(-50%) rotate(0deg)";
+            } else {
+                document.getElementsByClassName("lobby-list")[0].className = "lobby-list visible";
+                document.querySelector("#caret").style.transform = "translateY(-50%) rotate(-180deg)";
+            }
         } else {
-            document.getElementsByClassName("lobby-list")[0].className = "lobby-list visible";
-            document.getElementById("caret").style.transform = "translateY(-50%) rotate(-180deg)";
+            if (document.getElementsByClassName("lobby-list")[0].classList.contains("visible")) {
+                document.getElementsByClassName("lobby-list")[0].className = "lobby-list";
+                document.querySelector(".card #caret").style.transform = "translateY(-50%) rotate(0deg)";
+            } else {
+                document.getElementsByClassName("lobby-list")[0].className = "lobby-list visible";
+                document.querySelector(".card #caret").style.transform = "translateY(-50%) rotate(-180deg)";
+            }
         }
     };
 
@@ -196,16 +206,14 @@ function Lobby(props) {
                     <h1 className="page-title unselectable">SpotiShare</h1>
                 </Col>
                 <Col xs={12} xl={{ offset: 1, span: 5 }} style={{ marginTop: "1em" }}>
-                    <div id="searchArea-close" onClick={() => shrinkSearchArea()}>
+                    <div id="searchArea-close" onClick={shrinkSearchArea}>
                         &times;
                     </div>
                     <div
-                        onFocus={() => {
-                            expandSearchArea();
-                        }}
                         onClick={(e) => {
-                            console.log(document.querySelector("#result-list").style.display);
-                            if (document.querySelector("#result-list").style.display === "block" && e.target.id === "searchArea") {
+                            if (document.querySelector("#result-list").style.opacity !== "1") {
+                                expandSearchArea();
+                            } else if (e.target.id === "searchArea") {
                                 shrinkSearchArea();
                             }
                         }}
@@ -247,8 +255,8 @@ function Lobby(props) {
                                                         {Math.floor((item.duration_ms / 60000 - Math.floor(item.duration_ms / 60000)) * 60) >= 10
                                                             ? Math.floor((item.duration_ms / 60000 - Math.floor(item.duration_ms / 60000)) * 60)
                                                             : `0${Math.floor(
-                                                                (item.duration_ms / 60000 - Math.floor(item.duration_ms / 60000)) * 60
-                                                            )}`}
+                                                                  (item.duration_ms / 60000 - Math.floor(item.duration_ms / 60000)) * 60
+                                                              )}`}
                                                     </div>
                                                 </Col>
                                                 <Col xs={{ offset: 1, span: 5 }} xl={{ offset: 0, span: 6 }}>
@@ -280,6 +288,12 @@ function Lobby(props) {
             <Row>
                 <Col xs={12} xl={3}>
                     <Queue queue={queue} />
+                    {/* Exact same dropdown from lobby */}
+                    <div className="dropdown unselectable" onClick={() => toggleDropdown("export")}>
+                        <p style={{ margin: "0" }}>Export Playlist</p>
+                        <CaretDownFill id="caret" />
+                    </div>
+                    <div className="export-settings">LOLOL</div>
                 </Col>
                 <Col xs={12} xl={6}>
                     <WebPlayback roomId={roomId} disabled={client.isHost} token={localStorage.getItem("spotify-access-token")} />
@@ -289,7 +303,7 @@ function Lobby(props) {
                         <Card.Header id="chat-header" className="unselectable">
                             Chat
                         </Card.Header>
-                        <div className="dropdown unselectable" onClick={toggleLobbyList}>
+                        <div className="dropdown unselectable" onClick={() => toggleDropdown("members")}>
                             <p style={{ margin: "0" }}>Currently listening ({members ? members.length : 0})</p>
                             <CaretDownFill id="caret" />
                         </div>
