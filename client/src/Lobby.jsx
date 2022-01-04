@@ -56,10 +56,8 @@ function Lobby(props) {
     };
 
     const addToQueue = (song) => {
-        let newQueue = queue.slice();
-        queue.push(song);
-        newQueue.push(song);
-        updateQueue(newQueue);
+        console.log("current queue:", queue, "new song:", song)
+        updateQueue((oldQueue) => [...oldQueue, song]);
     };
 
     // search area expand animation
@@ -144,6 +142,10 @@ function Lobby(props) {
 
     useEffect(() => {
         initializeUser();
+
+        client.socket.on("updateQueue", ({ newQueueItem }) => {
+            addToQueue(newQueueItem);
+        })
 
         client.socket.on("receiveMessage", ({ msg, type, userName, userId }) => {
             const chat = document.getElementById("chat");
@@ -246,8 +248,8 @@ function Lobby(props) {
                                                         {Math.floor((item.duration_ms / 60000 - Math.floor(item.duration_ms / 60000)) * 60) >= 10
                                                             ? Math.floor((item.duration_ms / 60000 - Math.floor(item.duration_ms / 60000)) * 60)
                                                             : `0${Math.floor(
-                                                                  (item.duration_ms / 60000 - Math.floor(item.duration_ms / 60000)) * 60
-                                                              )}`}
+                                                                (item.duration_ms / 60000 - Math.floor(item.duration_ms / 60000)) * 60
+                                                            )}`}
                                                     </div>
                                                 </Col>
                                                 <Col xs={{ offset: 1, span: 5 }} xl={{ offset: 0, span: 6 }}>
@@ -261,8 +263,7 @@ function Lobby(props) {
                                                 onClick={() => {
                                                     client.socket.emit("addToQueue", {
                                                         track: item,
-                                                        trackId: item.uri,
-                                                        accessToken: localStorage.getItem("spotify-access-token"),
+                                                        newQueueItem: [item, JSON.parse(localStorage.getItem("client-data")).body.display_name],
                                                     });
                                                     addToQueue([item, JSON.parse(localStorage.getItem("client-data")).body.display_name]);
                                                 }}

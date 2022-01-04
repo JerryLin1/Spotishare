@@ -262,41 +262,58 @@ io.on("connection", (socket) => {
             const spotifyID = match[2];
             switch (albumTrackOrPlaylist) {
                 case "track":
-                    loggedInSpotifyApi.getTrack(spotifyID)
-                    .then(data => {
-                        addToQueue(data.body, socket.room)
-                    })
+                    loggedInSpotifyApi.getTrack(spotifyID).then((data) => {
+                        addToQueue(data.body, socket.room);
+                    });
                     break;
                 case "playlist":
-                    loggedInSpotifyApi.getPlaylist(spotifyID)
-                    .then(data => {
-                        console.log(data.body.tracks.items)
+                    loggedInSpotifyApi.getPlaylist(spotifyID).then((data) => {
+                        let tracks = [];
                         for (item of data.body.tracks.items) {
-                            console.log(item.track.name)
+                            tracks.push(item.track);
                         }
-                    })
+                        let iter = Math.ceil(data.body.tracks.total / 50);
+
+                        (async () => {
+                            if (iter > 2) {
+                                for (i = 2; i <= iter; i++) {
+                                    await loggedInSpotifyApi
+                                        .getPlaylistTracks(spotifyID, { limit: 50, offset: i * 50 })
+                                        .then((rdata) => {
+                                            for (item of rdata.body.items) {
+                                                tracks.push(item.track);
+                                            }
+                                        });
+                                }
+                            }
+                        })().then(() => {
+                            let c = 1;
+                            for (track of tracks) {
+                                addToQueue(track, socket.room);
+                                console.log(c + " " + track.name);
+                                c++;
+                            }
+                        });
+                    });
                     break;
                 case "album":
-                    loggedInSpotifyApi.getAlbum(spotifyID)
-                    .then(data => {
+                    loggedInSpotifyApi.getAlbum(spotifyID).then((data) => {
                         for (track of data.body.tracks.items) {
-                            console.log(track.name)
-                            addToQueue(track, socket.room)
+                            addToQueue(track, socket.room);
                         }
-                    })
+                    });
                     break;
             }
             //albumOrTrack: album
             //spotifyID: 0BwWUstDMUbgq2NYONRqlu
-        } else {
-            sendToChat({
-                msg,
-                type: "USER",
-                userName: rooms[socket.room].clients[socket.id].name,
-                userId: socket.id,
-                roomId: socket.room,
-            });
         }
+        sendToChat({
+            msg,
+            type: "USER",
+            userName: rooms[socket.room].clients[socket.id].name,
+            userId: socket.id,
+            roomId: socket.room,
+        });
     });
 
     function sendToChat({ msg, type, userName, userId, roomId }) {
@@ -362,9 +379,11 @@ io.on("connection", (socket) => {
         socket.broadcast.to(socket.room).emit("updatePlaybackPos", spos);
     });
 
-    socket.on("addToQueue", ({ track, trackId, accessToken }) => {
+    socket.on("addToQueue", ({ track, newQueueItem }) => {
         addToQueue(track, socket.room)
+        socket.broadcast.to(socket.room).emit("updateQueue", { newQueueItem });
     });
+
     function addToQueue(track, roomId) {
         rooms[roomId].queue.push(track);
         // If the queue is at its end
