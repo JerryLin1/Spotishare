@@ -381,8 +381,13 @@ io.on("connection", (socket) => {
 
     socket.on("addToQueue", ({ track, newQueueItem }) => {
         addToQueue(track, socket.room)
-        socket.broadcast.to(socket.room).emit("updateQueue", { newQueueItem });
+        socket.broadcast.to(socket.room).emit("addQueueItem", { newQueueItem });
     });
+
+    socket.on("removeFromQueue", ({ key }) => {
+        rooms[socket.room].queue.splice(key, 1);
+        io.to(socket.room).emit("removeQueueItem", { key });
+    })
 
     function addToQueue(track, roomId) {
         rooms[roomId].queue.push(track);

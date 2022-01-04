@@ -56,8 +56,15 @@ function Lobby(props) {
     };
 
     const addToQueue = (song) => {
-        console.log("current queue:", queue, "new song:", song)
         updateQueue((oldQueue) => [...oldQueue, song]);
+    };
+
+    const removeFromQueue = (key) => {
+        updateQueue((oldQueue) => {
+            let newQueue = [...oldQueue];
+            newQueue.splice(key,1);
+            return newQueue;
+        });
     };
 
     // search area expand animation
@@ -139,8 +146,12 @@ function Lobby(props) {
     useEffect(() => {
         initializeUser();
 
-        client.socket.on("updateQueue", ({ newQueueItem }) => {
+        client.socket.on("addQueueItem", ({ newQueueItem }) => {
             addToQueue(newQueueItem);
+        })
+
+        client.socket.on("removeQueueItem", ({ key }) => {
+            removeFromQueue(key);
         })
 
         client.socket.on("receiveMessage", ({ msg, type, userName, userId }) => {
