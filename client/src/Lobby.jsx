@@ -56,7 +56,6 @@ function Lobby(props) {
     };
 
     const addToQueue = (song) => {
-        console.log("current queue:", queue, "new song:", song)
         updateQueue((oldQueue) => [...oldQueue, song]);
     };
 
@@ -65,17 +64,14 @@ function Lobby(props) {
         /**********  TODO: fix random re-expand when clicking on song card **********/
         let searchArea = document.querySelector("#searchArea"),
             searchBox = document.querySelector("#searchbox");
-        if (document.querySelector("#result-list").style.opacity === "1") {
-            return;
-        } else if (window.innerWidth <= 1200) {
-            searchArea.style.cssText = `position: fixed !important ; width: 100vw; height: 100%; top: 0; background-color: rgba(25,25,25,0.75)`;
+        if (window.innerWidth <= 1200) {
+            searchArea.style.cssText = `position: fixed !important; width: 100vw; height: 100%; top: 0; background-color: rgba(25,25,25,0.75)`;
             searchBox.style.cssText = "left: 50vw; transform: translateX(-50%); width: 60%";
 
-            setTimeout(() => {
-                document.querySelector("#result-list").style.cssText = "opacity: 1; display: block";
-            }, 25);
+            document.querySelector("#result-list").style.cssText = "opacity: 1; display: block";
+            document.querySelector("#searchArea-close").style.display = "block";
         } else {
-            searchArea.style.cssText = "position: absolute; width: 100vw; height: 12em";
+            searchArea.style.cssText = "position: fixed !important; width: 100vw; height: 12em";
             searchBox.style.cssText = "left: 50vw; transform: translateX(-50%)";
 
             anime({
@@ -145,12 +141,11 @@ function Lobby(props) {
 
         client.socket.on("updateQueue", ({ newQueueItem }) => {
             addToQueue(newQueueItem);
-        })
+        });
 
         client.socket.on("receiveMessage", ({ msg, type, userName, userId }) => {
             const chat = document.getElementById("chat");
 
-            // console.log(chat.scrollTop + chat.clientHeight, chat.scrollHeight);
             if (chat.scrollTop + chat.clientHeight >= chat.scrollHeight - 200) chat.scrollTop = chat.scrollHeight;
 
             setChat((oldChat) => [
@@ -203,10 +198,10 @@ function Lobby(props) {
                         &times;
                     </div>
                     <div
-                        onFocus={expandSearchArea}
                         onClick={(e) => {
-                            console.log(document.querySelector("#result-list").style.display);
-                            if (document.querySelector("#result-list").style.display === "block" && e.target.id === "searchArea") {
+                            if (document.querySelector("#result-list").style.opacity !== "1") {
+                                expandSearchArea();
+                            } else if (e.target.id === "searchArea") {
                                 shrinkSearchArea();
                             }
                         }}
@@ -248,8 +243,8 @@ function Lobby(props) {
                                                         {Math.floor((item.duration_ms / 60000 - Math.floor(item.duration_ms / 60000)) * 60) >= 10
                                                             ? Math.floor((item.duration_ms / 60000 - Math.floor(item.duration_ms / 60000)) * 60)
                                                             : `0${Math.floor(
-                                                                (item.duration_ms / 60000 - Math.floor(item.duration_ms / 60000)) * 60
-                                                            )}`}
+                                                                  (item.duration_ms / 60000 - Math.floor(item.duration_ms / 60000)) * 60
+                                                              )}`}
                                                     </div>
                                                 </Col>
                                                 <Col xs={{ offset: 1, span: 5 }} xl={{ offset: 0, span: 6 }}>
