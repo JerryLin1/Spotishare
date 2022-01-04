@@ -55,8 +55,8 @@ function Lobby(props) {
         });
     };
 
-    const addToQueue = (song) => {
-        updateQueue((oldQueue) => [...oldQueue, song]);
+    const addToQueue = (queueItem) => {
+        updateQueue((oldQueue) => [...oldQueue, queueItem]);
     };
 
     const removeFromQueue = (key) => {
@@ -147,7 +147,7 @@ function Lobby(props) {
     useEffect(() => {
         initializeUser();
 
-        client.socket.on("addQueueItem", ({ newQueueItem }) => {
+        client.socket.on("addQueueItem", ( newQueueItem ) => {
             addToQueue(newQueueItem);
         });
 
@@ -270,9 +270,9 @@ function Lobby(props) {
                                                 onClick={() => {
                                                     client.socket.emit("addToQueue", {
                                                         track: item,
+                                                        user: JSON.parse(localStorage.getItem("client-data")).body.display_name,
                                                         newQueueItem: [item, JSON.parse(localStorage.getItem("client-data")).body.display_name],
                                                     });
-                                                    addToQueue([item, JSON.parse(localStorage.getItem("client-data")).body.display_name]);
                                                 }}
                                             >
                                                 Add
