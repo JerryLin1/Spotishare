@@ -11,7 +11,7 @@ function Queue(props) {
         return (
             <div id="queue-container">
                 <h2 id="queue-title">There's nothing in the queue!</h2>
-                <h4 style={{ textAlign: "center" }}>Add some songs by searching some up!</h4>
+                <h6 style={{ textAlign: "center" }}>Add some songs by searching some up!</h6>
             </div>
         );
     }
@@ -41,16 +41,11 @@ function Queue(props) {
                                 <Col xs={7}>
                                     <div className="song-card-name">{track.name}</div>
                                     <div className="song-card-artist">{track.artists.map((artist) => artist.name).join(", ")}</div>
+                                    <div className="added-by">Added by {user}</div>
                                 </Col>
                             </Row>
                         </Col>
-                        <Col
-                            xl={12}
-                            xs={12}
-                            style={{
-                                padding: "0 0.5em",
-                            }}
-                        >
+                        <Col xl={12} xs={12}>
                             <button
                                 onClick={() => {
                                     client.socket.emit("removeFromQueue", { key: key });
@@ -59,7 +54,6 @@ function Queue(props) {
                                 {client.isHost ? "Remove" : "Vote to remove"}
                             </button>
                         </Col>
-                        <div className="added-by">Added by {user}</div>
                     </Row>
                 );
             })}

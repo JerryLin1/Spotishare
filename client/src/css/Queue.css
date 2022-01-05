@@ -1,6 +1,5 @@
 #queue-title {
     text-align: center;
-    font-weight: bold;
     padding: 0.5em 0;
     width: 100%;
 }
@@ -32,7 +31,7 @@
 .export-settings.visible {
     overflow-y: scroll;
     padding: 1em;
-    height: 7.5em;
+    height: 9em;
     opacity: 1;
 }
 
@@ -42,10 +41,9 @@
 }
 
 .added-by {
-    width: 100%;
-    text-align: center;
-    font-size: 0.75em;
+    font-size: 0.6em;
     margin-top: 0.5em;
+    font-style: italic;
 }
 
 @media screen and (max-width: 1200px) {

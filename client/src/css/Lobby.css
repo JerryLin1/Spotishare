@@ -10,225 +10,11 @@
 
 .pre-lobby-body {
     position: absolute;
-    width: 100%;
+    width: calc(100% - 4em);
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%)
 }
-
-/******* Web Player *******/
-
-.web-player {
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    justify-content: center;
-    text-align: center;
-    min-height: 100%;
-    min-width: 100%;
-}
-
-.spotifyBtn {
-    background: transparent;
-    margin: 0.5em 0.25em;
-    padding: 0.5em;
-    border-radius: 50% !important;
-}
-
-.spotifyBtn>* {
-    width: 2em;
-    height: 2em;
-}
-
-.spotifyBtn:nth-child(2)>* {
-    width: 3em;
-    height: 3em;
-}
-
-#nowPlayingCover {
-    height: 50%;
-    width: 50%;
-    min-height: 200px;
-    min-width: 200px;
-    margin-bottom: 1em;
-}
-
-#nowPlayingName {
-    font-size: 2em;
-    font-weight: bold;
-}
-
-#nowPlayingArtist {
-    font-size: 1.2em;
-    margin: 0.5em auto;
-}
-
-/******* Chat *******/
-
-#chat-wrapper {
-    width: 50%;
-}
-
-.chat-container {
-    margin: 0.5em auto;
-    height: 60vh;
-}
-
-#chat-header {
-    font-size: 2em;
-}
-
-#chat {
-    height: 100%;
-    width: 100%;
-    display: block;
-    overflow-y: scroll;
-    overflow-wrap: break-word;
-}
-
-#sendBar {
-    height: 3em;
-    width: 100%;
-    display: inline-flex;
-}
-
-#chatInput {
-    width: 74.5%;
-    margin-right: 0.5%;
-    border: none;
-    padding: 0.75em;
-}
-
-#chatInput:focus {
-    outline: 1px solid #000;
-}
-
-#sendBtn {
-    border: none;
-    background-color: rgba(103, 255, 128, 0.603);
-    width: 30%;
-    padding: 0;
-    font-size: 0.85em;
-}
-
-#sendBtn:hover {
-    background-color: rgb(0, 248, 0);
-}
-
-.dropdown {
-    width: 100%;
-    height: 2.5em;
-    padding: 0.5em;
-    text-align: center;
-    background-color: rgb(122, 122, 122);
-    color: #fff;
-    transition: 0.25s;
-}
-
-.dropdown:hover {
-    cursor: pointer;
-    background-color: rgb(105, 105, 105);
-}
-
-.caret {
-    position: absolute;
-    right: 1em;
-    top: 50%;
-    transform: translateY(-50%) rotate(0deg);
-    transition: 0.3s;
-}
-
-.lobby-list {
-    position: absolute;
-    top: 6.5em;
-    width: 100%;
-    height: 0;
-    background-color: rgba(204, 204, 204, 0.8);
-    opacity: 0;
-    overflow-y: scroll;
-    transition: 0.3s;
-}
-
-.lobby-list.visible {
-    height: calc(100% - 6.5em);
-    opacity: 1;
-    overflow-y: scroll;
-}
-
-.member-card {
-    background-color: #fff;
-    height: 90px !important;
-    width: 80%;
-    height: 0%;
-    margin: 0.5em auto;
-    padding: 0.5em;
-    box-shadow: 0 0 2px black;
-}
-
-#member-name {
-    font-size: 1.25em;
-}
-
-#pfp-container {
-    position: relative;
-    height: 70px;
-    width: 70px;
-    overflow: hidden;
-    border-radius: 50% !important;
-}
-
-#member-pfp {
-    object-fit: cover;
-    height: 70px;
-    width: 70px;
-}
-
-/******* Song Cards *******/
-
-.song-card {
-    display: flex;
-    align-items: center;
-    border: 1px solid #888;
-    margin: 0.5em auto;
-    padding: 0.25em;
-    transition: 0.3s;
-    width: 100%;
-    font-size: 1.2em;
-}
-
-.song-card>div>.row {
-    display: flex;
-    align-items: center;
-}
-
-.song-card button {
-    border: 1px solid #000;
-    align-items: center;
-    width: 100%;
-    height: 2.5em;
-}
-
-.song-card img {
-    display: block;
-    width: 100px;
-    height: 100px;
-    margin: auto;
-}
-
-.song-card-artist {
-    font-size: 0.85em;
-}
-
-.song-card-name {
-    font-weight: bold;
-    font-size: 1.1em;
-}
-
-.song-card:hover {
-    background: #888;
-    color: #fff;
-}
-
 
 /******* song search *******/
 
@@ -294,6 +80,218 @@
     color: #ccc;
 }
 
+
+/******* Web Player *******/
+
+.web-player {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    min-height: 100%;
+    min-width: 100%;
+}
+
+.spotifyBtn {
+    background: transparent;
+    margin: 0.5em 0.25em;
+    padding: 0.5em;
+    border-radius: 50% !important;
+}
+
+.spotifyBtn>* {
+    width: 2em;
+    height: 2em;
+}
+
+.spotifyBtn:nth-child(2)>* {
+    width: 3em;
+    height: 3em;
+}
+
+#nowPlayingCover {
+    height: 50%;
+    width: 50%;
+    min-height: 200px;
+    min-width: 200px;
+    margin-bottom: 1em;
+}
+
+#nowPlayingName {
+    font-size: 2em;
+    font-weight: bold;
+}
+
+#nowPlayingArtist {
+    font-size: 1.2em;
+    margin: 0.5em auto;
+}
+
+/******* Chat *******/
+
+#chat-wrapper {
+    width: 50%;
+}
+
+.chat-container {
+    margin: 0.5em auto;
+    border: none;
+    height: 60vh;
+}
+
+#chat {
+    height: 100%;
+    width: 100%;
+    display: block;
+    overflow-y: scroll;
+    overflow-wrap: break-word;
+}
+
+#chat-header {
+    font-size: 2em;
+}
+
+
+#sendBar {
+    height: 3em;
+    width: 100%;
+    display: inline-flex;
+}
+
+#chatInput {
+    width: 74.5%;
+    height: 2.5rem;
+    margin-right: 0.5%;
+    border: none;
+    padding: 0.75em;
+    font-size: 0.85em;
+}
+
+#chatInput:focus {
+    outline: 1px solid #000;
+}
+
+#sendBtn {
+    border: none;
+    height: 2.5rem;
+    background-color: rgba(103, 255, 128, 0.603);
+    width: 30%;
+    padding: 0;
+    font-size: 0.75em;
+}
+
+#sendBtn:hover {
+    background-color: rgb(0, 248, 0);
+}
+
+.dropdown {
+    width: 100%;
+    height: 2.5em;
+    padding: 0.5em;
+    text-align: center;
+    background-color: rgb(122, 122, 122);
+    color: #fff;
+    transition: 0.25s;
+}
+
+.dropdown:hover {
+    cursor: pointer;
+    background-color: rgb(105, 105, 105);
+}
+
+.caret {
+    position: absolute;
+    right: 1em;
+    top: 50%;
+    transform: translateY(-50%) rotate(0deg);
+    transition: 0.3s;
+}
+
+.lobby-list {
+    position: absolute;
+    top: 6.5em;
+    width: 100%;
+    height: 0;
+    background-color: rgba(204, 204, 204, 0.8);
+    opacity: 0;
+    overflow-y: scroll;
+    transition: 0.3s;
+}
+
+.lobby-list.visible {
+    height: calc(100% - 6.5em);
+    opacity: 1;
+    overflow-y: scroll;
+}
+
+.member-card {
+    background-color: #fff;
+    height: fit-content;
+    width: 80%;
+    margin: 0.5em auto;
+    padding: 0.5em;
+    box-shadow: 0 0 2px black;
+}
+
+.member-card>.col:nth-child(2) {
+    text-align: center;
+}
+#member-pfp {
+    object-fit: cover;
+    height: 70px;
+    width: 70px;
+}
+
+/******* Song Cards *******/
+
+.song-card {
+    display: flex;
+    align-items: center;
+    border: 1px solid #888;
+    margin: 0.5em auto;
+    padding: 0.5em;
+    transition: 0.3s;
+    width: 100%;
+    font-size: 1.2em;
+}
+
+.song-card>div>.row {
+    display: flex;
+    align-items: center;
+}
+
+.song-card>*>*>* {
+    padding: 0;
+}
+
+.song-card button {
+    border: 1px solid #888;
+    align-items: center;
+    width: 100%;
+    height: 2.5em;
+}
+
+.song-card img {
+    display: block;
+    width: 100px;
+    height: 100px;
+    margin: auto;
+}
+
+.song-card-artist {
+    font-size: 0.85em;
+}
+
+.song-card-name {
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+.song-card:hover {
+    background: #ccc;
+}
+
 /* media queries */
 
 @media screen and (max-width: 1200px) {
@@ -315,13 +313,17 @@
 }
 
 @media screen and (max-width: 600px) {
+    #searchbox {
+        font-size: 0.75em;
+    }
+
     .song-card {
         font-size: 0.675em;
     }
 
     .song-card img {
-        width: 64px;
-        height: 64px;
+        width: 40px;
+        height: 40px;
     }
 
     #member-pfp {

@@ -116,7 +116,7 @@ function WebPlayback(props) {
         return (
             <>
                 <div className="web-player">
-                    <h2> Player is ready! Add songs to the queue to start the listening session. </h2>
+                    <h1> Player is ready! Add songs to the queue to start the listening session. </h1>
                 </div>
             </>
         );
@@ -124,7 +124,7 @@ function WebPlayback(props) {
         return (
             <>
                 <div className="web-player">
-                    <h2>You've reached the end of the queue. Add more songs keep the listening session going!</h2>
+                    <h1>You've reached the end of the queue. Add more songs keep the listening session going!</h1>
                 </div>
             </>
         );

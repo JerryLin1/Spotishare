@@ -1,3 +1,4 @@
+import { Container } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import { isLoggedIn, login } from ".";
 
@@ -7,7 +8,7 @@ function PreLobby(props) {
     let { roomId } = useParams();
     let navigate = useNavigate();
     return (
-        <div className="pre-lobby">
+        <Container fluid className="pre-lobby">
             <h1 className="page-title unselectable">SpotiShare</h1>
             <div className="pre-lobby-body">
                 <div>
@@ -29,7 +30,7 @@ function PreLobby(props) {
                 <div style={{ fontSize: "1.25em", marginTop: "1em" }}>Room ID: {roomId}</div>
             </div>
             <span className="credits">Created by Roseak Lin, Tom Han, Jerry Lin</span>
-        </div>
+        </Container>
     );
 }
 export default PreLobby;

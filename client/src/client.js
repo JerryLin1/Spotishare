@@ -51,7 +51,7 @@ export default class Client extends React.Component {
 
     sendMessage = (msg) => {
         if (msg != "") {
-            this.socket.emit("sendMessage", msg);
+            this.socket.emit("sendMessage", String(msg));
         }
     };
 }

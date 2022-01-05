@@ -20,7 +20,7 @@ button {
 }
 
 button:hover {
-    background: rgb(41, 41, 41);
+    background: rgb(30, 30, 30);
     color: #fff;
     cursor: default;
 }
@@ -59,7 +59,7 @@ button:hover {
 #sign-in {
     position: absolute;
     right: 1.5em;
-    top: 2em;
+    top: 1.5em;
     vertical-align: middle;
     display: inline-block;
 }
