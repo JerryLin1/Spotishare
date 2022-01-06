@@ -185,10 +185,8 @@
     align-items: center;
     border: 1px solid #888;
     margin: 0.5em auto;
-    padding: 0.5em;
     transition: 0.3s;
     width: 100%;
-    font-size: 1.2em;
 }
 
 .song-card>div>.row {
@@ -212,8 +210,8 @@
     width: 50%;
     height: 50%;
     margin: auto;
-    max-width: 100px;
-    max-height: 100px;
+    max-width: 80px;
+    max-height: 800px;
 }
 
 .song-card-artist {
