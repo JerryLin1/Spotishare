@@ -7,9 +7,8 @@ import WebPlayback from "./WebPlayback.jsx";
 import Queue from "./Queue.jsx";
 import { ClientContext } from "./contexts/ClientProvider.jsx";
 
-import anime from "animejs";
-
 import "./css/Lobby.css";
+import SearchBar from "./SearchBar.jsx";
 
 function Lobby(props) {
     let { roomId } = useParams();
@@ -17,10 +16,6 @@ function Lobby(props) {
     const [members, setMembers] = useState([]);
     const [chat, setChat] = useState([]);
     const [queue, updateQueue] = useState([]);
-    const [typingTimeout, updateTypingTimeout] = useState(undefined);
-    const [searchResults, setSearchResults] = useState([]);
-
-    const searchInputRef = useRef(null);
 
     const renderMembers = () => {
         /* TODO: make member cards not ugly */
@@ -33,7 +28,7 @@ function Lobby(props) {
                     </Col>
                     <Col>
                         <div>
-                            {true && (
+                            {user.isHost && (
                                 <svg xmlns="http://www.w3.org/2000/svg" width={36} height={20} viewBox="0 0 512 512" fill="gold">
                                     <path d="M528 448H112c-8.8 0-16 7.2-16 16v32c0 8.8 7.2 16 16 16h416c8.8 0 16-7.2 16-16v-32c0-8.8-7.2-16-16-16zm64-320c-26.5 0-48 21.5-48 48 0 7.1 1.6 13.7 4.4 19.8L476 239.2c-15.4 9.2-35.3 4-44.2-11.6L350.3 85C361 76.2 368 63 368 48c0-26.5-21.5-48-48-48s-48 21.5-48 48c0 15 7 28.2 17.7 37l-81.5 142.6c-8.9 15.6-28.9 20.8-44.2 11.6l-72.3-43.4c2.7-6 4.4-12.7 4.4-19.8 0-26.5-21.5-48-48-48S0 149.5 0 176s21.5 48 48 48c2.6 0 5.2-.4 7.7-.8L128 416h384l72.3-192.8c2.5.4 5.1.8 7.7.8 26.5 0 48-21.5 48-48s-21.5-48-48-48z" />
                                 </svg>
@@ -68,81 +63,6 @@ function Lobby(props) {
             newQueue.splice(key, 1);
             return newQueue;
         });
-    };
-
-    // search area expand animation
-    const expandSearchArea = () => {
-        let searchArea = document.querySelector("#searchArea"),
-            searchBox = document.querySelector("#searchbox");
-        if (window.innerWidth <= 1200) {
-            searchArea.style.cssText = `position: fixed !important; width: 100vw; height: 100%; top: 0; background-color: rgba(25,25,25,0.75)`;
-            searchBox.style.cssText = "left: 50vw; transform: translateX(-50%); width: 60%";
-
-            document.querySelector("#result-list").style.cssText = "opacity: 1; display: block";
-        } else {
-            searchArea.style.cssText = "position: fixed !important; width: 100vw; height: 12em";
-            searchBox.style.cssText = "left: 50vw; transform: translateX(-50%)";
-
-            anime({
-                targets: searchArea,
-                height: `${window.innerHeight / 16}em`,
-                width: "100vw",
-                backgroundColor: "rgba(33,33,33,0.75)",
-                easing: "linear",
-                duration: 250,
-            });
-
-            anime({
-                targets: searchBox,
-                width: ["calc(33.33333% - 4em)", "60%"],
-                easing: "linear",
-                duration: 250,
-                complete: () => {
-                    document.querySelector("#result-list").style.display = "block";
-                    anime({ targets: "#result-list", opacity: 1, duration: 100, easing: "linear" });
-                    if (window.innerHeight > 700) {
-                        document.querySelector("#searchArea-close").style.display = "block";
-                    }
-                },
-            });
-        }
-    };
-
-    // search collapse area animation
-    const shrinkSearchArea = () => {
-        let searchArea = document.querySelector("#searchArea"),
-            searchBox = document.querySelector("#searchbox");
-        document.querySelector("#searchArea-close").style.display = "none";
-        if (window.innerWidth <= 1200) {
-            // TODO: don't play animation and just expand searcharea
-            document.querySelector("#result-list").style.cssText = "opacity: 0; display: none";
-            searchArea.style.cssText = "position: relative; width: 100%; height: 0";
-            searchBox.style.cssText = "left: 0; transform: none; width: 80%";
-        } else {
-            anime({ targets: "#result-list", opacity: 0, duration: 100, easing: "linear" });
-            document.querySelector("#result-list").style.display = "none";
-
-            anime({
-                targets: searchArea,
-                height: [`${window.innerHeight / 16}em`, "12em"],
-                backgroundColor: "rgba(0,0,0,0)",
-                easing: "linear",
-                duration: 250,
-                complete: () => {
-                    searchArea.style.cssText = "position: relative; width: 100%; height: 0";
-                },
-            });
-
-            anime({
-                targets: searchBox,
-                width: "calc(33.33333% - 4em)",
-                easing: "linear",
-                duration: 250,
-                complete: () => {
-                    searchBox.style.cssText = "left: 0; transform: none; width: 80%";
-                },
-            });
-        }
     };
 
     const toggleDropdown = (dropdown) => {
@@ -198,86 +118,7 @@ function Lobby(props) {
                     <h1 className="page-title unselectable">SpotiShare</h1>
                 </Col>
                 <Col xs={12} xl={{ offset: 1, span: 5 }} style={{ marginTop: "1em" }}>
-                    <div id="searchArea-close" onClick={shrinkSearchArea}>
-                        &times;
-                    </div>
-                    <div
-                        onClick={(e) => {
-                            if (document.querySelector("#result-list").style.opacity !== "1") {
-                                expandSearchArea();
-                            } else if (e.target.id === "searchArea") {
-                                shrinkSearchArea();
-                            }
-                        }}
-                        id="searchArea"
-                    >
-                        <input
-                            autoComplete="off"
-                            ref={searchInputRef}
-                            onInput={() => {
-                                clearTimeout(typingTimeout);
-                                if (searchInputRef.current.value === "") {
-                                    return;
-                                }
-                                updateTypingTimeout(
-                                    setTimeout(() => {
-                                        fetch(
-                                            `/search?value=${searchInputRef.current.value}&accessToken=${localStorage.getItem(
-                                                "spotify-access-token"
-                                            )}`
-                                        )
-                                            .then((e) => e.json())
-                                            .then((data) => {
-                                                setSearchResults(data);
-                                            });
-                                    }, 500)
-                                );
-                            }}
-                            id="searchbox"
-                            type="text"
-                            placeholder="Artist, Song Name, Album..."
-                        />
-                        <div id="result-list">
-                            {searchResults.map((item, key) => {
-                                return (
-                                    <Row key={key} className="song-card">
-                                        <Col xs={12} xl={9} style={{ padding: "0.5em" }}>
-                                            <Row style={{ width: "100%" }}>
-                                                <Col xs={6}>
-                                                    <div style={{ margin: "0.5em", textAlign: "center" }}>
-                                                        <img className="unselectable" src={item.album.images[1].url} />
-                                                        {String(item.duration_ms / 60000)[0]}:
-                                                        {Math.floor((item.duration_ms / 60000 - Math.floor(item.duration_ms / 60000)) * 60) >= 10
-                                                            ? Math.floor((item.duration_ms / 60000 - Math.floor(item.duration_ms / 60000)) * 60)
-                                                            : `0${Math.floor(
-                                                                  (item.duration_ms / 60000 - Math.floor(item.duration_ms / 60000)) * 60
-                                                              )}`}
-                                                    </div>
-                                                </Col>
-                                                <Col xs={{ offset: 1, span: 5 }} xl={{ offset: 0, span: 6 }}>
-                                                    <div className="song-card-name">{item.name}</div>
-                                                    <div className="song-card-artist">{item.artists.map((artist) => artist.name).join(", ")}</div>
-                                                </Col>
-                                            </Row>
-                                        </Col>
-                                        <Col>
-                                            <button
-                                                onClick={() => {
-                                                    client.socket.emit("addToQueue", {
-                                                        track: item,
-                                                        user: JSON.parse(localStorage.getItem("client-data")).body.display_name,
-                                                        newQueueItem: [item, JSON.parse(localStorage.getItem("client-data")).body.display_name],
-                                                    });
-                                                }}
-                                            >
-                                                Add
-                                            </button>
-                                        </Col>
-                                    </Row>
-                                );
-                            })}
-                        </div>
-                    </div>
+                    <SearchBar />
                 </Col>
             </Row>
             <Row>
@@ -318,7 +159,7 @@ function Lobby(props) {
                         autoComplete="off"
                         onSubmit={(event) => {
                             event.preventDefault();
-                            client.sendMessage(document.getElementById("chatInput").value);
+                            client.sendMessage(formatMessage(document.getElementById("chatInput").value));
                             document.getElementById("chatInput").value = "";
                         }}
                     >
@@ -341,6 +182,11 @@ function processChatMessage(text) {
     return text.replace(urlRegex, function (url) {
         return `<a target="_blank" href="${url}"> ${url} </a>`;
     });
+}
+
+function formatMessage(msg) {
+    console.log(msg.replaceAll("<", "&lt;").replaceAll(">", "&gt;"))
+    return msg.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
 }
 
 export default Lobby;

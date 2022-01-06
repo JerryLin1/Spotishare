@@ -1,8 +1,8 @@
 import { Row, Col } from "react-bootstrap";
-import { CaretDownFill } from "react-bootstrap-icons";
-import "./css/Queue.css";
 import { ClientContext } from "./contexts/ClientProvider.jsx";
 import { useContext } from "react";
+
+import "./css/Queue.css";
 
 function Queue(props) {
     const queue = props.queue;
@@ -29,7 +29,7 @@ function Queue(props) {
                             <Row style={{ width: "100%" }}>
                                 <Col xs={5} style={{ margin: "0.25em auto" }}>
                                     <div>
-                                        <img className="unselectable" src={track.album.images[2].url} />
+                                        <img className="unselectable" src={track.album.images[1].url} />
                                     </div>
                                     <div style={{ textAlign: "center" }}>
                                         {String(track.duration_ms / 60000)[0]}:

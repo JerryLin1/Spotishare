@@ -16,71 +16,6 @@
     transform: translate(-50%, -50%)
 }
 
-/******* song search *******/
-
-#searchArea {
-    position: relative;
-    left: 0 !important;
-    top: 0;
-    z-index: 1;
-}
-
-#searchArea>h3:first-of-type {
-    margin-bottom: 0.5em;
-}
-
-#searchbox {
-    position: absolute;
-    z-index: 2;
-    left: 0;
-    top: 25%;
-    height: 3em;
-    width: 80%;
-    border: none;
-    padding: 0 0.5em;
-}
-
-#searchbox:focus {
-    outline: 1px solid #ccc;
-}
-
-#result-list {
-    position: absolute;
-    width: 100%;
-    max-width: 60vw;
-    max-height: 50vh;
-    top: 32.5%;
-    left: 50%;
-    transform: translateX(-50%);
-
-    padding: 1em;
-    overflow-y: scroll;
-    background-color: #fff;
-    opacity: 0;
-}
-
-#result-list:empty {
-    background-color: transparent;
-    overflow: hidden;
-}
-
-#searchArea-close {
-    display: none;
-    z-index: 3;
-    font-size: 3em;
-    color: #fff;
-    position: absolute;
-    top: 17.5%;
-    right: 21%;
-    transition: 0.3s;
-}
-
-#searchArea-close:hover {
-    cursor: pointer;
-    color: #ccc;
-}
-
-
 /******* Web Player *******/
 
 .web-player {
@@ -222,7 +157,6 @@
 .lobby-list.visible {
     height: calc(100% - 6.5em);
     opacity: 1;
-    overflow-y: scroll;
 }
 
 .member-card {
@@ -237,6 +171,7 @@
 .member-card>.col:nth-child(2) {
     text-align: center;
 }
+
 #member-pfp {
     object-fit: cover;
     height: 70px;
@@ -274,9 +209,11 @@
 
 .song-card img {
     display: block;
-    width: 100px;
-    height: 100px;
+    width: 50%;
+    height: 50%;
     margin: auto;
+    max-width: 100px;
+    max-height: 100px;
 }
 
 .song-card-artist {
@@ -295,35 +232,24 @@
 /* media queries */
 
 @media screen and (max-width: 1200px) {
-    #searchArea {
-        position: absolute !important;
-        width: 100%;
-        top: 7.5em;
-    }
-
-    #searchbox {
-        left: 50vw !important;
-        transform: translateX(-50%) !important;
-        width: 60% !important;
-    }
-
     .web-player {
         margin-top: 1em;
+    }
+
+    .song-card img {
+        min-width: 64px;
+        min-height: 64px;
     }
 }
 
 @media screen and (max-width: 600px) {
-    #searchbox {
-        font-size: 0.75em;
-    }
-
     .song-card {
         font-size: 0.675em;
     }
 
     .song-card img {
-        width: 40px;
-        height: 40px;
+        min-width: 40px;
+        min-height: 40px;
     }
 
     #member-pfp {

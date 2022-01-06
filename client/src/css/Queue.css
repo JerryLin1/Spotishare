@@ -13,24 +13,19 @@
     font-size: 0.75em;
 }
 
-#queue-container img {
-    width: initial;
-    height: initial;
-}
-
+/* dropdown css properties are from lobby.css */
 .export-settings {
     position: absolute;
     width: calc(25% - 2.5em);
     height: 0;
     background-color: rgb(204, 204, 204);
     opacity: 0;
-    overflow: hidden;
+    overflow-y: scroll;
+    padding: 1em;
     transition: 0.3s;
 }
 
 .export-settings.visible {
-    overflow-y: scroll;
-    padding: 1em;
     height: 9em;
     opacity: 1;
 }
@@ -47,17 +42,23 @@
 }
 
 @media screen and (max-width: 1200px) {
-    #queue-container {
-        margin-top: 5em !important;
-    }
-
     .export-settings {
         width: calc(100% - 5.5em);
+    }
+
+    .song-card img {
+        min-width: 64px;
+        min-height: 64px;
     }
 }
 
 @media screen and (max-width: 600px) {
     #queue-container .song-card {
         font-size: 1em;
+    }
+
+    .song-card img {
+        min-width: 40px;
+        min-height: 40px;
     }
 }

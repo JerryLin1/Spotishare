@@ -7,6 +7,11 @@
     border-radius: 0 !important;
 }
 
+*::selection {
+    color: #fff;
+    background-color: #000;
+}
+
 body {
     background-color: #23da63;
     padding: 2em
@@ -26,7 +31,7 @@ button:hover {
 }
 
 ::-webkit-scrollbar {
-    width: 0.75em;
+    width: 0.75rem;
 }
 
 ::-webkit-scrollbar-track {
@@ -85,10 +90,6 @@ button:hover {
 }
 
 @media screen and (max-width: 1200px) {
-    .page-title {
-        text-align: center !important;
-    }
-
     .page-title.home {
         margin-top: 1.25em;
         font-size: 5em;
