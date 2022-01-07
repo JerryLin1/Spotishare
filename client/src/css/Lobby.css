@@ -2,6 +2,8 @@
     margin-top: 1.5em;
 }
 
+
+
 /******* Pre Lobby *******/
 
 .pre-lobby>* {
@@ -14,6 +16,13 @@
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%)
+}
+
+/**************/
+
+#roomCode:hover {
+    cursor: pointer;
+    text-decoration: underline;
 }
 
 /******* Web Player *******/

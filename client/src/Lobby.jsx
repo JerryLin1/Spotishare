@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Row, Col, Container, Card, Form } from "react-bootstrap";
 import { CaretDownFill, Spotify } from "react-bootstrap-icons";
 import { useParams } from "react-router-dom";
@@ -121,6 +121,9 @@ function Lobby(props) {
                 <Col xs={12} xl={{ offset: 1, span: 5 }} style={{ marginTop: "1em" }}>
                     <SearchBar />
                 </Col>
+                <Col xs={12} xl={3} style={{ marginTop: "2em" }}>
+                    <strong>Room invite link:</strong> <span id="roomCode">{window.location.href.substring(0, window.location.href.indexOf("lobby") - 1)}</span>
+                </Col>
             </Row>
             <Row>
                 <Col xs={12} xl={3}>
@@ -131,10 +134,10 @@ function Lobby(props) {
                     </div>
                     <div className="export-settings">
                         <button>
-                            Export Spotify Playlist <Spotify fill="#23da63" />
+                            Export to Spotify playlist <Spotify className="spotify-logo" />
                         </button>
                         <button>
-                            Export others' songs to Spotify Playlist <Spotify fill="#23da63" />
+                            Export others' songs to Spotify playlist <Spotify className="spotify-logo" />
                         </button>
                     </div>
                 </Col>

@@ -300,7 +300,7 @@ io.on("connection", (socket) => {
                 case "album":
                     loggedInSpotifyApi.getAlbum(spotifyID).then((data) => {
                         for (track of data.body.tracks.items) {
-                            track.album = {images: data.body.images}
+                            track.album = { images: data.body.images }
                             addToQueue(track, name, socket.room);
                         }
                     });

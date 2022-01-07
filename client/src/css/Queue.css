@@ -18,6 +18,13 @@
 }
 
 /* dropdown css properties are from lobby.css */
+.spotify-logo {
+    margin-left: 2px;
+    fill: #23da63;
+    width: 25px;
+    height: 25px;
+}
+
 .export-settings {
     position: absolute;
     width: calc(25% - 2.5em);
@@ -26,11 +33,12 @@
     opacity: 0;
     padding: 1em;
     transition: 0.3s;
-    overflow: hidden;
+    overflow-y: scroll;
 }
 
 .export-settings.visible {
     height: 9em;
+    /* padding-bottom: 1em; */
     opacity: 1;
 }
 
