@@ -9,7 +9,7 @@
     margin-bottom: 0.5em;
 }
 
-#searchbox {
+#searchBox {
     position: absolute;
     z-index: 2;
     left: 0;
@@ -20,7 +20,7 @@
     padding: 0 0.5em;
 }
 
-#searchbox:focus {
+#searchBox:focus {
     outline: 1px solid #ccc;
 }
 
@@ -67,7 +67,7 @@
         min-height: 3em;
     }
 
-    #searchbox {
+    #searchBox {
         position: static;
     }
 }

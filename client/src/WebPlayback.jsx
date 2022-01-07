@@ -1,7 +1,6 @@
-import { set } from "animejs";
 import React, { useState, useEffect, useContext } from "react";
-import { PlayCircle, PauseCircle, SkipForwardCircle, SkipBackwardCircle, SegmentedNav } from "react-bootstrap-icons";
-import { io } from "socket.io-client";
+import { PlayCircle, PauseCircle, SkipForwardCircle, SkipBackwardCircle, VolumeUpFill, VolumeMuteFill } from "react-bootstrap-icons";
+
 import { ClientContext } from "./contexts/ClientProvider";
 
 import "./css/Lobby.css";
@@ -13,6 +12,7 @@ function WebPlayback(props) {
     const [is_paused, setPaused] = useState(false);
     const [is_active, setActive] = useState(false);
     const [player, setPlayer] = useState(undefined);
+    const [volume, setVolume] = useState([0.5, undefined]);
     const [endOfQueue, setEndOfQueue] = useState(false);
     const [current_track, setTrack] = useState(undefined);
 
@@ -135,45 +135,86 @@ function WebPlayback(props) {
         );
     } else {
         return (
-            <>
-                <div className="web-player">
-                    <img src={current_track.album.images[0].url} id="nowPlayingCover" className="unselectable" alt="" />
-                    <div id="nowPlayingName">{current_track.name}</div>
-                    <div id="nowPlayingArtist">{current_track.artists.map((artist) => artist.name).join(", ")}</div>
+            <div className="web-player">
+                <img src={current_track.album.images[0].url} id="nowPlayingCover" className="unselectable" alt="" />
+                <div id="nowPlayingName">{current_track.name}</div>
+                <div id="nowPlayingArtist">{current_track.artists.map((artist) => artist.name).join(", ")}</div>
 
-                    {client.isHost && (
-                        <div id="nowPlayingSide">
-                            <button
-                                className="spotifyBtn"
-                                onClick={() => {
-                                    player.previousTrack();
-                                }}
-                            >
-                                <SkipBackwardCircle />
-                            </button>
+                {client.isHost && (
+                    <div id="nowPlayingSide">
+                        <button
+                            className="spotifyBtn"
+                            onClick={() => {
+                                player.previousTrack();
+                            }}
+                        >
+                            <SkipBackwardCircle />
+                        </button>
 
-                            <button
-                                className="spotifyBtn"
-                                onClick={() => {
-                                    player.togglePlay();
-                                    client.socket.emit("togglePlayPause");
-                                }}
-                            >
-                                {is_paused ? <PlayCircle /> : <PauseCircle />}
-                            </button>
+                        <button
+                            className="spotifyBtn"
+                            onClick={() => {
+                                player.togglePlay();
+                                client.socket.emit("togglePlayPause");
+                            }}
+                        >
+                            {is_paused ? <PlayCircle /> : <PauseCircle />}
+                        </button>
 
-                            <button
-                                className="spotifyBtn"
+                        <button
+                            className="spotifyBtn"
+                            onClick={() => {
+                                player.nextTrack();
+                            }}
+                        >
+                            <SkipForwardCircle />
+                        </button>
+                    </div>
+                )}
+                <div className="volume-control">
+                    <span id="volume-icon">
+                        {volume[0] === 0 ? (
+                            <VolumeMuteFill
+                                // When the volume button is clicked and sound is muted, it will change sound back to original sound before it was muted
+                                // If the last event before it was muted was a drag or click to 0, sound will be put back to 0.5
                                 onClick={() => {
-                                    player.nextTrack();
+                                    if (volume[1] !== undefined) {
+                                        player.setVolume(Number(volume[1]));
+                                        setVolume([volume[1], undefined]);
+                                        document.querySelector("#volume-slider").style.setProperty("--scrollbar-width", `${volume[1] * 100}%`);
+                                    } else {
+                                        player.setVolume(0.5);
+                                        setVolume([0.5, undefined]);
+                                        document.querySelector("#volume-slider").style.setProperty("--scrollbar-width", `50%`);
+                                    }
                                 }}
-                            >
-                                <SkipForwardCircle />
-                            </button>
-                        </div>
-                    )}
+                            />
+                        ) : (
+                            <VolumeUpFill
+                                onClick={() => {
+                                    document.querySelector("#volume-slider").style.setProperty("--scrollbar-width", `0%`);
+                                    player.setVolume(0);
+                                    setVolume([0, volume[0]]);
+                                }}
+                            />
+                        )}
+                    </span>
+                    <input
+                        id="volume-slider"
+                        type="range"
+                        min={0}
+                        max={1.0}
+                        value={volume[0]}
+                        step={0.01}
+                        onChange={(e) => {
+                            let volume = Number(e.target.value);
+                            player.setVolume(volume);
+                            setVolume([volume, undefined])
+                            document.querySelector("#volume-slider").style.setProperty("--scrollbar-width", `${volume * 100}%`);
+                        }}
+                    ></input>
                 </div>
-            </>
+            </div>
         );
     }
 }

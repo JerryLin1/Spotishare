@@ -16,7 +16,7 @@ function SearchBar(props) {
     // search area expand animation
     const expandSearchArea = () => {
         let searchArea = document.querySelector("#searchArea"),
-            searchBox = document.querySelector("#searchbox");
+            searchBox = document.querySelector("#searchBox");
         if (window.innerWidth <= 1200) {
             searchArea.style.cssText = `position: fixed !important; width: 100vw; height: 100%; top: 0; background-color: rgba(25,25,25,0.75)`;
             searchBox.style.cssText = "position: absolute; left: 50%; transform: translateX(-50%); width: 60%";
@@ -54,7 +54,7 @@ function SearchBar(props) {
     // search collapse area animation
     const shrinkSearchArea = () => {
         let searchArea = document.querySelector("#searchArea"),
-            searchBox = document.querySelector("#searchbox");
+            searchBox = document.querySelector("#searchBox");
         document.querySelector("#searchArea-close").style.display = "none";
         if (window.innerWidth <= 1200) {
             document.querySelector("#result-list").style.cssText = "opacity: 0; display: none";
@@ -119,7 +119,7 @@ function SearchBar(props) {
                         }, 500)
                     );
                 }}
-                id="searchbox"
+                id="searchBox"
                 type="text"
                 placeholder="Artist, Song Name, Album..."
             />

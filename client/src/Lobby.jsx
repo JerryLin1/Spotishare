@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from "react";
-import { Row, Col, Container, Card, Form } from "react-bootstrap";
+import React from "react";
+import { Row, Col, Container, Card, Form, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { CaretDownFill, Spotify } from "react-bootstrap-icons";
 import { useParams } from "react-router-dom";
 
@@ -121,8 +122,11 @@ function Lobby(props) {
                 <Col xs={12} xl={{ offset: 1, span: 5 }} style={{ marginTop: "1em" }}>
                     <SearchBar />
                 </Col>
-                <Col xs={12} xl={3} style={{ marginTop: "2em" }}>
-                    <strong>Room invite link:</strong> <span id="roomCode">{window.location.href.substring(0, window.location.href.indexOf("lobby") - 1)}</span>
+                <Col xs={12} xl={3}>
+                    <div id="roomCode">
+                        <strong>Room invite link: {" "}</strong>
+                        <RoomCode />
+                    </div>
                 </Col>
             </Row>
             <Row>
@@ -176,6 +180,35 @@ function Lobby(props) {
         </Container>
     );
 }
+
+// modified from: https://react-bootstrap.netlify.app/components/overlays/#tooltips
+const UpdatingTooltip = React.forwardRef(({ popper, children, show: _, ...props }, ref) => {
+    useEffect(() => {
+        popper.scheduleUpdate();
+    }, [children, popper]);
+    return (
+        <Tooltip ref={ref} body {...props}>
+            {children}
+        </Tooltip>
+    );
+});
+
+const RoomCode = () => {
+    const [content, setContent] = useState("Copy Code");
+    return (
+        <OverlayTrigger placement="top" overlay={<UpdatingTooltip>{content}</UpdatingTooltip>}>
+            <span
+                onClick={() => {
+                    navigator.clipboard.writeText(window.location.href.substring(0, window.location.href.indexOf("lobby") - 1));
+                    setContent("Code Copied!");
+                }}
+                onMouseLeave={() => setTimeout(() => setContent("Copy Code"), 250)}
+            >
+                {window.location.href.substring(0, window.location.href.indexOf("lobby") - 1)}
+            </span>
+        </OverlayTrigger>
+    );
+};
 
 // modified from https://stackoverflow.com/a/8943487
 function processChatMessage(text) {

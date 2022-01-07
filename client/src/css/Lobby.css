@@ -2,8 +2,6 @@
     margin-top: 1.5em;
 }
 
-
-
 /******* Pre Lobby *******/
 
 .pre-lobby>* {
@@ -20,7 +18,12 @@
 
 /**************/
 
-#roomCode:hover {
+#roomCode {
+    margin-top: 2em;
+    text-align: right;
+}
+
+#roomCode>span:hover {
     cursor: pointer;
     text-decoration: underline;
 }
@@ -72,6 +75,56 @@
     margin: 0.5em auto;
 }
 
+.volume-control {
+    margin: 0.5em auto;
+    display: flex;
+    align-items: center;
+}
+
+#volume-icon:hover {
+    cursor: pointer;
+}
+
+#volume-slider {
+    position: relative;
+    margin-left: 0.5em;
+    -webkit-appearance: none;
+    height: 5px;
+    background: #fff;
+    z-index: 0;
+    --scrollbar-width: 50%;
+    --scrollbar-background: transparent;
+    --scrollbar-opacity: 0.5;
+}
+
+#volume-slider:hover {
+    --scrollbar-background: rgb(0, 0, 0);
+    --scrollbar-opacity: 1;
+}
+
+#volume-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    height: 15px;
+    width: 15px;
+    border-radius: 50%;
+    background: var(--scrollbar-background);
+    z-index: 1;
+    transition: 0.1s;
+}
+
+#volume-slider::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: var(--scrollbar-width);
+    height: 5px;
+    background-color: #000;
+    opacity: var(--scrollbar-opacity);
+    z-index: -1;
+    transition: 0.1s;
+}
+
 /******* Chat *******/
 
 #chat-wrapper {
@@ -95,7 +148,6 @@
 #chat-header {
     font-size: 2em;
 }
-
 
 #sendBar {
     height: 3em;
@@ -248,6 +300,10 @@
     .song-card img {
         min-width: 64px;
         min-height: 64px;
+    }
+
+    #roomCode {
+        text-align: center;
     }
 }
 

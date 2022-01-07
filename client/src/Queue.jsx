@@ -18,7 +18,7 @@ function Queue(props) {
     return (
         <div id="queue-container">
             <h2 id="queue-title" className="unselectable">
-                Next In Queue
+                Song Queue
             </h2>
             {queue.map((queueItem, key) => {
                 let track = queueItem.track,
