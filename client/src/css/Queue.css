@@ -13,6 +13,10 @@
     font-size: 0.75em;
 }
 
+#queue-container .song-card {
+    font-size: 1.2em;
+}
+
 /* dropdown css properties are from lobby.css */
 .export-settings {
     position: absolute;
@@ -20,9 +24,9 @@
     height: 0;
     background-color: rgb(204, 204, 204);
     opacity: 0;
-    overflow-y: scroll;
     padding: 1em;
     transition: 0.3s;
+    overflow: hidden;
 }
 
 .export-settings.visible {
