@@ -14,6 +14,7 @@ function SearchBar(props) {
     const searchInputRef = useRef(null);
 
     // search area expand animation
+    // NOTE: animations will not play if screen width < 1200px
     const expandSearchArea = () => {
         let searchArea = document.querySelector("#searchArea"),
             searchBox = document.querySelector("#searchBox");

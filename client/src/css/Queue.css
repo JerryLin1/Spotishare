@@ -32,7 +32,7 @@
     background-color: rgb(204, 204, 204);
     opacity: 0;
     padding: 1em;
-    transition: 0.3s;
+    transition: 0.25s;
     overflow-y: scroll;
 }
 

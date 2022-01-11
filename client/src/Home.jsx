@@ -3,7 +3,6 @@ import { useContext } from "react";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import { isLoggedIn, login } from ".";
-import { ClientContext } from "./contexts/ClientProvider";
 
 function HomePage(props) {
     return (

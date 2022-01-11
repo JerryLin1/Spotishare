@@ -136,14 +136,20 @@ function WebPlayback(props) {
     } else {
         return (
             <div className="web-player">
-                <img src={current_track.album.images[0].url} id="nowPlayingCover" className="unselectable" alt="" />
+                <img
+                    src={current_track.album.images[0].url}
+                    id="nowPlayingCover"
+                    className="unselectable"
+                    alt={current_track.name}
+                    onClick={() => {window.open(`https://open.spotify.com/track/${current_track.id}`)}}
+                />
                 <div id="nowPlayingName">{current_track.name}</div>
                 <div id="nowPlayingArtist">{current_track.artists.map((artist) => artist.name).join(", ")}</div>
 
                 {client.isHost && (
                     <div id="nowPlayingSide">
                         <button
-                            className="spotifyBtn"
+                            className="spotify-btn"
                             onClick={() => {
                                 player.previousTrack();
                             }}
@@ -152,7 +158,7 @@ function WebPlayback(props) {
                         </button>
 
                         <button
-                            className="spotifyBtn"
+                            className="spotify-btn"
                             onClick={() => {
                                 player.togglePlay();
                                 client.socket.emit("togglePlayPause");
@@ -162,7 +168,7 @@ function WebPlayback(props) {
                         </button>
 
                         <button
-                            className="spotifyBtn"
+                            className="spotify-btn"
                             onClick={() => {
                                 player.nextTrack();
                             }}
@@ -209,7 +215,7 @@ function WebPlayback(props) {
                         onChange={(e) => {
                             let volume = Number(e.target.value);
                             player.setVolume(volume);
-                            setVolume([volume, undefined])
+                            setVolume([volume, undefined]);
                             document.querySelector("#volume-slider").style.setProperty("--scrollbar-width", `${volume * 100}%`);
                         }}
                     ></input>

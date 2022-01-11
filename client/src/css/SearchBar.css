@@ -52,7 +52,7 @@
     position: absolute;
     top: 17.5%;
     right: 21%;
-    transition: 0.3s;
+    transition: 0.25s;
 }
 
 #searchArea-close:hover {

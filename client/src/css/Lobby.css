@@ -19,8 +19,11 @@
 /**************/
 
 #roomCode {
-    margin-top: 2em;
-    text-align: right;
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+    justify-content: center;
+    height: 100%;
 }
 
 #roomCode>span:hover {
@@ -40,19 +43,18 @@
     min-width: 100%;
 }
 
-.spotifyBtn {
+.spotify-btn {
     background: transparent;
     margin: 0.5em 0.25em;
-    padding: 0.5em;
     border-radius: 50% !important;
 }
 
-.spotifyBtn>* {
+.spotify-btn>* {
     width: 2em;
     height: 2em;
 }
 
-.spotifyBtn:nth-child(2)>* {
+.spotify-btn:nth-child(2)>* {
     width: 3em;
     height: 3em;
 }
@@ -63,6 +65,18 @@
     min-height: 200px;
     min-width: 200px;
     margin-bottom: 1em;
+    transition: 0.25s;
+}
+
+#nowPlayingCover:hover {
+    cursor: pointer;
+}
+
+@media screen and (min-width: 1200px) {
+    #nowPlayingCover:hover {
+        transform: scale(1.05);
+        cursor: pointer;
+    }
 }
 
 #nowPlayingName {
@@ -81,8 +95,13 @@
     align-items: center;
 }
 
+#volume-icon {
+    transition: 0.25s;
+}
+
 #volume-icon:hover {
     cursor: pointer;
+    transform: scale(1.25);
 }
 
 #volume-slider {
@@ -126,15 +145,11 @@
 }
 
 /******* Chat *******/
-
-#chat-wrapper {
-    width: 50%;
-}
-
 .chat-container {
     margin: 0.5em auto;
     border: none;
     height: 60vh;
+    min-height: 7.5em;
 }
 
 #chat {
@@ -143,6 +158,7 @@
     display: block;
     overflow-y: scroll;
     overflow-wrap: break-word;
+    min-height: 5em;
 }
 
 #chat-header {
@@ -201,7 +217,7 @@
     right: 1em;
     top: 50%;
     transform: translateY(-50%) rotate(0deg);
-    transition: 0.3s;
+    transition: 0.25s;
 }
 
 .lobby-list {
@@ -212,7 +228,7 @@
     background-color: rgba(204, 204, 204, 0.8);
     opacity: 0;
     overflow-y: scroll;
-    transition: 0.3s;
+    transition: 0.25s;
 }
 
 .lobby-list.visible {
@@ -247,7 +263,7 @@
     border: 1px solid #888;
     margin: 0.5em auto;
     padding: 0.5em;
-    transition: 0.3s;
+    transition: 0.25s;
     width: 100%;
 }
 
@@ -294,7 +310,8 @@
 
 @media screen and (max-width: 1200px) {
     .web-player {
-        margin-top: 1em;
+        margin: 3em auto;
+        min-height: 0;
     }
 
     .song-card img {
@@ -303,7 +320,8 @@
     }
 
     #roomCode {
-        text-align: center;
+        margin: 1em auto;
+        align-items: center;
     }
 }
 

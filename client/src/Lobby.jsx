@@ -124,7 +124,7 @@ function Lobby(props) {
                 </Col>
                 <Col xs={12} xl={3}>
                     <div id="roomCode">
-                        <strong>Room invite link: {" "}</strong>
+                        <strong>Room invite link: </strong>
                         <RoomCode />
                     </div>
                 </Col>
@@ -219,7 +219,7 @@ function processChatMessage(text) {
 }
 
 function formatMessage(msg) {
-    return msg.replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("&", "&amp;");
+    return msg.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
 }
 
 export default Lobby;
