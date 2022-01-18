@@ -322,6 +322,7 @@ io.on("connection", (socket) => {
     });
 
     function sendToChat({ msg, type, userName, userId, roomId }) {
+        if (rooms[roomId] === undefined) return
         let chatMsg = { msg, type, userName, userId };
         rooms[roomId].chatHistory.push(chatMsg);
         io.to(roomId).emit("receiveMessage", chatMsg);
@@ -351,7 +352,7 @@ io.on("connection", (socket) => {
                 uris: [`spotify:track:${trackId}`],
             })
             .then((data) => {
-                waitForTrackEnd();
+                if (rooms[socket.room].clients[socket.id].isHost) waitForTrackEnd();
             });
     });
 

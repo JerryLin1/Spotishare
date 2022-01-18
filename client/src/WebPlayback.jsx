@@ -50,11 +50,6 @@ function WebPlayback(props) {
                 if (!state) return;
                 if (prevPlayerState === undefined) {
                     prevPlayerState = state;
-                    client.socket.emit("changeTrackRequest", {
-                        trackId: state.track_window.current_track.id,
-                        track: state.track_window.current_track,
-                        state: state,
-                    });
                     return;
                 } else {
                     let ptrack = prevPlayerState.track_window.current_track.id;
