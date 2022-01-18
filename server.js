@@ -228,6 +228,7 @@ io.on("connection", (socket) => {
     });
 
     socket.on("joinRoom", (info, callback) => {
+        if (rooms[info.roomId]?.clients[socket.id]?.name === undefined) return;
         socket.join(info.roomId);
         socket.room = info.roomId;
         io.to(info.roomId).emit("updateClientList", rooms[info.roomId].clients);
@@ -241,9 +242,10 @@ io.on("connection", (socket) => {
         });
     });
 
-    socket.on("initializeClientDevice", (device_id) =>
-        rooms[socket.room].clients[socket.id].deviceId = device_id
-    )
+    socket.on("initializeClientDevice", (device_id) => {
+        if (socket.room === undefined) return
+        rooms[socket.room].clients[socket.id].deviceId = device_id;
+    });
 
     socket.on("togglePlayPause", () => {
         rooms[socket.room].paused = !rooms[socket.room].paused;
@@ -251,7 +253,8 @@ io.on("connection", (socket) => {
     });
 
     socket.on("sendMessage", (msg) => {
-        let name = rooms[socket.room].clients[socket.id].name
+        if (socket.room === undefined) return
+        let name = rooms[socket.room].clients[socket.id].name;
         // Modified from https://stackoverflow.com/a/64866894
         const regEx =
             /^(?:spotify:|(?:https?:\/\/(?:open|play)\.spotify\.com\/))(?:embed)?\/?(album|track|playlist)(?::|\/)((?:[0-9a-zA-Z]){22})/;
@@ -300,7 +303,7 @@ io.on("connection", (socket) => {
                 case "album":
                     loggedInSpotifyApi.getAlbum(spotifyID).then((data) => {
                         for (track of data.body.tracks.items) {
-                            track.album = { images: data.body.images }
+                            track.album = { images: data.body.images };
                             addToQueue(track, name, socket.room);
                         }
                     });
@@ -342,12 +345,14 @@ io.on("connection", (socket) => {
         var loggedInSpotifyApi = new SpotifyWebApi();
         loggedInSpotifyApi.setAccessToken(accessToken);
 
-        loggedInSpotifyApi.play({
-            device_id: rooms[socket.room].clients[socket.id].deviceId,
-            uris: [`spotify:track:${trackId}`],
-        }).then((data) => {
-            waitForTrackEnd();
-        });
+        loggedInSpotifyApi
+            .play({
+                device_id: rooms[socket.room].clients[socket.id].deviceId,
+                uris: [`spotify:track:${trackId}`],
+            })
+            .then((data) => {
+                waitForTrackEnd();
+            });
     });
 
     // Helper for socket.on("changeTrack", ...)
@@ -359,22 +364,24 @@ io.on("connection", (socket) => {
             var loggedInSpotifyApi = new SpotifyWebApi();
             loggedInSpotifyApi.setAccessToken(rooms[socket.room].hostToken);
 
-            loggedInSpotifyApi.getMyCurrentPlaybackState()
-                .then((data) => {
-                    if (data.body.is_playing && data.body.progress_ms + 1500 >= currentTrackInfo.duration_ms) {
-                        console.log("Track in queue has ended; firing changeTrack");
-                        rooms[socket.room].currentQueuePos++;
-                        if (rooms[socket.room].currentQueuePos < rooms[socket.room].queue.length) {
-                            console.log("Change track firing...")
-                            io.to(socket.room).emit("changeTrack", rooms[socket.room].queue[rooms[socket.room].currentQueuePos].id);
-                        } else {
-                            console.log("End of queue firing...")
-                            io.to(socket.room).emit("endOfQueue");
-                        }
-                        clearInterval(checkIfFinished);
+            loggedInSpotifyApi.getMyCurrentPlaybackState().then((data) => {
+                if (data.body.is_playing && data.body.progress_ms + 1500 >= currentTrackInfo.duration_ms) {
+                    console.log("Track in queue has ended; firing changeTrack");
+                    rooms[socket.room].currentQueuePos++;
+                    if (rooms[socket.room].currentQueuePos < rooms[socket.room].queue.length) {
+                        console.log("Change track firing...");
+                        io.to(socket.room).emit(
+                            "changeTrack",
+                            rooms[socket.room].queue[rooms[socket.room].currentQueuePos].id
+                        );
+                    } else {
+                        console.log("End of queue firing...");
+                        io.to(socket.room).emit("endOfQueue");
                     }
-                })
-        }, 1000)
+                    clearInterval(checkIfFinished);
+                }
+            });
+        }, 1000);
     }
 
     socket.on("syncLobbyPosition", (spos) => {
@@ -382,13 +389,13 @@ io.on("connection", (socket) => {
     });
 
     socket.on("addToQueue", ({ track, user, newQueueItem }) => {
-        addToQueue(track, user, socket.room)
+        addToQueue(track, user, socket.room);
     });
 
     socket.on("removeFromQueue", ({ key }) => {
         rooms[socket.room].queue.splice(key, 1);
         io.to(socket.room).emit("removeQueueItem", { key });
-    })
+    });
 
     function addToQueue(track, user, roomId) {
         rooms[roomId].queue.push(track);
@@ -400,7 +407,6 @@ io.on("connection", (socket) => {
         io.to(socket.room).emit("addQueueItem", { track, user });
     }
 });
-
 
 // Add new client like rooms[roomId].clients[socket.id] = new Client()
 function Client(roomId) {
