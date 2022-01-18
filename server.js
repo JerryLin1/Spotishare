@@ -329,6 +329,7 @@ io.on("connection", (socket) => {
     }
 
     socket.on("changeTrackRequest", ({ trackId, track, state }) => {
+        if (!rooms[socket.room].clients[socket.id].isHost) return;
         console.log(`Now playing ${track.name}`);
         sendToChat({
             msg: `Now playing <strong>${track.name}</strong> by <strong>${track.artists
