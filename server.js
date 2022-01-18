@@ -58,6 +58,7 @@ app.get("/auth/login", (req, res) => {
         client_id: process.env.REACT_APP_SPOTIFY_CLIENTID,
         scope: scope.join(" "),
         redirect_uri: redirectUri,
+        show_dialog: true,
     });
     const redirectUriAuth = "https://accounts.spotify.com/authorize/?" + auth_query_parameters.toString();
     res.send(

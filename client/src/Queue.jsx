@@ -31,7 +31,7 @@ function Queue(props) {
                                     <div>
                                         <img className="unselectable" src={track.album.images[1].url} />
                                     </div>
-                                    <div style={{ textAlign: "center" }}>
+                                    <div className="song-duration">
                                         {String(track.duration_ms / 60000)[0]}:
                                         {Math.floor((track.duration_ms / 60000 - Math.floor(track.duration_ms / 60000)) * 60) >= 10
                                             ? Math.floor((track.duration_ms / 60000 - Math.floor(track.duration_ms / 60000)) * 60)

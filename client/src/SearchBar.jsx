@@ -133,10 +133,12 @@ function SearchBar(props) {
                                     <Col xs={6}>
                                         <div style={{ margin: "0.5em", textAlign: "center" }}>
                                             <img className="unselectable" src={item.album.images[1].url} />
-                                            {String(item.duration_ms / 60000)[0]}:
-                                            {Math.floor((item.duration_ms / 60000 - Math.floor(item.duration_ms / 60000)) * 60) >= 10
-                                                ? Math.floor((item.duration_ms / 60000 - Math.floor(item.duration_ms / 60000)) * 60)
-                                                : `0${Math.floor((item.duration_ms / 60000 - Math.floor(item.duration_ms / 60000)) * 60)}`}
+                                            <p className="song-duration">
+                                                {String(item.duration_ms / 60000)[0]}:
+                                                {Math.floor((item.duration_ms / 60000 - Math.floor(item.duration_ms / 60000)) * 60) >= 10
+                                                    ? Math.floor((item.duration_ms / 60000 - Math.floor(item.duration_ms / 60000)) * 60)
+                                                    : `0${Math.floor((item.duration_ms / 60000 - Math.floor(item.duration_ms / 60000)) * 60)}`}
+                                            </p>
                                         </div>
                                     </Col>
                                     <Col xs={{ offset: 1, span: 5 }} xl={{ offset: 0, span: 6 }}>

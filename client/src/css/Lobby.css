@@ -23,6 +23,7 @@
     flex-direction: column;
     align-items: end;
     justify-content: center;
+    text-align: right;
     height: 100%;
 }
 
@@ -123,12 +124,15 @@
 
 #volume-slider::-webkit-slider-thumb {
     -webkit-appearance: none;
+    position: absolute;
+    left: var(--scrollbar-width);
+    top: -3.75px;
+    transform: translateX(-50%);
     height: 15px;
     width: 15px;
     border-radius: 50%;
     background: var(--scrollbar-background);
     z-index: 1;
-    transition: 0.1s;
 }
 
 #volume-slider::after {
@@ -141,7 +145,6 @@
     background-color: #000;
     opacity: var(--scrollbar-opacity);
     z-index: -1;
-    transition: 0.1s;
 }
 
 /******* Chat *******/
@@ -274,6 +277,12 @@
 
 .song-card>*>*>* {
     padding: 0;
+}
+
+.song-duration {
+    text-align: center;
+    margin-top: 0.5em;
+    margin-bottom: 0;
 }
 
 .song-card button {

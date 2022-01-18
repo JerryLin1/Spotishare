@@ -196,7 +196,7 @@ const UpdatingTooltip = React.forwardRef(({ popper, children, show: _, ...props 
 const RoomCode = () => {
     const [content, setContent] = useState("Copy Code");
     return (
-        <OverlayTrigger placement="top" overlay={<UpdatingTooltip>{content}</UpdatingTooltip>}>
+        <OverlayTrigger placement="bottom" overlay={<UpdatingTooltip>{content}</UpdatingTooltip>}>
             <span
                 onClick={() => {
                     navigator.clipboard.writeText(window.location.href.substring(0, window.location.href.indexOf("lobby") - 1));
