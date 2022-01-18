@@ -21,13 +21,15 @@ This is the pre-lobby screen. This is displayed when a user clicks on an invite 
 
 ![image](https://user-images.githubusercontent.com/41880283/149177356-412d3bb2-2811-47aa-af89-fd67bf62b842.png)
 
-This is the actual listening party! This is the initial state when a user joins, letting the user know nothing is playing, yet. A dropdown in the chat section on the right side lets them know how many people are currently in the party. 
+This is the actual listening party! This is the initial state when a user joins, letting the user know nothing is playing, yet. A dropdown in the chat section on the right side lets them know how many people are currently in the party. The chat is handled by the backend using node.js and socket.io. When a message is sent, it is emitted to all clients connected and displayed into the chat area on the UI. With this feature new members joining in cannot see previous chat logs.
 
 ![chrome_aAIfFoE8fi](https://user-images.githubusercontent.com/41880283/149182135-7f575e4d-9457-41ac-8846-96201562e258.gif)
 
-This is the search bar where you can look for songs! Songs are retrieved from a Spotify API request, and displayed in a list for a user to browse and choose which song they want to add to the queue.
+This is the search bar where you can look for songs. Songs are retrieved from a Spotify API request, and displayed in a list for a user to browse and choose which song they want to add to the queue.
 
 ![chrome_svOtrDID3J](https://user-images.githubusercontent.com/41880283/149195183-67c436e8-b2e7-49db-86f1-a42f3567821e.gif)
 
 Once a song is added into the queue, it automatically begins. The queue shows details about the song, as well as who added it into the queue.
 In the web player, the album cover, song name, artist and volume control are displayed to all users, while the play/pause, rewind, and seek forward controls are only visible to the host. 
+
+Using the web player's "player_state_changed" event, each client is frequently checked to see if its position in the current song is within at most 3 seconds difference with the host's position. If it is not, then the client's song position will be brought up or down to the host's position and re-synced.
