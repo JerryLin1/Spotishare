@@ -5,7 +5,7 @@ import { ClientContext } from "./contexts/ClientProvider";
 
 import "./css/Lobby.css";
 
-const syncTolerance = 3000;
+const SYNC_TOLERANCE = 3000;
 
 function WebPlayback(props) {
     const client = useContext(ClientContext);
@@ -68,7 +68,7 @@ function WebPlayback(props) {
                             state: state,
                         });
                     }
-                    if (Math.abs(spos - ppos) >= syncTolerance) {
+                    if (Math.abs(spos - ppos) >= SYNC_TOLERANCE) {
                         console.log("previous pos:", ppos, "current pos:", spos);
                         client.socket.emit("syncLobbyPosition", spos);
                     }
