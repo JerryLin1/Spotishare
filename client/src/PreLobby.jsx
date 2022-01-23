@@ -2,7 +2,7 @@ import { Container } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import { isLoggedIn, login } from ".";
 
-import "./css/Lobby.css";
+import "./css/Lobby.scss";
 
 function PreLobby(props) {
     let { roomId } = useParams();

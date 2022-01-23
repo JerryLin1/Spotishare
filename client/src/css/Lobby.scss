@@ -1,0 +1,375 @@
+// shortcuts for centering items
+
+%absolute-center {
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+%flex-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.container-fluid {
+    > .row:nth-child(2) {
+        margin-top: 1.5em;
+    }
+}
+
+#roomCode {
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+    justify-content: center;
+    text-align: right;
+    height: 100%;
+}
+
+#roomCode {
+    > span:hover {
+        cursor: pointer;
+        text-decoration: underline;
+    }
+}
+
+/******* Pre Lobby *******/
+
+.pre-lobby {
+    > * {
+        text-align: center;
+    }
+}
+
+.pre-lobby-body {
+    position: absolute;
+    width: calc(100% - 4em);
+    @extend %absolute-center;
+}
+
+/******* Web Player *******/
+
+.web-player {
+    @extend %flex-center;
+    text-align: center;
+    min-height: 100%;
+    min-width: 100%;
+}
+
+.spotify-btn {
+    background: transparent;
+    margin: 0.5em 0.25em;
+    border-radius: 50% !important;
+}
+
+.spotify-btn > {
+    * {
+        width: 2em;
+        height: 2em;
+    }
+}
+
+.spotify-btn:nth-child(2) > {
+    * {
+        width: 3em;
+        height: 3em;
+    }
+}
+
+#nowPlayingCover {
+    height: 50%;
+    width: 50%;
+    min-height: 200px;
+    min-width: 200px;
+    margin-bottom: 1em;
+    transition: 0.25s;
+
+    &:hover {
+        cursor: pointer;
+    }
+}
+
+@media screen and (min-width: 1200px) {
+    #nowPlayingCover:hover {
+        transform: scale(1.05);
+    }
+}
+
+#nowPlayingName {
+    font-size: 2em;
+    font-weight: bold;
+}
+
+#nowPlayingArtist {
+    font-size: 1.2em;
+    margin: 0.5em auto;
+}
+
+.volume-control {
+    margin: 0.5em auto;
+    display: flex;
+    align-items: center;
+}
+
+#volume-icon {
+    transition: 0.25s;
+    &:hover {
+        cursor: pointer;
+    }
+}
+
+#volume-slider {
+    position: relative;
+    margin-left: 0.5em;
+    -webkit-appearance: none;
+    height: 5px;
+    background: #fff;
+    z-index: 0;
+    --scrollbar-width: 50%;
+    --scrollbar-background: transparent;
+    --scrollbar-opacity: 0.5;
+
+    &:hover {
+        --scrollbar-background: rgb(0, 0, 0);
+        --scrollbar-opacity: 1;
+    }
+
+    &::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        position: absolute;
+        left: var(--scrollbar-width);
+        top: -3.75px;
+        transform: translateX(-50%);
+        height: 15px;
+        width: 15px;
+        border-radius: 50%;
+        background: var(--scrollbar-background);
+        z-index: 1;
+    }
+
+    &::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: var(--scrollbar-width);
+        height: 5px;
+        background-color: #000;
+        opacity: var(--scrollbar-opacity);
+        z-index: -1;
+    }
+}
+
+/******* Chat *******/
+
+.chat-container {
+    margin: 0.5em auto;
+    border: none;
+    height: 60vh;
+    min-height: 7.5em;
+}
+
+#chat {
+    height: 100%;
+    width: 100%;
+    display: block;
+    overflow-y: scroll;
+    overflow-wrap: break-word;
+    min-height: 5em;
+}
+
+#chat-header {
+    font-size: 2em;
+}
+
+#sendBar {
+    height: 3em;
+    width: 100%;
+    display: inline-flex;
+}
+
+#chatInput {
+    width: 74.5%;
+    height: 2.5rem;
+    margin-right: 0.5%;
+    border: none;
+    padding: 0.75em;
+    font-size: 0.85em;
+}
+
+#chatInput:focus {
+    outline: 1px solid #000;
+}
+
+#sendBtn {
+    border: none;
+    height: 2.5rem;
+    background-color: rgba(103, 255, 128, 0.603);
+    width: 30%;
+    padding: 0;
+    font-size: 0.75em;
+
+    &:hover {
+        background-color: rgb(0, 248, 0);
+    }
+}
+
+.dropdown {
+    width: 100%;
+    font-size: 0.8em;
+    padding: 0.5em;
+    text-align: center;
+    background-color: rgb(122, 122, 122);
+    color: #fff;
+    transition: 0.25s;
+
+    &:hover {
+        cursor: pointer;
+        background-color: rgb(105, 105, 105);
+    }
+}
+
+.caret {
+    position: absolute;
+    right: 1em;
+    top: 50%;
+    transform: translateY(-50%) rotate(0deg);
+    transition: 0.25s;
+}
+
+.lobby-list {
+    position: absolute;
+    top: 6em;
+    width: 100%;
+    height: 0;
+    background-color: rgba(204, 204, 204, 0.8);
+    opacity: 0;
+    overflow-y: scroll;
+    transition: 0.25s;
+}
+
+.lobby-list.visible {
+    height: calc(100% - 6em);
+    opacity: 1;
+}
+
+.member-card {
+    background-color: #fff;
+    font-size: 1.5em;
+    height: fit-content;
+    width: 80%;
+    margin: 0.5em auto;
+    padding: 0.5em;
+}
+
+.member-card > {
+    .col:nth-child(2) {
+        text-align: center;
+    }
+}
+
+#member-pfp {
+    object-fit: cover;
+    height: 70px;
+    width: 70px;
+}
+
+/******* Song Cards *******/
+
+.song-card {
+    display: flex;
+    align-items: center;
+    border: 1px solid #888;
+    margin: 0.5em auto;
+    padding: 0.5em;
+    transition: 0.25s;
+    width: 100%;
+}
+
+.song-card {
+    > div {
+        > .row {
+            display: flex;
+            align-items: center;
+        }
+    }
+}
+
+.song-card > * > * > * {
+    padding: 0;
+}
+
+.song-duration {
+    text-align: center;
+    margin-top: 0.5em;
+    margin-bottom: 0;
+}
+
+.song-card button {
+    border: 1px solid #888;
+    align-items: center;
+    width: 100%;
+    height: 2.5em;
+}
+
+.song-card {
+    img {
+        display: block;
+        width: 50%;
+        height: 50%;
+        margin: auto;
+        max-width: 80px;
+        max-height: 800px;
+    }
+
+    &:hover {
+        background: #888;
+        color: #fff;
+    }
+}
+
+.song-card-artist {
+    font-size: 0.85em;
+}
+
+.song-card-name {
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+/* media queries */
+
+@media screen and (max-width: 1200px) {
+    .web-player {
+        margin: 3em auto;
+        min-height: 0;
+    }
+
+    .song-card img {
+        min-width: 64px;
+        min-height: 64px;
+    }
+
+    #roomCode {
+        margin: 1em auto;
+        align-items: center;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .song-card {
+        font-size: 0.675em;
+    }
+
+    .song-card img {
+        min-width: 40px;
+        min-height: 40px;
+    }
+
+    #member-pfp {
+        width: 56px;
+        height: 56px;
+    }
+}

@@ -21,12 +21,12 @@ function HomePage(props) {
                 onClick={() => {
                     if (!isLoggedIn()) login();
                     else {
-                        // uhh
+                        // sign out?
                     }
                 }}
                 id="sign-in"
             >
-                {localStorage.getItem("client-data") && isLoggedIn() ? `Sign out (${JSON.parse(localStorage.getItem("client-data")).body.display_name})` : "Sign In"}
+                {localStorage.getItem("client-data") && isLoggedIn() ? `Hello ${JSON.parse(localStorage.getItem("client-data")).body.display_name}!` : "Sign In"}
             </button>
 
             <div style={{ width: "100%", textAlign: "center" }}>

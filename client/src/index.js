@@ -1,12 +1,12 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { BrowserRouter, Route, MemoryRouter, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { ClientProvider } from "./contexts/ClientProvider";
 import HomePage from "./Home";
 import Lobby from "./Lobby";
 import PreLobby from "./PreLobby";
 
-import "./css/styles.css";
+import "./css/styles.scss";
 
 ReactDOM.render(
     <React.StrictMode>

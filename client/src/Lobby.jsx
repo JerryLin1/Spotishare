@@ -8,7 +8,7 @@ import WebPlayback from "./WebPlayback.jsx";
 import Queue from "./Queue.jsx";
 import { ClientContext } from "./contexts/ClientProvider.jsx";
 
-import "./css/Lobby.css";
+import "./css/Lobby.scss";
 import SearchBar from "./SearchBar.jsx";
 
 function Lobby(props) {
@@ -91,8 +91,9 @@ function Lobby(props) {
 
         client.socket.on("receiveMessage", ({ msg, type, userName, userId }) => {
             const chat = document.getElementById("chat");
-
-            if (chat.scrollTop + chat.clientHeight >= chat.scrollHeight - 200) chat.scrollTop = chat.scrollHeight;
+            if (chat.scrollTop + chat.clientHeight >= chat.scrollHeight - 200) {
+                chat.scrollTop = chat.scrollHeight;
+            }
 
             setChat((oldChat) => [
                 ...oldChat,
@@ -163,9 +164,10 @@ function Lobby(props) {
                     <Form
                         autoComplete="off"
                         onSubmit={(event) => {
+                            let input = document.querySelector("#chatInput");
                             event.preventDefault();
-                            client.sendMessage(formatMessage(document.getElementById("chatInput").value));
-                            document.getElementById("chatInput").value = "";
+                            client.sendMessage(formatMessage(input.value));
+                            input.value = "";
                         }}
                     >
                         <div id="sendBar">

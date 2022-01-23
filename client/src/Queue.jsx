@@ -2,7 +2,7 @@ import { Row, Col } from "react-bootstrap";
 import { ClientContext } from "./contexts/ClientProvider.jsx";
 import { useContext } from "react";
 
-import "./css/Queue.css";
+import "./css/Queue.scss";
 
 function Queue(props) {
     const queue = props.queue;

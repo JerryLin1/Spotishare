@@ -2,7 +2,7 @@ import { useState, useRef, useContext } from "react";
 import { Row, Col } from "react-bootstrap";
 import anime from "animejs";
 
-import "./css/SearchBar.css";
+import "./css/SearchBar.scss";
 
 import { ClientContext } from "./contexts/ClientProvider.jsx";
 

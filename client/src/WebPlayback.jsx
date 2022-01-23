@@ -3,7 +3,7 @@ import { PlayCircle, PauseCircle, SkipForwardCircle, SkipBackwardCircle, VolumeU
 
 import { ClientContext } from "./contexts/ClientProvider";
 
-import "./css/Lobby.css";
+import "./css/Lobby.scss";
 
 const SYNC_TOLERANCE = 3000;
 
@@ -141,7 +141,9 @@ function WebPlayback(props) {
                     id="nowPlayingCover"
                     className="unselectable"
                     alt={current_track.name}
-                    onClick={() => {window.open(`https://open.spotify.com/track/${current_track.id}`)}}
+                    onClick={() => {
+                        window.open(`https://open.spotify.com/track/${current_track.id}`);
+                    }}
                 />
                 <div id="nowPlayingName">{current_track.name}</div>
                 <div id="nowPlayingArtist">{current_track.artists.map((artist) => artist.name).join(", ")}</div>
