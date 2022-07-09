@@ -5,7 +5,7 @@ import { isLoggedIn, login } from ".";
 
 function HomePage(props) {
     return (
-        <Container fluid>
+        <Container fluid id="home">
             <h1 className="page-title home unselectable">SpotiShare</h1>
             {(!isLoggedIn() || JSON.parse(localStorage.getItem("client-data")).body.product != "premium") && (
                 <p style={{ width: "100vw", textAlign: "center", position: "absolute", left: 0, bottom: "1em", padding: "1.5em" }}>

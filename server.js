@@ -417,6 +417,7 @@ function Client(roomId) {
 // setInterval(() => {
 //     console.dir(rooms, { depth: null });
 // }, 5000);
+
 function numberOfClientsInRoom(roomId) {
     return Object.keys(rooms[roomId].clients).length;
 }

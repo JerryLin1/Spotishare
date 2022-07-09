@@ -3,66 +3,66 @@
     left: 0 !important;
     top: 0;
     z-index: 1;
-}
 
-#searchArea>h3:first-of-type {
-    margin-bottom: 0.5em;
-}
+    >h3:first-of-type {
+        margin-bottom: 0.5em;
+    }
 
-#searchBox {
-    position: absolute;
-    z-index: 2;
-    left: 0;
-    top: 25%;
-    height: 3em;
-    width: 80%;
-    border: none;
-    padding: 0 0.5em;
-}
+    #searchBox {
+        position: absolute;
+        z-index: 2;
+        left: 0;
+        top: 25%;
+        height: 3em;
+        width: 80%;
+        border: none;
+        padding: 0 0.5em;
+        border-radius: 0.25rem;
 
-#searchBox:focus {
-    outline: 1px solid #ccc;
-}
+        &:focus {
+            outline: 1px solid #ccc;
+        }
+    }
 
-#result-list {
-    position: absolute;
-    width: 100%;
-    max-width: 60vw;
-    max-height: 50vh;
-    top: 32.5%;
-    left: 50%;
-    transform: translateX(-50%);
-    padding: 1em;
-    overflow-y: scroll;
-    background-color: #fff;
-    text-align: left;
-    opacity: 0;
-}
+    #result-list {
+        position: absolute;
+        width: 100%;
+        max-width: 60vw;
+        max-height: 50vh;
+        top: 32.5%;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 1em;
+        overflow-y: scroll;
+        background-color: #fff;
+        text-align: left;
+        opacity: 0;
 
-#result-list:empty {
-    background-color: transparent;
-    overflow: hidden;
-}
+        &:empty {
+            background-color: transparent;
+            overflow: hidden;
+        }
+    }
 
-#searchArea-close {
-    display: none;
-    z-index: 3;
-    font-size: 3em;
-    color: #fff;
-    position: absolute;
-    top: 17.5%;
-    right: 21%;
-    transition: 0.25s;
-}
+    #searchArea-close {
+        display: none;
+        z-index: 3;
+        font-size: 3em;
+        color: #fff;
+        position: absolute;
+        top: 17.5%;
+        right: 21%;
+        transition: 0.25s;
 
-#searchArea-close:hover {
-    cursor: pointer;
-    color: #ccc;
-}
+        &:hover {
+            cursor: pointer;
+            color: #ccc;
+        }
+    }
 
+}
 @media screen and (max-width: 1200px) {
     #searchArea {
-        position: static !important;
         text-align: center;
         min-height: 3em;
     }

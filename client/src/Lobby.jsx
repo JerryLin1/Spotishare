@@ -115,7 +115,7 @@ function Lobby(props) {
     }, []);
 
     return (
-        <Container fluid>
+        <Container fluid className="lobby">
             <Row>
                 <Col xs={12} xl={3}>
                     <h1 className="page-title unselectable">SpotiShare</h1>

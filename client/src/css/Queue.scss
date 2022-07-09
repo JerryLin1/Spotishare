@@ -1,23 +1,30 @@
-#queue-title {
-    text-align: center;
-    padding: 0.5em 0;
-    width: 100%;
-}
-
 #queue-container {
     position: relative;
     background-color: #fff;
     padding: 1em;
-    overflow-y: scroll;
+    overflow-y: auto;
     height: 60vh;
     font-size: 0.75em;
+    border-radius: 0.25rem;
+
+    #queue-title {
+        text-align: center;
+        padding: 0.5em 0;
+        width: 100%;
+    }
+
+    .song-card {
+        font-size: 1.2em;
+    }
+
+    .added-by {
+        font-size: 0.6em;
+        margin: 0.5em auto;
+        font-style: italic;
+    }
 }
 
-#queue-container .song-card {
-    font-size: 1.2em;
-}
-
-/* dropdown css properties are from lobby.css */
+/* dropdown css properties are from styles.scss */
 .spotify-logo {
     margin-left: 2px;
     fill: #23da63;
@@ -33,23 +40,17 @@
     opacity: 0;
     padding: 1em;
     transition: 0.25s;
-    overflow-y: scroll;
-}
+    overflow-y: auto;
 
-.export-settings.visible {
-    height: 9em;
-    opacity: 1;
-}
+    button {
+        width: 100%;
+        margin: 0.5em auto;
+    }
 
-.export-settings button {
-    width: 100%;
-    margin: 0.5em auto;
-}
-
-.added-by {
-    font-size: 0.6em;
-    margin: 0.5em auto;
-    font-style: italic;
+    &.visible {
+        height: 9em;
+        opacity: 1;
+    }
 }
 
 @media screen and (max-width: 1200px) {
